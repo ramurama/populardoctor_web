@@ -7,17 +7,26 @@ import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import Checkbox from '@material-ui/core/Checkbox';
 import MatTableHead from './MatTableHead';
-
+import { UNDERSCORE } from '../../../../../constants/utils';
 
 
 function getSorting(order, orderBy) {
-  return order === 'desc' ? (a, b) => b[orderBy] - a[orderBy] : (a, b) => a[orderBy] - b[orderBy];
+  return order === 'desc' ? (a, b) => b[orderBy] < a[orderBy] : (a, b) => a[orderBy] - b[orderBy];
 }
-
+function getSort(value, order, orderBy){
+	console.log(value)
+	console.log(orderBy)
+	console.log(order)
+	console.log( UNDERSCORE.sortBy(value, orderBy))
+	// console.log(UNDERSCORE.chain(value).sortBy('user.age').reverse().value())
+	// console.log(UNDERSCORE.reverse(UNDERSCORE.sortBy(value, orderBy)))
+	return order === 'desc' ? UNDERSCORE.sortBy(value, orderBy) :  
+		UNDERSCORE.chain(value).sortBy('user.age').reverse().value();
+}
 export default class MatTable extends PureComponent {
   state = {
     order: 'asc',
-    orderBy: 'calories',
+    orderBy: '_id',
     selected: [],
     page: 0,
     rowsPerPage: 5,
@@ -91,7 +100,11 @@ export default class MatTable extends PureComponent {
     const {
       order, orderBy, selected, rowsPerPage, page
 		} = this.state;
-		const { columns, data, showCheckbox } = this.props;
+		const { columns, showCheckbox, data } = this.props;
+		let _data = [];
+		if(data && data.length !== 0){
+		 _data = getSort(data, order, orderBy).slice(page * rowsPerPage, (page * rowsPerPage) + rowsPerPage);
+		}
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - (page * rowsPerPage));
 
 		console.log(data)
@@ -109,26 +122,23 @@ export default class MatTable extends PureComponent {
                   rowCount={data.length}
                 />
                 <TableBody>
-                  {data
-                    .sort(getSorting(order, orderBy))
-                    .slice(page * rowsPerPage, (page * rowsPerPage) + rowsPerPage)
-                    .map((d) => {
-                      const isSelected = this.isSelected(d.id);
+                  {_data.map((d) => {
+                      const isSelected = this.isSelected(d._id);
                       return (
                         <TableRow
                           className="material-table__row"
                           role="checkbox"
-                          onClick={event => this.handleClick(event, d.id)}
+                          onClick={event => this.handleClick(event, d._id)}
                           aria-checked={isSelected}
                           tabIndex={-1}
-                          key={d.id}
+                          key={d._id}
                           selected={isSelected}
                         >
                           {showCheckbox && <TableCell className="material-table__cell" padding="checkbox">
                             <Checkbox checked={isSelected} className="material-table__checkbox" />
                           </TableCell>}
 													{columns.map((key) => {
-														return (<TableCell component="th" scope="row"  padding="default">
+														return (<TableCell component="th" scope="row"  align="center" padding="default">
 															{key.render ? key.render(d) : d[key.id]}
 															</TableCell>)
 														})}
