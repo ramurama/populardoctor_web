@@ -1,6 +1,6 @@
 import { combineReducers, createStore, applyMiddleware } from 'redux';
 import { reducer as reduxFormReducer } from 'redux-form';
-import { sidebarReducer, themeReducer, doctorReducer } from '../../redux/reducers/index';
+import { sidebarReducer, themeReducer, doctorReducer, hospitalReducer, userReducer, scheduleReducer } from '../../redux/reducers/index';
 import thunk from 'redux-thunk';
 
 const reducer = combineReducers({
@@ -8,6 +8,9 @@ const reducer = combineReducers({
   theme: themeReducer,
 	sidebar: sidebarReducer,
 	doctor: doctorReducer,
+	hospital: hospitalReducer,
+	user: userReducer,
+	schedule: scheduleReducer,
 });
 
 const store = createStore(reducer, applyMiddleware(thunk));

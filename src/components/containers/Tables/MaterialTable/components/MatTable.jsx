@@ -138,7 +138,7 @@ export default class MatTable extends PureComponent {
                             <Checkbox checked={isSelected} className="material-table__checkbox" />
                           </TableCell>}
 													{columns.map((key) => {
-														return (<TableCell component="th" scope="row"  align="center" padding="default">
+														return (<TableCell component="th" scope="row"  align="left" padding="default">
 															{key.render ? key.render(d) : d[key.id]}
 															</TableCell>)
 														})}
