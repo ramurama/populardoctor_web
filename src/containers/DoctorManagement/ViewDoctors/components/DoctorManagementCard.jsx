@@ -38,15 +38,7 @@ class DoctorManagementCard extends React.Component {
 				</a>
 			</div>);
 	
-  _renderStatus = (text) => {
-		const color = (text.doctorDetails.status === 'ACTIVE') ? styles.active: styles.inactive;
-		console.log(color)
-    return (
-      <Chip
-        label={text.doctorDetails.status}
-        classes={styles.active}
-      />);
-	}
+
 
 	_renderToggle = (text) => {
 		const color = (text.doctorDetails.status === 'ACTIVE') ? false: true;
@@ -87,12 +79,8 @@ class DoctorManagementCard extends React.Component {
         id: "degree",
         numeric: false,
         disablePadding: true,
-        label: "Education"
-      },
-      {
-        id: "status",
-        label: "Status",
-        render: text => this._renderStatus(text)
+				label: "Education",
+				render: text => text.degree,
       },
       {
         id: "action",
@@ -103,7 +91,7 @@ class DoctorManagementCard extends React.Component {
 
     return (
       <Col md={12}>
-        <Card>
+        <Card style={{ height: '80vh'}}>
           <CardBody>
             <div className="card__title">
               <MaterialTable columns={columns} data={doctorList} />

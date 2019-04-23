@@ -20,7 +20,7 @@ export default class MatTable extends PureComponent {
     orderBy: 'calories',
     selected: [],
     page: 0,
-    rowsPerPage: 10,
+    rowsPerPage: 5,
   };
 
   handleRequestSort = (event, property) => {
@@ -97,8 +97,6 @@ export default class MatTable extends PureComponent {
 		console.log(data)
     return (
       <Col md={12} lg={12}>
-        <Card>
-          <CardBody>
             <div className="material-table__wrap">
               <Table className="material-table">
                 <MatTableHead
@@ -155,10 +153,8 @@ export default class MatTable extends PureComponent {
               nextIconButtonProps={{ 'aria-label': 'Next Page' }}
               onChangePage={this.handleChangePage}
               onChangeRowsPerPage={this.handleChangeRowsPerPage}
-              rowsPerPageOptions={[50,25, 10]}
+              rowsPerPageOptions={[25,10, 5]}
             />
-          </CardBody>
-        </Card>
       </Col>
     );
   }
