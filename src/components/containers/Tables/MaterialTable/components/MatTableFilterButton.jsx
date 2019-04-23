@@ -30,7 +30,7 @@ class MatTableFilterButton extends React.Component {
 
   render() {
     const { anchorEl } = this.state;
-
+		const { columns } = this.props;
     return (
       <div>
         <IconButton
@@ -48,13 +48,9 @@ class MatTableFilterButton extends React.Component {
           onClose={this.handleClose}
           className="material-table__filter-menu"
         >
-          <MenuItem onClick={this.handleSort('name')} className="material-table__filter-menu-item">Name</MenuItem>
-          <MenuItem onClick={this.handleSort('calories')} className="material-table__filter-menu-item">
-            Calories
-          </MenuItem>
-          <MenuItem onClick={this.handleSort('fat')} className="material-table__filter-menu-item">Fat</MenuItem>
-          <MenuItem onClick={this.handleSort('carbs')} className="material-table__filter-menu-item">Carbs</MenuItem>
-          <MenuItem onClick={this.handleSort('protein')} className="material-table__filter-menu-item">Protein</MenuItem>
+					{columns.map((column) => 
+						<MenuItem onClick={this.handleSort(column.id)} className="material-table__filter-menu-item">column.label</MenuItem>
+					)}
         </Menu>
       </div>
     );
