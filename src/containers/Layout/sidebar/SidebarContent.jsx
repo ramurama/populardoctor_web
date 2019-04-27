@@ -67,14 +67,14 @@ class SidebarContent extends Component {
             <SidebarLink title="Page two" route="/pages/two" onClick={this.hideSidebar} />
             <SidebarLink title="Chart" route="/pages/chartjs" onClick={this.hideSidebar} />
           </SidebarCategory> */}
-          <SidebarCategory title={USER_MANAGEMENT}>
+          <SidebarCategory title={USER_MANAGEMENT} icon='users'>
             <SidebarLink
               title={VIEW_USERS}
               route={ROUTE_VIEW_USERS}
               onClick={this.hideSidebar}
             />
           </SidebarCategory>
-          <SidebarCategory title={DOCTOR_MANAGEMENT} icon='diamond'>
+          <SidebarCategory title={DOCTOR_MANAGEMENT} icon='heart-pulse'>
             <SidebarLink
               title={CREATE_DOCTOR}
               route={ROUTE_CREATE_DOCTOR}
@@ -86,7 +86,7 @@ class SidebarContent extends Component {
               onClick={this.hideSidebar}
             />
           </SidebarCategory>
-          <SidebarCategory title={HOSPITAL_MANAGEMENT} icon='diamond'>
+          <SidebarCategory title={HOSPITAL_MANAGEMENT} icon='apartment'>
             <SidebarLink
               title={CREATE_HOSPITAL}
               route={ROUTE_CREATE_HOSPITAL}
@@ -98,7 +98,7 @@ class SidebarContent extends Component {
               onClick={this.hideSidebar}
             />
           </SidebarCategory>
-          <SidebarCategory title={SCHEDULE_MANAGEMENT} icon='diamond'>
+          <SidebarCategory title={SCHEDULE_MANAGEMENT} icon='clock'>
             <SidebarLink
               title={CREATE_SCHEDULE}
               route={ROUTE_CREATE_SCHEDULE}
