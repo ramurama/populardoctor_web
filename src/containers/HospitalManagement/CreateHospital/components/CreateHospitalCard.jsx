@@ -52,7 +52,6 @@ class CreateHospitalCard extends PureComponent {
 				name: '',
 				address: '',
 				location: '',
-				state: '',
 				pincode: '',
 				landmark: '',
 			},
