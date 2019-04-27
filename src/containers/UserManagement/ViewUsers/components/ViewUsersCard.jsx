@@ -29,16 +29,6 @@ class UserManagementCard extends React.Component {
     this.props.getUserList();
   }
 
-	renderAvatar = (text) => 
-			(<div style={{display: 'flex', width: 200}}>
-				<Avatar alt="L" src={text.doctorDetails.profileImage} classes={styles.avatar} />
-				<a style={{padding: 20}}>
-					<strong>{text.doctorDetails.fullName}</strong>
-				</a>
-			</div>);
-	
-
-
 	_renderToggle = (text) => {
 		const color = (text.status === 'ACTIVE') ? false: true;
 		const tooltext = (text.status === 'ACTIVE') ? 'Block': 'Unblock';
@@ -52,11 +42,9 @@ class UserManagementCard extends React.Component {
 		</Tooltip>)
 	}
 
-	
   render() {
     const { userDataList } = this.props;
     const columns = [
-      { id: 'id', numeric: false, disablePadding: true, label: '#' },
       { id: 'fullName', numeric: false, disablePadding: true, label: 'Name' },
       { id: 'username', numeric: false, disablePadding: true, label: 'Contact' },
       { id: 'gender', numeric: false, disablePadding: true, label: 'Gender' },

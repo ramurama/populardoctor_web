@@ -14,15 +14,16 @@ function getSorting(order, orderBy) {
   return order === 'desc' ? (a, b) => b[orderBy] < a[orderBy] : (a, b) => a[orderBy] - b[orderBy];
 }
 function getSort(value, order, orderBy){
-	console.log(value)
-	console.log(orderBy)
-	console.log(order)
-	console.log( UNDERSCORE.sortBy(value, orderBy))
-	// console.log(UNDERSCORE.chain(value).sortBy('user.age').reverse().value())
-	// console.log(UNDERSCORE.reverse(UNDERSCORE.sortBy(value, orderBy)))
 	return order === 'desc' ? UNDERSCORE.sortBy(value, orderBy) :  
 		UNDERSCORE.chain(value).sortBy('user.age').reverse().value();
 }
+
+const style = {
+	tableBody: {
+		overflow: 'scroll',
+		height: '100%'
+	}
+};
 export default class MatTable extends PureComponent {
   state = {
     order: 'asc',
@@ -110,7 +111,7 @@ export default class MatTable extends PureComponent {
 		console.log(data)
     return (
       <Col md={12} lg={12}>
-            <div className="material-table__wrap">
+            <div className="material-table__wrap" style={{height: '90%'}}>
               <Table className="material-table">
                 <MatTableHead
                   numSelected={selected.length}
@@ -121,7 +122,7 @@ export default class MatTable extends PureComponent {
                   onRequestSort={this.handleRequestSort}
                   rowCount={data.length}
                 />
-                <TableBody>
+                <TableBody classes={style.tableBody}>
                   {_data.map((d) => {
                       const isSelected = this.isSelected(d._id);
                       return (
@@ -138,7 +139,7 @@ export default class MatTable extends PureComponent {
                             <Checkbox checked={isSelected} className="material-table__checkbox" />
                           </TableCell>}
 													{columns.map((key) => {
-														return (<TableCell component="th" scope="row"  align="left" padding="default">
+														return (<TableCell component="th" scope="row"  padding="default">
 															{key.render ? key.render(d) : d[key.id]}
 															</TableCell>)
 														})}

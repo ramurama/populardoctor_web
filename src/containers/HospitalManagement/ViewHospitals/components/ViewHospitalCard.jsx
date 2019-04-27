@@ -60,24 +60,17 @@ class HospitalManagementCard extends React.Component {
   render() {
     const { hospitalList } = this.props;
     const columns = [
-      { id: "id", numeric: true, disablePadding: true, label: "#" },
       {
         id: "name",
-        numeric: false,
-        disablePadding: true,
-        label: "Hospital Name"
+				label: "Hospital Name",
       },
       {
         id: "location",
-        numeric: false,
-        disablePadding: true,
         label: "Location"
       },
-      { id: "pincode", numeric: false, disablePadding: true, label: "Pincode" },
+      { id: "pincode", label: "Pincode" },
       {
         id: "landmark",
-        numeric: false,
-        disablePadding: true,
         label: "Landmark"
       }
     ];

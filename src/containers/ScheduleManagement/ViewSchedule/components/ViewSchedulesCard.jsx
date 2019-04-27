@@ -57,7 +57,6 @@ class ScheduleManagementCard extends React.Component {
   render() {
     const { userDataList } = this.props;
     const columns = [
-      { label: '#', numeric: false, disablePadding: true, id:'id'},
 			{ label: 'Hospital Name', numeric: false, disablePadding: true, render : (text) => text.hospital.name},
 			{ label: 'Weekday', numeric: false, disablePadding: true, id: 'weekday' },
 			{ label: 'Starttime', numeric: false, disablePadding: true, id: 'startTime' },

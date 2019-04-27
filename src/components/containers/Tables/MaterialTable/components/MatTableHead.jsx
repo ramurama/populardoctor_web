@@ -43,8 +43,8 @@ export default class MatTableHead extends PureComponent {
             <TableCell
               className="material-table__cell material-table__cell--sort"
               key={row.id}
-              align="center"
-              padding={row.disablePadding ? 'none' : 'default'}
+							align={row.numeric ? 'rigth' : 'left'}
+              padding={'default'}
               sortDirection={orderBy === row.id ? order : false}
             >
               <TableSortLabel
