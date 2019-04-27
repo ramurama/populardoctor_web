@@ -1,7 +1,7 @@
 import { post, get } from './fetch';
 import Endpoint from './endpoints';
 
-export  function getDoctorList (pageNo, size) {
+export  function getDoctorList () {
 	const doctor =  `${Endpoint.doctorList}`;
 	return function (dispatch){
 		return get(doctor)
