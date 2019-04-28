@@ -9,7 +9,6 @@ import { BasicNotification } from './components/Notification';
 let notificationRU = null;
 
 const showNotification = (show, title, message) => {
-	alert(show)
 	if(!show){
 		return;
 	}

@@ -5,13 +5,14 @@ import {
 import { Field, reduxForm, SubmissionError } from 'redux-form';
 import PropTypes from 'prop-types';
 import { withTranslation } from 'react-i18next';
+import Snackbar from '@material-ui/core/Snackbar';
 import { save} from "../../../../redux/actions/hospitalActions";
 import validate from '../../../../components/Form/FormValidation/components/validate';
 import { addHospital } from '../constants/hospitalForm';
 import { UNDERSCORE } from "../../../../constants/utils";
 
 const renderField = ({
-  input, placeholder, type,  touched, error
+  input, placeholder, type, meta:{ touched, error },
 }) => (
   <div className="form__form-group-input-wrap form__form-group-input-wrap--error-above">
     <input {...input} placeholder={placeholder} type={type} />
@@ -55,6 +56,7 @@ class CreateHospitalCard extends PureComponent {
 				pincode: '',
 				landmark: '',
 			},
+			open: false,
 			errorText: {},
     };
   }
@@ -65,34 +67,36 @@ class CreateHospitalCard extends PureComponent {
 		this.setState({saveData});
 	}
 
-	_handleSubmit = () => {
-		const { saveData } = this.state;
+	_handleSubmit = ({name = '',streetName ='', building ='', location='', landmark='', pincode=0}) => {
+		const  saveData  = {
+			name,
+			streetName,
+			building,
+			location,
+			landmark,
+			pincode,
+		};
 		const errorText = {};
 		Object.keys(saveData).forEach((key) => this.validateTextData(saveData[key], key, saveData, errorText))
 		this._validatePincode(saveData.pincode, errorText);
 		const error = Object.keys(errorText).filter(key => !!errorText[key]).length;
 		if(error !== 0){
-			alert(1)
+			console.log(errorText)
 			throw new SubmissionError(errorText);
 		}
 		const data = {
 			name: saveData.name,
-			address: saveData.address,
+			address: `${saveData.streetName} ${saveData.building}`,
 			location: saveData.location,
 			landmark: saveData.landmark,
 			pincode: saveData.pincode,
 		};
 		save(data)
 		.then(response => {
-			this.props.loadData();
 			this.setState({
-				...this._clearState(),
-				isToast: true,
-				vertical: 'top',
-				horizontal: 'right',
-			});
+				open: true,
+			})
 		})
-
 	}
 
 	validateTextData = (value, key, editValue, errorText) => {
@@ -114,18 +118,19 @@ class CreateHospitalCard extends PureComponent {
 			errorText['pincode'] = addHospital['pincode'].errorText;
 		}
 	}
-
+	_handleClose = () => {
+		this.setState({show : false});
+	}
 
   render() {
     const {
-  		pristine, reset, submitting,
+  		pristine, reset, submitting, handleSubmit
     } = this.props;
-		const { errorText } = this.state;
     return (
       <Col sm="12" md={{ size: 6, offset: 3 }}>
         <Card>
           <CardBody>
-            <form className="form form--horizontal" onSubmit={this._handleSubmit}>
+            <form className="form form--horizontal" onSubmit={handleSubmit(this._handleSubmit)}>
               <div className="form__form-group">
                 <span className="form__form-group-label">Hospital Name</span>
                 <div className="form__form-group-field">
@@ -134,24 +139,31 @@ class CreateHospitalCard extends PureComponent {
                     component={renderField}
                     type="text"
 										placeholder="Hospital Name"
-										error={'Field is empty'}
-										onChange={(value) => this._handleChange('name',value)}
                   />
                 </div>
               </div>
-              <div className="form__form-group">
-                <span className="form__form-group-label">Address</span>
-                <div className="form__form-group-field">
-                  <Field
-                    name="address"
-										component="textarea"
+							<div className="form__form-group">
+								<span className="form__form-group-label">Street name</span>
+								<div className="form__form-group-field">
+									<Field
+										name="streetName"
+										component={renderField}
 										type="text"
-										placeholder={`Plot No
-																	Street`}
-										onChange={(value) => this._handleChange('address',value)}
-                  />
-                </div>
+										placeholder="Street name"
+									/>
+								</div>
               </div>
+							<div className="form__form-group">
+								<span className="form__form-group-label">Building</span>
+								<div className="form__form-group-field">
+									<Field
+										name="building"
+										component={renderField}
+										type="text"
+										placeholder="Building"
+									/>
+								</div>
+							</div>
               <div className="form__form-group">
                 <span className="form__form-group-label">Location</span>
                 <div className="form__form-group-field">
@@ -160,7 +172,6 @@ class CreateHospitalCard extends PureComponent {
 										component={renderField}
 										type="text"
 										placeholder="Location"
-										onChange={(value) => this._handleChange('location',value)}
                   />
                 </div>
               </div>
@@ -184,7 +195,6 @@ class CreateHospitalCard extends PureComponent {
 										component={renderField}
 										type="text"
 										placeholder="Landmark"
-										onChange={(value) => this._handleChange('landmark',value)}
                   />
                 </div>
               </div>
@@ -195,6 +205,17 @@ class CreateHospitalCard extends PureComponent {
                 </Button>
               </ButtonToolbar>
             </form>
+						{this.state.open && <Snackbar
+							anchorOrigin={{ vertical: 'top', horizontal:'right' }}
+							autoHideDuration={3000}
+							open={this.state.open}
+							ContentProps={{
+								'aria-describedby': 'message-id',
+							}}
+							onClose={this._handleClose}
+							message={<span id="message-id"> Hospital saved successfully</span>}
+						/>}
+
           </CardBody>
         </Card>
       </Col>
@@ -203,7 +224,7 @@ class CreateHospitalCard extends PureComponent {
 }
 
 export default reduxForm({
-  form: 'horizontal_form_validation_two', // a unique identifier for this form
+  form: 'hospital', // a unique identifier for this form
   validate,
 })(withTranslation('common')(CreateHospitalCard));
  

@@ -13,6 +13,24 @@ export const addHospital = {
 		length: 40,
 		errorText: 'Numbers and special characters are not allowed'
 	},
+	streetName: {
+		type: 'text',
+		emptyField: 'Field cannot be empty',
+		length: 40,
+		errorText: 'Numbers and special characters are not allowed'
+	},
+	building: {
+		type: 'text',
+		emptyField: 'Field cannot be empty',
+		length: 40,
+		errorText: 'Numbers and special characters are not allowed'
+	},
+	address: {
+		type: 'text',
+		emptyField: 'Field cannot be empty',
+		length: 240,
+		errorText: 'Numbers and special characters are not allowed'
+	},
 	landmark: {
 		type: 'text',
 		emptyField: 'Field cannot be empty',

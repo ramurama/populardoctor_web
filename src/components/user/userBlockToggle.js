@@ -35,7 +35,7 @@ class UserBlockToggle extends React.Component{
 	render(){
 		const { status } = this.props;
 		const toolText = status === 'ACTIVE' ? 'block' : 'unblock';
-		const color = status === 'ACTIVE' ? false: true;
+		const color = status === 'ACTIVE' ? true: false;
 		return (
 		<Container>
 			<Tooltip title={toolText}>

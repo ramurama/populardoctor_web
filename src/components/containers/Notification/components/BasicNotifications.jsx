@@ -11,7 +11,6 @@ class BasicNotifications extends PureComponent {
 
   render() {
 		const { show } = this.props;
-		console.log(show)
     return (
       <div>
 				{show && this.tigger}

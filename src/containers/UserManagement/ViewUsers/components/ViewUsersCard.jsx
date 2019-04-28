@@ -7,8 +7,7 @@ import MaterialTable from "../../../../components/containers/Tables/MaterialTabl
 import { UNDERSCORE } from "../../../../constants/utils";
 import * as Action from "../../../../redux/actions/userActions";
 import UserBlockToggle from "../../../../components/user/userBlockToggle";
-import Notifications from '../../../../components/containers/Notification/index';
-
+import Snackbar from '@material-ui/core/Snackbar';
 
 const styles = {
 	avatar: {
@@ -41,7 +40,6 @@ class UserManagementCard extends React.Component {
 	}
 
 	_handleNotification = (value) =>{
-		console.log(value)
 		this.setState({...value});
 	}
 
@@ -63,7 +61,7 @@ class UserManagementCard extends React.Component {
       { id: 'fullName', numeric: false, disablePadding: true, label: 'Name' },
       { id: 'username', numeric: false, disablePadding: true, label: 'Contact' },
       { id: 'gender', numeric: false, disablePadding: true, label: 'Gender' },
-      { id: 'action', label: 'Operation', render : (text) => this._renderToggle(text)},
+      { id: 'action', label: 'Block/Unblock', render : (text) => this._renderToggle(text)},
 
     ];
 
@@ -74,11 +72,16 @@ class UserManagementCard extends React.Component {
             <div className="card__title">
               <MaterialTable columns={columns} data={userDataList} />
             </div>
-						<Notifications
-							show={this.state.show}
-							title={`User ${this.state.userStatus}`}
-							message={this.state.message}
-						/>
+						{this.state.show && <Snackbar
+							anchorOrigin={{ vertical: 'top', horizontal:'right' }}
+							autoHideDuration={3000}
+							open={this.state.show}
+							ContentProps={{
+								'aria-describedby': 'message-id',
+							}}
+							onClose={this._handleClose}
+							message={<span id="message-id"> Hospital saved successfully</span>}
+						/>}
           </CardBody>
         </Card>
       </Col>
