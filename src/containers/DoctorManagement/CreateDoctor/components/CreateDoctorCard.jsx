@@ -19,13 +19,11 @@ const profileImage = 'https://images.pexels.com/photos/433635/pexels-photo-43363
 
 const renderField = ({
   input, placeholder, type, meta:{ touched, error },
-}) => (<div>
+}) => (
   <div className="form__form-group-input-wrap ">
     <input {...input} placeholder={placeholder} type={type} />
     {touched && error && <span className="form__form-group-error">{error}</span>}
   </div>
-	{type==='textarea' && touched && error && <span className="form__form-group-error">{error}</span>}
-	</div>
 );
 
 renderField.propTypes = {
@@ -97,6 +95,7 @@ class CreateDoctorCard extends PureComponent {
 		this.setState({ errorText });
 		const error = Object.keys(errorText).filter(key => !!errorText[key]).length;
 		if(error === 0){
+			this.setState({ active: true });
 			save(editValue)
 			.then(response => {
 				this.setState({
