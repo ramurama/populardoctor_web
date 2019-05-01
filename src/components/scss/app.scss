@@ -61,6 +61,8 @@
 @import './component/material-table';         // pages/tables/material_table/*
 @import './component/load';
 @import './component/customizer';
+@import './component/select-options.scss';
+@import './component/react-select.scss';
 
 //pages...
 @import 'containers/account';              // pages/account/* (except profile)

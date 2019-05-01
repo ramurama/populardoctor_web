@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react';
 import DatePicker from 'react-datepicker';
 import PropTypes from 'prop-types';
+import "react-datepicker/dist/react-datepicker.css";
 
 class DatePickerField extends PureComponent {
   static propTypes = {
@@ -29,11 +30,8 @@ class DatePickerField extends PureComponent {
     return (
       <div className="date-picker">
         <DatePicker
-          className="form__form-group-datepicker"
           selected={startDate}
           onChange={this.handleChange}
-          dateFormat="LL"
-          dropDownMode="select"
         />
       </div>
     );
@@ -41,8 +39,13 @@ class DatePickerField extends PureComponent {
 }
 
 const renderDatePickerField = (props) => {
-  const { input } = props;
-  return <DatePickerField {...input} />;
+	const {  input, meta } = props;
+	return (<div >
+     	<DatePickerField {...input} />
+      {meta.touched && meta.error && <span className="form__form-group-error">{meta.error}</span>}
+    </div>
+  );
+   
 };
 
 renderDatePickerField.propTypes = {

@@ -6,6 +6,7 @@ import { Field, reduxForm } from 'redux-form';
 import PropTypes from 'prop-types';
 import { withTranslation } from 'react-i18next';
 import renderDropZoneField from '../../../../shared/components/form/DropZone';
+import AvatarUploader from '../../src';
 
 const FileUploadDefault = ({ handleSubmit, reset, t }) => (
   <Col md={12} lg={6}>

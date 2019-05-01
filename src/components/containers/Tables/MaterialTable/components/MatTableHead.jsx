@@ -44,7 +44,7 @@ export default class MatTableHead extends PureComponent {
               className="material-table__cell material-table__cell--sort"
               key={row.id}
 							align={row.numeric ? 'rigth' : 'left'}
-              padding={'default'}
+							padding={'default'}
               sortDirection={orderBy === row.id ? order : false}
             >
               <TableSortLabel
@@ -53,7 +53,7 @@ export default class MatTableHead extends PureComponent {
                 onClick={this.createSortHandler(row.id)}
                 className="material-table__sort-label"
               >
-                {row.label}
+                <div style={{ whiteSpace: 'nowrap'}}>{row.label}</div>
               </TableSortLabel>
             </TableCell>
           ), this)}

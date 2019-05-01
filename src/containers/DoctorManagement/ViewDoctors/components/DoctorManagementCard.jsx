@@ -42,10 +42,7 @@ class DoctorManagementCard extends React.Component {
 	}
 	renderAvatar = (text) => 
 			(<div style={{display: 'flex', width: 200}}>
-				<Avatar alt="L" src={text.doctorDetails.profileImage} classes={styles.avatar} />
-				<a style={{padding: 20}}>
-					<strong>{text.doctorDetails.fullName}</strong>
-				</a>
+				<strong>{text.doctorDetails.fullName}</strong>
 			</div>);
 	
 	_handleNotification = (value) =>{
@@ -66,7 +63,7 @@ class DoctorManagementCard extends React.Component {
 	}
 
   render() {
-    const { doctorList } = this.props;
+		const { doctorList } = this.props;
     const columns = [
       {
         id: "name",
@@ -74,6 +71,13 @@ class DoctorManagementCard extends React.Component {
         disablePadding: true,
         label: "Name",
         render: text => this.renderAvatar(text)
+			},
+			{
+        id: "phone",
+        numeric: false,
+        disablePadding: true,
+        label: "Doctor Id",
+        render: text => text.doctorDetails.username
       },
       {
         id: "specialization",
