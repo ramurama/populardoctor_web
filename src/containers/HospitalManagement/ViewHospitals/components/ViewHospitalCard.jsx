@@ -26,7 +26,7 @@ const styles = {
 };
 class HospitalManagementCard extends React.Component {
   componentWillMount() {
-    this.props.getHospitalList('all');
+    this.props.getHospitalList("all");
   }
 
   renderAvatar = text => (
@@ -61,17 +61,35 @@ class HospitalManagementCard extends React.Component {
     const { hospitalList } = this.props;
     const columns = [
       {
+        id: "hospitalPdNumber",
+        numeric: false,
+        disablePadding: true,
+        label: "Hospital Id",
+        render: text => text.hospitalPdNumber
+      },
+      {
         id: "name",
-				label: "Hospital Name",
+        numeric: false,
+        disablePadding: true,
+        label: "Hospital Name"
       },
       {
         id: "location",
+        numeric: false,
+        disablePadding: true,
         label: "Location"
       },
-      { id: "pincode", label: "Pincode" },
+      {
+        id: "pincode",
+        label: "Pincode",
+        numeric: false,
+        disablePadding: true
+      },
       {
         id: "landmark",
-        label: "Landmark"
+        label: "Landmark",
+        numeric: false,
+        disablePadding: true
       }
     ];
 
@@ -105,7 +123,7 @@ function mapStateToProps(state) {
 }
 function mapDispatchToProps(dispatch) {
   return {
-    getHospitalList: (location) => {
+    getHospitalList: location => {
       dispatch(Action.getHospitalList(location));
     }
   };

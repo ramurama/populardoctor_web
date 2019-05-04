@@ -73,11 +73,11 @@ class DoctorManagementCard extends React.Component {
         render: text => this.renderAvatar(text)
 			},
 			{
-        id: "phone",
+        id: "doctorPdNumber",
         numeric: false,
         disablePadding: true,
         label: "Doctor Id",
-        render: text => text.doctorDetails.username
+        render: text => text.doctorPdNumber,
       },
       {
         id: "specialization",

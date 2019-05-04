@@ -6,7 +6,7 @@ import { Field, reduxForm, SubmissionError } from 'redux-form';
 import PropTypes from 'prop-types';
 import { withTranslation } from 'react-i18next';
 import Snackbar from '@material-ui/core/Snackbar';
-import { save} from "../../../../redux/actions/hospitalActions";
+import { save } from "../../../../redux/actions/doctorActions";
 import validate from '../../../../components/Form/FormValidation/components/validate';
 import { addDoctor, emptyField } from '../constants/doctorForm';
 import { UNDERSCORE } from "../../../../constants/utils";
@@ -279,7 +279,7 @@ class CreateDoctorCard extends PureComponent {
 							'aria-describedby': 'message-id',
 						}}
 						onClose={this._handleClose}
-						message={<span id="message-id"> Hospital saved successfully</span>}
+						message={<span id="message-id"> Doctor saved successfully</span>}
 					/>
         </Card>
       
