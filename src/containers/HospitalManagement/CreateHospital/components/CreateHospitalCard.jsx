@@ -81,7 +81,6 @@ class CreateHospitalCard extends PureComponent {
 		this._validatePincode(saveData.pincode, errorText);
 		const error = Object.keys(errorText).filter(key => !!errorText[key]).length;
 		if(error !== 0){
-			console.log(errorText)
 			throw new SubmissionError(errorText);
 		}
 		const data = {

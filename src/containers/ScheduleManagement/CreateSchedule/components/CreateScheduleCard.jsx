@@ -5,13 +5,14 @@ import { connect } from "react-redux";
 import { withTranslation } from "react-i18next";
 import AddIcon from "mdi-react/AddIcon";
 import DeleteIcon from "mdi-react/DeleteIcon";
+import { addSchedule, emptyField } from '../constants/AddScheduleConfig';
 import * as Action from "../../../../redux/actions/scheduleActions";
 import validate from "../../../../components/Form/FormValidation/components/validate";
 import renderSelectField from "../../../../components/shared/components/form/Select";
 import renderDatePicker from "../../../../components/shared/components/form/DatePicker";
 import renderToggleButtonField from "../../../../components/shared/components/form/ToggleButton";
 import { UNDERSCORE } from "../../../../constants/utils";
-
+const moment = require('moment');
 const weekDays = [
   {
     value: "Mon",
@@ -72,13 +73,81 @@ class CreateScheduleCard extends React.Component {
     this.props.getHospitalList();
   }
 
-  _handleSubmit = () => {};
+  _handleSubmit = ({doctor='', hospital='', weekday='', fastrack=false, startTime='', endTime=''}) => {
+		alert(JSON.stringify(addSchedule))
+		const editValue = {
+			doctor,
+			hospital,
+			weekday,
+		};
+		const { tokenList } = this.state;
+		const errorText = {};
+		Object.keys(editValue).forEach((key) => this._validateScheduleFields(key, editValue[key], errorText))
+		this._validateTokens(this._parseToken(tokenList, fastrack), errorText);
+		const error = Object.keys(errorText).filter(key => !!errorText[key]).length;
+		if(error !== 0){
+			throw new SubmissionError(errorText);
+			return;
+		}
+		// this._validateTokens(this._parseToken(tokenList, fastrack));
+		editValue.tokens = this._parseToken(tokenList, fastrack);
+		editValue.startTime= moment(editValue.fromTime).format('hh:mm A');
+		editValue.endTime = moment(editValue.endTime).format('hh:mm A');
+		editValue.hospitalId = editValue.hospital.value;
+		editValue.doctorId = editValue.doctor.value;
+		this.setState({active: true});
+		Action.save(editValue)
+		.then(response => {
+			this.setState({
+				...this.clearState(),
+				open: true,
+				vertical: 'top',
+				horizontal: 'right',
+			});
+		});
+	};
+
   _parseList = (dataList, key) => {
     return dataList
       ? dataList.map(data => ({ value: data[key], label: data.name }))
       : [];
 	};
-	
+
+	_parseToken = (tokenList, fastrack) => {
+		const dataList = [];
+		tokenList.forEach((token) => {
+			if(!UNDERSCORE.isEmpty(token.tokenNo) && !UNDERSCORE.isEmpty(token.tokenType) &&
+				token.startTime && token.endTime){
+					const data = {
+						tokenNo: token.tokenNo,
+						tokenType: token.tokenType,
+						tokenTime: `${this._formatDate(token.startTime)} - ${this._formatDate(token.endTime)}`,
+					};
+					dataList.push(data);
+			}
+		});
+		if(!UNDERSCORE.isEmpty(fastrack)){
+			dataList.push(fastrack);
+		}
+		return dataList;
+	}
+
+	_validateScheduleFields = (key, value, errorText) => {
+		if(UNDERSCORE.isEmpty(value)){
+			errorText[key] = addSchedule[key].emptyField;
+			if(addSchedule[key].type === 'date' && !!value){
+				errorText[key] = '';
+			}
+			
+		}
+	}
+
+	_validateTokens = (tokenList,errorText) => {
+		if(tokenList.length === 0){
+			errorText.tokens = emptyField;
+		}
+	}
+
 	_handleAddToken = () => {
 		const {
 			tokenList
@@ -143,7 +212,9 @@ class CreateScheduleCard extends React.Component {
 	}
 
   render() {
-    const { handleSubmit } = this.props;
+		const {
+			pristine, reset, submitting, handleSubmit
+		} = this.props;
 
     const doctorList = this._parseList(this.props.doctorList, "pdNumber");
     const hospitalList = this._parseList(this.props.hospitalList, "pdNumber");
@@ -225,6 +296,12 @@ class CreateScheduleCard extends React.Component {
                     </div>
                   </Col>
                   <Col md={6} sm={12}>
+									<ButtonToolbar className="form__button-toolbar">
+										<Button color="primary" type="submit" >Save</Button>
+										<Button type="button" onClick={reset} disabled={pristine || submitting}>
+											Cancel
+										</Button>
+									</ButtonToolbar>
                     <div className="form__form-group">
                       <h5 className="bold-text">Add Token</h5>
                     </div>
