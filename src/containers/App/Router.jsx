@@ -11,6 +11,10 @@ import CreateHospital from '../HospitalManagement/CreateHospital/index';
 import ViewHospitals from '../HospitalManagement/ViewHospitals/index';
 import CreateSchedule from '../ScheduleManagement/CreateSchedule/index';
 import ViewSchedules from '../ScheduleManagement/ViewSchedule/index';
+import Announcement from '../Announcement';
+import CreateFrontdeskUser from '../FrontdeskUsers/CreateFrontdeskUser';
+import ViewFrontdeskUser from '../FrontdeskUsers/ViewFrontdeskUser';
+import LinkFrontdeskUser from '../FrontdeskUsers/LinkFrontdeskUser';
 
 import {
   ROUTE_CREATE_DOCTOR,
@@ -19,7 +23,11 @@ import {
   ROUTE_VIEW_HOSPITALS,
   ROUTE_CREATE_SCHEDULE,
   ROUTE_VIEW_SCHEDULES,
-  ROUTE_VIEW_USERS
+  ROUTE_VIEW_USERS,
+  ROUTE_ANNOUNCEMENT,
+  ROUTE_CREATE_FRONTDESK_USER,
+  ROUTE_VIEW_FRONTDESK_USER,
+  ROUTE_LINK_FRONTDESK_USER
 } from '../../constants/routes';
 
 const Pages = () => (
@@ -31,6 +39,10 @@ const Pages = () => (
     <Route path={ROUTE_VIEW_HOSPITALS} component={ViewHospitals} />
     <Route path={ROUTE_CREATE_SCHEDULE} component={CreateSchedule} />
     <Route path={ROUTE_VIEW_SCHEDULES} component={ViewSchedules} />
+    <Route path={ROUTE_ANNOUNCEMENT} component={Announcement} />
+    <Route path={ROUTE_CREATE_FRONTDESK_USER} component={CreateFrontdeskUser} />
+    <Route path={ROUTE_VIEW_FRONTDESK_USER} component={ViewFrontdeskUser} />
+    <Route path={ROUTE_LINK_FRONTDESK_USER} component={LinkFrontdeskUser} />
   </Switch>
 );
 

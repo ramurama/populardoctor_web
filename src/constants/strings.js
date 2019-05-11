@@ -10,3 +10,7 @@ export const SCHEDULE_MANAGEMENT = 'Schedule Management';
 export const CREATE_SCHEDULE = 'Create Schedule';
 export const VIEW_SCHDULES = 'View Schedules';
 export const SETTINGS = 'Settings';
+export const ANNOUNCEMENT = 'Announcement';
+export const FRONTDESK_USERS = 'Front-Desk Users';
+export const CREATE_USER = 'Create User';
+export const LINK_USER = 'Link User';

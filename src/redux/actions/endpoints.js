@@ -25,6 +25,9 @@ const endpoints = {
 	getFrontdeskList: '/api/v1/admin/getFrontdeskUsers/',
 	getScheduleDoctors: '/api/v1/admin/getScheduleDoctors/',
 	getScheduleHospitals: '/api/v1/admin/getScheduleHospitals',
+
+	sendAnnouncement: '/api/v1/messages/push',
+	getAnnouncements: '/api/v1/admin/getAnnouncements'
 };
 
 export default endpoints;

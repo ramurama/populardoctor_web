@@ -14,7 +14,11 @@ import {
   SCHEDULE_MANAGEMENT,
   CREATE_SCHEDULE,
   VIEW_SCHDULES,
-  SETTINGS
+  SETTINGS,
+  FRONTDESK_USERS,
+  CREATE_USER,
+  LINK_USER,
+  ANNOUNCEMENT
 } from '../../../constants/strings';
 import {
   ROUTE_CREATE_DOCTOR,
@@ -23,7 +27,11 @@ import {
   ROUTE_VIEW_HOSPITALS,
   ROUTE_CREATE_SCHEDULE,
   ROUTE_VIEW_SCHEDULES,
-  ROUTE_VIEW_USERS
+  ROUTE_VIEW_USERS,
+  ROUTE_CREATE_FRONTDESK_USER,
+  ROUTE_VIEW_FRONTDESK_USER,
+  ROUTE_LINK_FRONTDESK_USER,
+  ROUTE_ANNOUNCEMENT
 } from '../../../constants/routes';
 
 class SidebarContent extends Component {
@@ -41,7 +49,7 @@ class SidebarContent extends Component {
   render() {
     const { changeToDark, changeToLight } = this.props;
     return (
-      <div className='sidebar__content'>
+      <div className="sidebar__content">
         {/* <ul className='sidebar__block'>
           <SidebarLink title="Log In" icon="exit" route="/log_in" onClick={this.hideSidebar} />
           <SidebarCategory title='Layout' icon='layers'>
@@ -61,20 +69,20 @@ class SidebarContent extends Component {
             </button>
           </SidebarCategory>
         </ul> */}
-        <ul className='sidebar__block'>
+        <ul className="sidebar__block">
           {/* <SidebarCategory title="Example Pages" icon="diamond">
             <SidebarLink title="Page one" route="/pages/one" onClick={this.hideSidebar} />
             <SidebarLink title="Page two" route="/pages/two" onClick={this.hideSidebar} />
             <SidebarLink title="Chart" route="/pages/chartjs" onClick={this.hideSidebar} />
           </SidebarCategory> */}
-          <SidebarCategory title={USER_MANAGEMENT} icon='users'>
+          <SidebarCategory title={USER_MANAGEMENT} icon="users">
             <SidebarLink
               title={VIEW_USERS}
               route={ROUTE_VIEW_USERS}
               onClick={this.hideSidebar}
             />
           </SidebarCategory>
-          <SidebarCategory title={DOCTOR_MANAGEMENT} icon='heart-pulse'>
+          <SidebarCategory title={DOCTOR_MANAGEMENT} icon="heart-pulse">
             <SidebarLink
               title={CREATE_DOCTOR}
               route={ROUTE_CREATE_DOCTOR}
@@ -86,7 +94,7 @@ class SidebarContent extends Component {
               onClick={this.hideSidebar}
             />
           </SidebarCategory>
-          <SidebarCategory title={HOSPITAL_MANAGEMENT} icon='apartment'>
+          <SidebarCategory title={HOSPITAL_MANAGEMENT} icon="apartment">
             <SidebarLink
               title={CREATE_HOSPITAL}
               route={ROUTE_CREATE_HOSPITAL}
@@ -98,7 +106,7 @@ class SidebarContent extends Component {
               onClick={this.hideSidebar}
             />
           </SidebarCategory>
-          <SidebarCategory title={SCHEDULE_MANAGEMENT} icon='clock'>
+          <SidebarCategory title={SCHEDULE_MANAGEMENT} icon="clock">
             <SidebarLink
               title={CREATE_SCHEDULE}
               route={ROUTE_CREATE_SCHEDULE}
@@ -110,6 +118,29 @@ class SidebarContent extends Component {
               onClick={this.hideSidebar}
             />
           </SidebarCategory>
+          <SidebarCategory title={FRONTDESK_USERS} icon="screen">
+            <SidebarLink
+              title={CREATE_USER}
+              route={ROUTE_CREATE_FRONTDESK_USER}
+              onClick={this.hideSidebar}
+            />
+            <SidebarLink
+              title={VIEW_USERS}
+              route={ROUTE_VIEW_FRONTDESK_USER}
+              onClick={this.hideSidebar}
+            />
+            <SidebarLink
+              title={LINK_USER}
+              route={ROUTE_LINK_FRONTDESK_USER}
+              onClick={this.hideSidebar}
+            />
+          </SidebarCategory>
+          <SidebarLink
+            title={ANNOUNCEMENT}
+            route={ROUTE_ANNOUNCEMENT}
+            onClick={this.hideSidebar}
+            icon="bullhorn"
+          />
         </ul>
       </div>
     );
