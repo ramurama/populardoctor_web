@@ -12,7 +12,7 @@ import { addDoctor, emptyField } from '../constants/doctorForm';
 import { UNDERSCORE } from "../../../../constants/utils";
 import renderSelectField from '../../../../components/shared/components/form/Select';
 import renderDatePicker from '../../../../components/shared/components/form/DatePicker';
-
+import renderDropZoneField from '../../../../components/shared/components/form/DropZone';
 const moment = require('moment');
 
 const profileImage = 'https://images.pexels.com/photos/433635/pexels-photo-433635.jpeg?auto=compress%5Cu0026cs=tinysrgb%5Cu0026dpr=2%5Cu0026h=750%5Cu0026w=1260'
@@ -267,7 +267,19 @@ class CreateDoctorCard extends PureComponent {
 						/>}
 						</Col>
 						<Col md={6} sm={12}>
-							
+						<Card style={{ height: 150}}>
+							<CardBody>
+								<div className="card__title">
+									<h5 className="subhead">For files upload</h5>
+								</div>
+								<form className="form" onSubmit={handleSubmit}>
+									<Field
+										name="files"
+										component={renderDropZoneField}
+									/>
+								</form>
+							</CardBody>
+						</Card>
 						</Col>
 						</Row>
           </CardBody>
@@ -288,7 +300,7 @@ class CreateDoctorCard extends PureComponent {
 }
 
 export default reduxForm({
-  form: 'hospital', // a unique identifier for this form
+  form: 'doctor', // a unique identifier for this form
   validate,
 })(withTranslation('common')(CreateDoctorCard));
  
