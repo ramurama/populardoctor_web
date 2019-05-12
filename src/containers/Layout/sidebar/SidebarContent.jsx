@@ -18,7 +18,8 @@ import {
   FRONTDESK_USERS,
   CREATE_USER,
   LINK_USER,
-  ANNOUNCEMENT
+  ANNOUNCEMENT,
+  BOOKINGS
 } from '../../../constants/strings';
 import {
   ROUTE_CREATE_DOCTOR,
@@ -31,7 +32,8 @@ import {
   ROUTE_CREATE_FRONTDESK_USER,
   ROUTE_VIEW_FRONTDESK_USER,
   ROUTE_LINK_FRONTDESK_USER,
-  ROUTE_ANNOUNCEMENT
+  ROUTE_ANNOUNCEMENT,
+  ROUTE_VIEW_BOOKINGS
 } from '../../../constants/routes';
 
 class SidebarContent extends Component {
@@ -140,6 +142,12 @@ class SidebarContent extends Component {
             route={ROUTE_ANNOUNCEMENT}
             onClick={this.hideSidebar}
             icon="bullhorn"
+          />
+          <SidebarLink
+            title={BOOKINGS}
+            route={ROUTE_VIEW_BOOKINGS}
+            onClick={this.hideSidebar}
+            icon="tag"
           />
         </ul>
       </div>

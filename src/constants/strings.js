@@ -14,3 +14,5 @@ export const ANNOUNCEMENT = 'Announcement';
 export const FRONTDESK_USERS = 'Front-Desk Users';
 export const CREATE_USER = 'Create User';
 export const LINK_USER = 'Link User';
+export const BOOKINGS = 'Bookings';
+export const BOOKING_DETAIL = 'Booking Detail';

@@ -12,3 +12,5 @@ export const ROUTE_VIEW_FRONTDESK_USER =
   '/pages/frontdeskUsers/viewFrontdeskUsers';
 export const ROUTE_LINK_FRONTDESK_USER =
   '/pages/frontdeskUsers/linkFrontdeskUser';
+export const ROUTE_VIEW_BOOKINGS = '/pages/bookings/viewBookings';
+export const ROUTE_VIEW_BOOKING_DETAIL = '/pages/bookings/viewBookingDetail';
