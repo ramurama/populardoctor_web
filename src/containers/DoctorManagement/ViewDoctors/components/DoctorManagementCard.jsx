@@ -1,88 +1,91 @@
-import React from "react";
-import { Card, CardBody, Col } from "reactstrap";
-import PropTypes from "prop-types";
-import { withRouter } from "react-router";
-import { connect } from "react-redux";
-import MaterialTable from "../../../../components/containers/Tables/MaterialTable/index";
-import { UNDERSCORE } from "../../../../constants/utils";
-import * as Action from "../../../../redux/actions/doctorActions";
-import UserBlockToggle from "../../../../components/user/userBlockToggle";
+import React from 'react';
+import { Card, CardBody, Col } from 'reactstrap';
+import PropTypes from 'prop-types';
+import { withRouter } from 'react-router';
+import { connect } from 'react-redux';
+import MaterialTable from '../../../../components/containers/Tables/MaterialTable/index';
+import { UNDERSCORE } from '../../../../constants/utils';
+import * as Action from '../../../../redux/actions/doctorActions';
+import UserBlockToggle from '../../../../components/user/userBlockToggle';
 
 class DoctorManagementCard extends React.Component {
-
-
   componentWillMount() {
-		this._onLoad();
+    this._onLoad();
     this.props.getSpecialization();
   }
 
-	_onLoad = () => {
-		this.props.getDoctorList();;
-	}
-	renderDoctorCell = (text) => 
-			(<div style={{display: 'flex', width: 200}}>
-				<strong>{text.doctorDetails.fullName}</strong>
-			</div>);
-	
-	_renderToggle = (row) => {
-		return (
-			<UserBlockToggle
-				data={row}
-				status={row.doctorDetails.status}
-				id={row.userId}
-				loadData={this._onLoad}
-				afterToggle={(value) => this._handleNotification(value)}
-			/>
-		)
-	}
+  _onLoad = () => {
+    this.props.getDoctorList();
+  };
+  renderDoctorCell = text => (
+    <div style={{ display: 'flex', width: 200 }}>
+      <strong>{text.doctorDetails.fullName}</strong>
+    </div>
+  );
+
+  _handleNotification = value => {
+    // this.setState({...value});
+  };
+
+  _renderToggle = row => {
+    return (
+      <UserBlockToggle
+        data={row}
+        status={row.doctorDetails.status}
+        id={row.userId}
+        loadData={this._onLoad}
+        afterToggle={value => this._handleNotification(value)}
+      />
+    );
+  };
 
   render() {
-		const { doctorList } = this.props;
+    const { doctorList } = this.props;
     const columns = [
       {
-        id: "name",
+        id: 'name',
         numeric: false,
         disablePadding: true,
-        label: "Name",
+        label: 'Name',
         render: text => this.renderDoctorCell(text)
-			},
-			{
-        id: "doctorPdNumber",
-        numeric: false,
-        disablePadding: true,
-        label: "Doctor Id",
-        render: text => text.doctorPdNumber,
       },
       {
-        id: "specialization",
+        id: 'doctorPdNumber',
         numeric: false,
         disablePadding: true,
-        label: "Specialization"
+        label: 'Doctor Id',
+        render: text => text.doctorPdNumber
       },
       {
-        id: "phone",
+        id: 'specialization',
         numeric: false,
         disablePadding: true,
-        label: "Contact",
+        label: 'Specialization'
+      },
+      {
+        id: 'phone',
+        numeric: false,
+        disablePadding: true,
+        label: 'Contact',
         render: text => text.doctorDetails.username
       },
       {
-        id: "degree",
+        id: 'degree',
         numeric: false,
         disablePadding: true,
-				label: "Education",
-				render: text => text.degree,
+        label: 'Education',
+        render: text => text.degree
       },
       {
-        id: "action",
-				label: "Operation",
-				render: text => this._renderToggle(text)
+        id: 'action',
+        label: 'Operation',
+        render: text => this._renderToggle(text)
       }
     ];
 
     return (
       <Col md={12}>
-        <Card style={{ height: '80vh'}}>
+        <Card style={{ height: '80vh' }}>
           <CardBody>
             <div className="card__title">
               <MaterialTable columns={columns} data={doctorList} />

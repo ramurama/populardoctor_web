@@ -40,7 +40,7 @@ class UserManagementCard extends React.Component {
 	}
 
 	_handleNotification = (value) =>{
-		this.setState({...value});
+		// this.setState({...value});
 	}
 
 	_renderToggle = (row) => {
