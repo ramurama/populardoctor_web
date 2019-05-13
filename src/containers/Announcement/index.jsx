@@ -8,7 +8,6 @@ import Moment from 'moment-timezone';
 import { sendPushMessage } from './components/commons';
 import Snackbar from '@material-ui/core/Snackbar';
 import _ from 'underscore';
-import Modal from '../../components/custom/Modal';
 
 class AnnouncementPage extends React.Component {
   constructor(props) {

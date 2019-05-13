@@ -30,7 +30,7 @@ export default class MatTable extends PureComponent {
     orderBy: '_id',
     selected: [],
     page: 0,
-    rowsPerPage: 5,
+    rowsPerPage: 25,
   };
 
   handleRequestSort = (event, property) => {
@@ -164,7 +164,7 @@ export default class MatTable extends PureComponent {
               nextIconButtonProps={{ 'aria-label': 'Next Page' }}
               onChangePage={this.handleChangePage}
               onChangeRowsPerPage={this.handleChangeRowsPerPage}
-              rowsPerPageOptions={[25,10, 5]}
+              rowsPerPageOptions={[100, 50, 25]}
             />
       </Col>
     );
