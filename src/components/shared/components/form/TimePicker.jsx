@@ -1,25 +1,25 @@
-import React, { PureComponent } from 'react';
-import PropTypes from 'prop-types';
-import TimePicker from 'rc-time-picker';
-import AvTimerIcon from 'mdi-react/AvTimerIcon';
-import classNames from 'classnames';
+import React, { PureComponent } from "react";
+import PropTypes from "prop-types";
+import TimePicker from "rc-time-picker";
+
+import "rc-time-picker/assets/index.css";
 
 class TimePickerField extends PureComponent {
   static propTypes = {
     onChange: PropTypes.func.isRequired,
     name: PropTypes.string.isRequired,
-    timeMode: PropTypes.bool.isRequired,
+    timeMode: PropTypes.bool.isRequired
   };
 
   state = {
-    open: false,
+    open: false
   };
 
   setOpen = ({ open }) => {
     this.setState({ open });
   };
 
-  toggleOpen = (e) => {
+  toggleOpen = e => {
     e.preventDefault();
     this.setState(prevState => ({ open: !prevState.open }));
   };
@@ -27,54 +27,47 @@ class TimePickerField extends PureComponent {
   render() {
     const { name, onChange, timeMode } = this.props;
     const { open } = this.state;
-    const btnClass = classNames({
-      'form__form-group-button': true,
-      active: open,
-    });
 
     return (
-      <div className="form__form-group-field">
-        <TimePicker
-          open={open}
-          onOpen={this.setOpen}
-          onClose={this.setOpen}
-          name={name}
-          onChange={onChange}
-          showSecond={false}
-          use12Hours={timeMode}
-        />
-        <button
-          className={btnClass}
-          type="button"
-          onClick={this.toggleOpen}
-        >
-          <AvTimerIcon />
-        </button>
-      </div>
+      <TimePicker
+        open={open}
+        onOpen={this.setOpen}
+        onClose={this.setOpen}
+        name={name}
+        onChange={onChange}
+        showSecond={false}
+        use12Hours={timeMode}
+      />
     );
   }
 }
 
-const renderTimePickerField = (props) => {
-  const { input, timeMode } = props;
+const renderTimePickerField = props => {
+  const { input, meta, timeMode, width } = props;
   return (
-    <TimePickerField
-      {...input}
-      timeMode={timeMode}
-    />
+    <div className="form__form-group-input-wrap">
+      <div style={{ width: width }}>
+        <TimePickerField {...input} timeMode={timeMode} />
+      </div>
+      {meta.touched && meta.error && (
+        <span className="form__form-group-error" style={{ width: width }}>
+          {meta.error}
+        </span>
+      )}
+    </div>
   );
 };
 
 renderTimePickerField.propTypes = {
   input: PropTypes.shape({
     onChange: PropTypes.func,
-    name: PropTypes.string,
+    name: PropTypes.string
   }).isRequired,
-  timeMode: PropTypes.bool,
+  timeMode: PropTypes.bool
 };
 
 renderTimePickerField.defaultProps = {
-  timeMode: false,
+  timeMode: false
 };
 
 export default renderTimePickerField;

@@ -12,21 +12,11 @@ class UserBlockToggle extends React.Component{
 		if(status === 'ACTIVE') {
 			return this.props.blockUser({userId: id})
 			.then(() => {
-				this.props.afterToggle({
-					show: true,
-					userStatus: 'Blocked',
-					message: 'Now the Doctor is not visible to customer and frontdesk',
-				})
 				this.props.loadData();
 			});
 		}else{
 			return this.props.unblockUser({userId: id})
 			.then(() => {
-				this.props.afterToggle({
-					show: true,
-					userStatus: 'Blocked',
-					message: 'Now the Doctor is not visible to customer and frontdesk',
-				})
 				this.props.loadData();
 			});
 		}

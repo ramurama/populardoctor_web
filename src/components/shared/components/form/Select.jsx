@@ -1,39 +1,62 @@
-import React, { PureComponent } from 'react';
-import Select from 'react-select';
-import PropTypes from 'prop-types';
+import React, { PureComponent } from "react";
+import Select from "react-select";
+import PropTypes from "prop-types";
+import MenuItem from '@material-ui/core/MenuItem';
+import Paper from '@material-ui/core/Paper';
 
+function Option(props) {
+  return (
+    <MenuItem
+      buttonRef={props.innerRef}
+      selected={props.isFocused}
+      component="div"
+      style={{
+        fontWeight: props.isSelected ? 500 : 400,
+      }}
+      {...props.innerProps}
+    >
+      {`${props.label} (${props.value}) `}
+    </MenuItem>
+  );
+}
+
+const components = {
+  Option,
+  
+};
 class SelectField extends PureComponent {
   static propTypes = {
     onChange: PropTypes.func.isRequired,
     name: PropTypes.string.isRequired,
     placeholder: PropTypes.string,
-    options: PropTypes.arrayOf(PropTypes.shape({
-      value: PropTypes.string,
-      label: PropTypes.string,
-    })),
+    options: PropTypes.arrayOf(
+      PropTypes.shape({
+        value: PropTypes.string,
+        label: PropTypes.string
+      })
+    ),
     value: PropTypes.oneOfType([
       PropTypes.string,
       PropTypes.shape({
         value: PropTypes.string,
-        label: PropTypes.string,
-      }),
-    ]).isRequired,
+        label: PropTypes.string
+      })
+    ]).isRequired
   };
 
   static defaultProps = {
-    placeholder: '',
-    options: [],
+    placeholder: "",
+    options: []
   };
 
-  handleChange = (selectedOption) => {
-    const { onChange } = this.props;
+  handleChange = selectedOption => {
+		const { onChange } = this.props;
+		
     onChange(selectedOption);
   };
 
   render() {
-    const {
-      value, name, placeholder, options,
-    } = this.props;
+    const { value, name, placeholder, options, renderId } = this.props;
 
     return (
       <Select
@@ -42,52 +65,53 @@ class SelectField extends PureComponent {
         onChange={this.handleChange}
         options={options}
         clearable={false}
-        className="react-select"
+				className="react-select"
         placeholder={placeholder}
-        classNamePrefix="react-select"
+				classNamePrefix="react-select"
+				components={renderId && {...components}}
       />
     );
   }
 }
 
-const renderSelectField = (props) => {
-  const {
-    input, meta, options, placeholder, width
-  } = props;
+const RenderSelectField = props => {
+  const { input, meta, options, placeholder, width, renderId, onChange } = props;
   return (
     <div className="form__form-group-input-wrap">
-			<div style={{width: width}}>
-				<SelectField
-					{...input}
-					options={options}
-					placeholder={placeholder}
-				/>
-			</div>
-      {meta.touched && meta.error && <span className="form__form-group-error">{meta.error}</span>}
+      <div style={{ width: width }}>
+        <SelectField {...input} options={options} placeholder={placeholder} renderId={renderId} onChange={onChange}/>
+      </div>
+      {meta.touched && meta.error && (
+        <span style={{ width: width }} className="form__form-group-error">
+          {meta.error}
+        </span>
+      )}
     </div>
   );
 };
 
-renderSelectField.propTypes = {
+RenderSelectField.propTypes = {
   input: PropTypes.shape({
     onChange: PropTypes.func,
-    name: PropTypes.string,
+    name: PropTypes.string
   }).isRequired,
   meta: PropTypes.shape({
     touched: PropTypes.bool,
-    error: PropTypes.string,
+    error: PropTypes.string
   }),
-  options: PropTypes.arrayOf(PropTypes.shape({
-    value: PropTypes.string,
-    label: PropTypes.string,
-  })),
-  placeholder: PropTypes.string,
+  options: PropTypes.arrayOf(
+    PropTypes.shape({
+      value: PropTypes.string,
+      label: PropTypes.string
+    })
+  ),
+  placeholder: PropTypes.string
 };
 
-renderSelectField.defaultProps = {
+RenderSelectField.defaultProps = {
   meta: null,
   options: [],
-  placeholder: '',
+  placeholder: ""
 };
 
-export default renderSelectField;
+export default RenderSelectField;

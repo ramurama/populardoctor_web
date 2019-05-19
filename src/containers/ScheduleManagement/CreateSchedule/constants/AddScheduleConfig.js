@@ -13,8 +13,7 @@ export const addSchedule = {
 	},
 	weekday: {
 		type: 'text',
-		emptyField: 'Choose the above day',
-		errorText: 'Numbers and special characters are not allowed'
+		emptyField: 'Field cannot be empty',
 	},
 	fromTime: {
 		type: 'date',
