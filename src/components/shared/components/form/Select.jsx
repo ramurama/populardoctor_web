@@ -6,17 +6,9 @@ import Paper from "@material-ui/core/Paper";
 
 function Option(props) {
   return (
-    <MenuItem
-      buttonRef={props.innerRef}
-      selected={props.isFocused}
-      component="div"
-      style={{
-        fontWeight: props.isSelected ? 500 : 400
-      }}
-      {...props.innerProps}
-    >
-      {`${props.label} (${props.value}) `}
-    </MenuItem>
+   <option>
+ 		{`${props.label} (${props.value}) `}
+	 </option>
   );
 }
 
@@ -54,20 +46,27 @@ class SelectField extends PureComponent {
     onChange(selectedOption);
   };
 
-  render() {
-    const { value, name, placeholder, options, renderId } = this.props;
+	setIdWithValue = (list) =>{
+		list.forEach(data => {data.label = `${data.label} (${data.value}) `})
+		return list;
+	}
 
+  render() {
+		const { value, name, placeholder, options, renderId } = this.props;
+		let optionList = options;
+		if(renderId){
+			optionList = this.setIdWithValue(optionList);
+		}
     return (
       <Select
         name={name}
         value={value}
         onChange={e => this.handleChange(e)}
-        options={options}
+        options={optionList}
         clearable={false}
         className="react-select"
         placeholder={placeholder}
         classNamePrefix="react-select"
-        components={renderId && { ...components }}
       />
     );
   }
