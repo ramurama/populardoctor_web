@@ -41,8 +41,9 @@ class SelectField extends PureComponent {
   };
 
   handleChange = selectedOption => {
-    const { onChange } = this.props;
-
+		const { onChange } = this.props;
+		console.log(selectedOption)
+		console.log(this.props.options)
     onChange(selectedOption);
   };
 
@@ -53,9 +54,11 @@ class SelectField extends PureComponent {
 
   render() {
 		const { value, name, placeholder, options, renderId } = this.props;
-		let optionList = options;
+		let optionList = [];
 		if(renderId){
-			optionList = this.setIdWithValue(optionList);
+			optionList = this.setIdWithValue(options);
+		}else{
+			optionList = options; 
 		}
     return (
       <Select

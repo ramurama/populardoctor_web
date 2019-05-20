@@ -53,11 +53,11 @@ const weekDays = [
 const TokenType = [
   {
     label: "PREMIUM",
-    value: "premium"
+    value: "REGULAR"
   },
   {
     label: "REGULAR",
-    value: "regular"
+    value: "REGULAR"
   }
 ];
 
@@ -259,8 +259,9 @@ class CreateScheduleCard extends React.Component {
         {tokenList &&
           tokenList.map((data, index) => (
             <div>
-              <div className="form__form-group">
-                <div style={{ display: "flex", flexDirection: "row" }}>
+              <div>
+								<div style={{display: 'flex', flexDirection: 'row'}}>
+								<div style={{width: 120, padding:'0px 8px'}}>
                   <Field
                     name={"tokentype" + index}
                     component={RenderSelectField}
@@ -272,20 +273,24 @@ class CreateScheduleCard extends React.Component {
                     width={100}
                     options={TokenType}
                   />
-                  <Field
-                    name={"tokenNo" + index}
-                    component={renderField}
-                    onChange={event =>
-                      this._handleTokenChange(
-                        index,
-                        "tokenNo",
-                        event.target.value
-                      )
-                    }
-                    type="number"
-                    value={data.tokenNo}
-                    placeholder="Token No"
-                  />
+									</div>
+									<div style={{width: 240, padding:'0px 8px'}}>
+										<Field
+											name={"tokenNo" + index}
+											component={renderField}
+											onChange={event =>
+												this._handleTokenChange(
+													index,
+													"tokenNo",
+													event.target.value
+												)
+											}
+											type="number"
+											value={data.tokenNo}
+											placeholder="Token No"
+										/>
+									</div>
+									<div style={{width: 120, padding:'0px 8px'}}>
                   <Field
                     name="startTime"
                     component={renderTimePickerField}
@@ -300,6 +305,8 @@ class CreateScheduleCard extends React.Component {
                     width={100}
                     timeMode
                   />
+									</div>
+									<div style={{width: 120, padding:'0px 8px'}}>
                   <Field
                     name="endTime"
                     component={renderTimePickerField}
@@ -314,25 +321,26 @@ class CreateScheduleCard extends React.Component {
                     width={100}
                     timeMode
                   />
-                </div>
-                <ButtonToolbar>
+									</div>
+               
                   <Button
-                    className="icon"
+                    className="icon btn-danger"
                     onClick={() => this._handleDeleteToken(data)}
                   >
-                    <span class="lnr lnr-trash" />
+                    <span class="lnr lnr-trash text-white" />
                   </Button>
                   {tokenList.length - 1 === index && (
                     <Button
+											className="icon btn-primary"
                       outline
                       onClick={() => this._handleAddToken(index + 1)}
                     >
-                      <span class="lnr lnr-plus-circle" />
+                      <span class="lnr lnr-plus-circle text-white" />
                     </Button>
-                  )}
-                </ButtonToolbar>
+									)}
+									</div>
+									</div>
               </div>
-            </div>
           ))}
       </div>
     );
