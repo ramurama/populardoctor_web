@@ -1,8 +1,8 @@
 import React, { PureComponent } from "react";
 import Select from "react-select";
 import PropTypes from "prop-types";
-import MenuItem from '@material-ui/core/MenuItem';
-import Paper from '@material-ui/core/Paper';
+import MenuItem from "@material-ui/core/MenuItem";
+import Paper from "@material-ui/core/Paper";
 
 function Option(props) {
   return (
@@ -11,7 +11,7 @@ function Option(props) {
       selected={props.isFocused}
       component="div"
       style={{
-        fontWeight: props.isSelected ? 500 : 400,
+        fontWeight: props.isSelected ? 500 : 400
       }}
       {...props.innerProps}
     >
@@ -21,8 +21,7 @@ function Option(props) {
 }
 
 const components = {
-  Option,
-  
+  Option
 };
 class SelectField extends PureComponent {
   static propTypes = {
@@ -50,8 +49,8 @@ class SelectField extends PureComponent {
   };
 
   handleChange = selectedOption => {
-		const { onChange } = this.props;
-		
+    const { onChange } = this.props;
+
     onChange(selectedOption);
   };
 
@@ -62,32 +61,51 @@ class SelectField extends PureComponent {
       <Select
         name={name}
         value={value}
-        onChange={this.handleChange}
+        onChange={e => this.handleChange(e)}
         options={options}
         clearable={false}
-				className="react-select"
+        className="react-select"
         placeholder={placeholder}
-				classNamePrefix="react-select"
-				components={renderId && {...components}}
+        classNamePrefix="react-select"
+        components={renderId && { ...components }}
       />
     );
   }
 }
 
 const RenderSelectField = props => {
-  const { input, meta, options, placeholder, width, renderId, onChange } = props;
-  return (
-    <div className="form__form-group-input-wrap">
+  const { input, meta, options, placeholder, width, renderId, filter, onChange } = props;
+  if (filter) {
+    return (
       <div style={{ width: width }}>
-        <SelectField {...input} options={options} placeholder={placeholder} renderId={renderId} onChange={onChange}/>
+        <SelectField
+          {...input}
+          options={options}
+          placeholder={placeholder}
+					renderId={renderId}
+					onChange={onChange}
+        />
       </div>
-      {meta.touched && meta.error && (
-        <span style={{ width: width }} className="form__form-group-error">
-          {meta.error}
-        </span>
-      )}
-    </div>
-  );
+    );
+  } else {
+    return (
+      <div className="form__form-group-input-wrap">
+        <div style={{ width: width }}>
+          <SelectField
+            {...input}
+            options={options}
+            placeholder={placeholder}
+            renderId={renderId}
+          />
+        </div>
+        {meta.touched && meta.error && (
+          <span style={{ width: width }} className="form__form-group-error">
+            {meta.error}
+          </span>
+        )}
+      </div>
+    );
+  }
 };
 
 RenderSelectField.propTypes = {

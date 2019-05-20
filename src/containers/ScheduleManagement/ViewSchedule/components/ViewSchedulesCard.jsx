@@ -118,7 +118,7 @@ class ScheduleManagementCard extends React.Component {
                   options={doctorList}
                   renderId={true}
                   onChange={value => this.handleSelect(value)}
-                  meta={{}}
+                  filter={true}
                 />
               </div>
             </div>

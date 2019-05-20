@@ -402,7 +402,7 @@ class CreateScheduleCard extends React.Component {
                           type="text"
                           placeholder="Doctor"
                           width={240}
-                          options={doctorList}
+													options={doctorList}
                           renderId={true}
                         />
                       </div>
