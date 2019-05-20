@@ -25,7 +25,6 @@ const styles = {
 class UserManagementCard extends React.Component {
 
 	state = {
-		show: false,
 		title: '',
 		userStatus: '',
 		message:'',
@@ -40,7 +39,7 @@ class UserManagementCard extends React.Component {
 	}
 
 	_handleNotification = (value) =>{
-		// this.setState({...value});
+		this.setState({...value});
 	}
 
 	_renderToggle = (row) => {
@@ -72,16 +71,6 @@ class UserManagementCard extends React.Component {
             <div className="card__title">
               <MaterialTable columns={columns} data={userDataList} />
             </div>
-						{this.state.show && <Snackbar
-							anchorOrigin={{ vertical: 'top', horizontal:'right' }}
-							autoHideDuration={3000}
-							open={this.state.show}
-							ContentProps={{
-								'aria-describedby': 'message-id',
-							}}
-							onClose={this._handleClose}
-							message={<span id="message-id"> Hospital saved successfully</span>}
-						/>}
           </CardBody>
         </Card>
       </Col>

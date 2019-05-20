@@ -1,39 +1,20 @@
 import React from 'react';
-import { Col, Container, Row, ButtonToolbar } from 'reactstrap';
-import AnnouncementForm from './components/AnnouncementForm';
+import { Col, Container, Row } from 'reactstrap';
+import AnnouncementCard from './components/AnnouncementCard';
 import { ANNOUNCEMENT } from '../../constants/strings';
 import AnnouncementsTable from './components/AnnouncementsTable';
 import Endpoint from '../../redux/actions/endpoints';
 import Moment from 'moment-timezone';
-import { sendPushMessage } from './components/commons';
-import Snackbar from '@material-ui/core/Snackbar';
-import _ from 'underscore';
 
 class AnnouncementPage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      announcements: [],
-      displayToast: false,
-      displayMessage: ''
+      announcements: []
     };
   }
   componentDidMount() {
     this._fetchAnnouncements();
-  }
-
-  _displayToast(httpStatus) {
-    if (_.isEqual(httpStatus, 200)) {
-      this.setState({
-        displayToast: true,
-        displayMessage: 'Message sent successfully'
-      });
-    } else {
-      this.setState({
-        displayToast: true,
-        displayMessage: 'Error sending message!'
-      });
-    }
   }
 
   _fetchAnnouncements() {
@@ -42,7 +23,7 @@ class AnnouncementPage extends React.Component {
       .then(announcementsData => {
         const announcements = announcementsData.map(announcement => {
           const date = Moment.tz(announcement.date, 'Asia/Calcutta').format(
-            'DD-MMM-YYYY HH:mm:ss'
+            'DD/MMM/YYYY hh:mm:ss'
           );
           return {
             ...announcement,
@@ -63,34 +44,11 @@ class AnnouncementPage extends React.Component {
           </Col>
         </Row>
         <Row>
-          <AnnouncementForm
-            afterPush={httpStatus => {
-              this._displayToast(httpStatus);
-            }}
-          />
+          <AnnouncementCard />
         </Row>
         <Row>
-          <AnnouncementsTable
-            data={this.state.announcements}
-            onResendClick={(title, body) => {
-              sendPushMessage(title, body, httpStatus => {
-                this._displayToast(httpStatus);
-              });
-            }}
-          />
+          <AnnouncementsTable data={this.state.announcements} />
         </Row>
-        {this.state.displayToast && (
-          <Snackbar
-            anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-            autoHideDuration={3000}
-            open={this.state.displayToast}
-            ContentProps={{
-              'aria-describedby': 'message-id'
-            }}
-            onClose={() => this.setState({ displayToast: false })}
-            message={<span id="message-id">{this.state.displayMessage}</span>}
-          />
-        )}
       </Container>
     );
   }

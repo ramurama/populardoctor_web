@@ -15,11 +15,6 @@ import Announcement from '../Announcement';
 import CreateFrontdeskUser from '../FrontdeskUsers/CreateFrontdeskUser';
 import ViewFrontdeskUser from '../FrontdeskUsers/ViewFrontdeskUser';
 import LinkFrontdeskUser from '../FrontdeskUsers/LinkFrontdeskUser';
-import ViewBookings from '../Bookings/ViewBookings';
-import ViewBookingDetail from '../Bookings/ViewBookingDetail';
-
-import CustomerCare from '../CustomerCare';
-import Settings from '../SettingsManagement'
 
 import {
   ROUTE_CREATE_DOCTOR,
@@ -32,11 +27,7 @@ import {
   ROUTE_ANNOUNCEMENT,
   ROUTE_CREATE_FRONTDESK_USER,
   ROUTE_VIEW_FRONTDESK_USER,
-  ROUTE_LINK_FRONTDESK_USER,
-  ROUTE_VIEW_BOOKINGS,
-  ROUTE_VIEW_BOOKING_DETAIL,
-  ROUTE_CUSTOMER_CARE,
-  ROUTE_SETTINGS
+  ROUTE_LINK_FRONTDESK_USER
 } from '../../constants/routes';
 
 const Pages = () => (
@@ -52,11 +43,6 @@ const Pages = () => (
     <Route path={ROUTE_CREATE_FRONTDESK_USER} component={CreateFrontdeskUser} />
     <Route path={ROUTE_VIEW_FRONTDESK_USER} component={ViewFrontdeskUser} />
     <Route path={ROUTE_LINK_FRONTDESK_USER} component={LinkFrontdeskUser} />
-    <Route path={ROUTE_VIEW_BOOKINGS} component={ViewBookings} />
-    <Route path={ROUTE_VIEW_BOOKING_DETAIL} component={ViewBookingDetail}  />
-
-    <Route path={ROUTE_CUSTOMER_CARE} component={CustomerCare}  />
-    <Route path={ROUTE_SETTINGS} component={Settings} />
   </Switch>
 );
 

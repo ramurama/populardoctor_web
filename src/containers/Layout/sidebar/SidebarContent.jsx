@@ -18,9 +18,7 @@ import {
   FRONTDESK_USERS,
   CREATE_USER,
   LINK_USER,
-  ANNOUNCEMENT,
-  BOOKINGS,
-  CUSTOMER_CARE
+  ANNOUNCEMENT
 } from '../../../constants/strings';
 import {
   ROUTE_CREATE_DOCTOR,
@@ -33,10 +31,7 @@ import {
   ROUTE_CREATE_FRONTDESK_USER,
   ROUTE_VIEW_FRONTDESK_USER,
   ROUTE_LINK_FRONTDESK_USER,
-  ROUTE_ANNOUNCEMENT,
-  ROUTE_VIEW_BOOKINGS,
-  ROUTE_CUSTOMER_CARE,
-  ROUTE_SETTINGS
+  ROUTE_ANNOUNCEMENT
 } from '../../../constants/routes';
 
 class SidebarContent extends Component {
@@ -54,7 +49,7 @@ class SidebarContent extends Component {
   render() {
     const { changeToDark, changeToLight } = this.props;
     return (
-      <div className='sidebar__content'>
+      <div className="sidebar__content">
         {/* <ul className='sidebar__block'>
           <SidebarLink title="Log In" icon="exit" route="/log_in" onClick={this.hideSidebar} />
           <SidebarCategory title='Layout' icon='layers'>
@@ -74,20 +69,20 @@ class SidebarContent extends Component {
             </button>
           </SidebarCategory>
         </ul> */}
-        <ul className='sidebar__block'>
+        <ul className="sidebar__block">
           {/* <SidebarCategory title="Example Pages" icon="diamond">
             <SidebarLink title="Page one" route="/pages/one" onClick={this.hideSidebar} />
             <SidebarLink title="Page two" route="/pages/two" onClick={this.hideSidebar} />
             <SidebarLink title="Chart" route="/pages/chartjs" onClick={this.hideSidebar} />
           </SidebarCategory> */}
-          <SidebarCategory title={USER_MANAGEMENT} icon='users'>
+          <SidebarCategory title={USER_MANAGEMENT} icon="users">
             <SidebarLink
               title={VIEW_USERS}
               route={ROUTE_VIEW_USERS}
               onClick={this.hideSidebar}
             />
           </SidebarCategory>
-          <SidebarCategory title={DOCTOR_MANAGEMENT} icon='heart-pulse'>
+          <SidebarCategory title={DOCTOR_MANAGEMENT} icon="heart-pulse">
             <SidebarLink
               title={CREATE_DOCTOR}
               route={ROUTE_CREATE_DOCTOR}
@@ -99,7 +94,7 @@ class SidebarContent extends Component {
               onClick={this.hideSidebar}
             />
           </SidebarCategory>
-          <SidebarCategory title={HOSPITAL_MANAGEMENT} icon='apartment'>
+          <SidebarCategory title={HOSPITAL_MANAGEMENT} icon="apartment">
             <SidebarLink
               title={CREATE_HOSPITAL}
               route={ROUTE_CREATE_HOSPITAL}
@@ -111,7 +106,7 @@ class SidebarContent extends Component {
               onClick={this.hideSidebar}
             />
           </SidebarCategory>
-          <SidebarCategory title={SCHEDULE_MANAGEMENT} icon='clock'>
+          <SidebarCategory title={SCHEDULE_MANAGEMENT} icon="clock">
             <SidebarLink
               title={CREATE_SCHEDULE}
               route={ROUTE_CREATE_SCHEDULE}
@@ -123,7 +118,7 @@ class SidebarContent extends Component {
               onClick={this.hideSidebar}
             />
           </SidebarCategory>
-          <SidebarCategory title={FRONTDESK_USERS} icon='screen'>
+          <SidebarCategory title={FRONTDESK_USERS} icon="screen">
             <SidebarLink
               title={CREATE_USER}
               route={ROUTE_CREATE_FRONTDESK_USER}
@@ -144,28 +139,8 @@ class SidebarContent extends Component {
             title={ANNOUNCEMENT}
             route={ROUTE_ANNOUNCEMENT}
             onClick={this.hideSidebar}
-            icon='bullhorn'
+            icon="bullhorn"
           />
-          <SidebarLink
-            title={BOOKINGS}
-            route={ROUTE_VIEW_BOOKINGS}
-            onClick={this.hideSidebar}
-            icon='tag'
-          />
-          <SidebarLink
-            title={CUSTOMER_CARE}
-            route={ROUTE_CUSTOMER_CARE}
-            onClick={this.hideSidebar}
-            icon='phone-handset'
-          />
-          <div style={{ position: 'absolute', bottom: 8 }}>
-            <SidebarLink
-              title={SETTINGS}
-              route={ROUTE_SETTINGS}
-              onClick={this.hideSidebar}
-              icon='cog'
-            />
-          </div>
         </ul>
       </div>
     );
