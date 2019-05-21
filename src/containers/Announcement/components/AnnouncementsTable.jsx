@@ -1,6 +1,8 @@
 import React from 'react';
-import { Card, CardBody, Col } from 'reactstrap';
+import { Card, CardBody, Col, Button } from 'reactstrap';
 import MaterialTable from '../../../components/containers/Tables/MaterialTable';
+import SendIcon from 'mdi-react/SendIcon';
+import { Link } from 'react-router-dom';
 
 const AnnouncementsTable = props => {
   const columns = [
@@ -15,6 +17,17 @@ const AnnouncementsTable = props => {
     {
       id: 'body',
       label: 'Message'
+    },
+    {
+      id: 'action',
+      label: 'Action',
+      render: row => {
+        return (
+          <a onClick={() => props.onResendClick(row.title, row.body)}>
+            <SendIcon color="#304ffe" />
+          </a>
+        );
+      }
     }
   ];
   return (

@@ -27,7 +27,15 @@ const endpoints = {
 	getScheduleHospitals: '/api/v1/admin/getScheduleHospitals',
 
 	sendAnnouncement: '/api/v1/messages/push',
-	getAnnouncements: '/api/v1/admin/getAnnouncements'
+	getAnnouncements: '/api/v1/admin/getAnnouncements',
+  
+	getBookings: '/api/v1/admin/getBookingHistory',
+	getBookingDetail: '/api/v1/admin/getBookingHistoryDetail',
+  
+	getSupportDetails: '/api/v1/user/getSupportDetails',
+	setSupportDetails: '/api/v1/admin/setSupportDetails',
+  
+	changePassword: '/api/v1/admin/changePassword'
 };
 
 export default endpoints;

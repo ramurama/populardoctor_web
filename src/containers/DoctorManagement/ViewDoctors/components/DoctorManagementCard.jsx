@@ -81,7 +81,7 @@ class DoctorManagementCard extends React.Component {
 
     return (
       <Col md={12}>
-        <Card style={{ height: '80vh'}}>
+        <Card>
           <CardBody>
             <div className="card__title">
               <MaterialTable columns={columns} data={doctorList} />
