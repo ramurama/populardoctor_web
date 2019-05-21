@@ -14,10 +14,12 @@
 @import './component/topbar';
 @import './component/load';
 @import './component/form';
+@import './component/select-options.scss';
+@import './component//react-select.scss';
 
 //pages...
 @import 'containers/account';
 
 //objects...
 @import 'objects/layout.scss';
-
+@import './component/edit-table.scss';
