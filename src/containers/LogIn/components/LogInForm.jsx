@@ -7,6 +7,7 @@ import AccountOutlineIcon from 'mdi-react/AccountOutlineIcon';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Endpoints from '../../../redux/actions/endpoints';
+import * as Actions from '../../../redux/actions/loginActions';
 
 class LogInForm extends PureComponent {
   static propTypes = {
@@ -26,17 +27,10 @@ class LogInForm extends PureComponent {
   };
 
   _handleSubmit = ({ username, password }) => {
-    fetch(Endpoints.login, {
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json'
-      },
-      method: 'POST',
-      body: JSON.stringify({ username, password })
-    })
+			Actions.login({ username, password })
       .then(res => res.json())
-      .then(res => {
-        console.log(res);
+      .then(data => {
+        this.context.router.history.push('/pages/userManagement/viewUsers');
       });
   };
 
@@ -105,6 +99,9 @@ class LogInForm extends PureComponent {
     );
   }
 }
+LogInForm.contextTypes = {
+  router: PropTypes.func.isRequired
+ }
 
 export default reduxForm({
   form: 'log_in_form'
