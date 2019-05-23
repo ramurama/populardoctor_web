@@ -87,9 +87,9 @@ class CreateDoctorCard extends PureComponent {
       degree,
       dateOfBirth: dateOfBirth ? moment(dateOfBirth).format('DD-MM-YYYY"') : '',
       specialization,
-      gender,
+      gender: gender.label,
       profileContent
-    };
+		};
     const errorText = {};
     editValue.password = editValue.mobile;
     editValue.profileImage = profileImage;
