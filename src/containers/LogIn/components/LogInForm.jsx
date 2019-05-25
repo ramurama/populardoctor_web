@@ -21,6 +21,18 @@ class LogInForm extends PureComponent {
     };
   }
 
+	componentDidMount () {
+		Actions.loginSatus()
+		.then(response => response.json())
+		.then( data =>  {
+			if(data.status === 'SUCCESS'){
+				this.context.router.history.push('/pages/userManagement/viewUsers');
+			}else{
+				this.context.router.history.push('/');
+			}
+		})
+	}
+
   showPassword = e => {
     e.preventDefault();
     this.setState(prevState => ({ showPassword: !prevState.showPassword }));
