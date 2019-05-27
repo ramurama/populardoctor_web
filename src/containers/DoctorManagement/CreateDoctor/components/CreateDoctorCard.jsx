@@ -1,10 +1,11 @@
 import React, { PureComponent } from 'react';
+import { connect } from 'react-redux';
 import { Card, CardBody, Col, Button, ButtonToolbar, Row } from 'reactstrap';
 import { Field, reduxForm, SubmissionError } from 'redux-form';
 import PropTypes from 'prop-types';
 import { withTranslation } from 'react-i18next';
 import Snackbar from '@material-ui/core/Snackbar';
-import { save } from '../../../../redux/actions/doctorActions';
+import * as Action from '../../../../redux/actions/doctorActions';
 import validate from '../../../../components/Form/FormValidation/components/validate';
 import { addDoctor, emptyField } from '../constants/doctorForm';
 import { UNDERSCORE } from '../../../../constants/utils';
@@ -64,6 +65,9 @@ class CreateDoctorCard extends PureComponent {
     };
   }
 
+	componentDidMount(){
+		this.props.getSpecialization();
+	}
   _handleChange = (key, event) => {
     const { saveData } = this.state;
     saveData[key] = event.target.value;
@@ -86,7 +90,7 @@ class CreateDoctorCard extends PureComponent {
       yearsOfExperience,
       degree,
       dateOfBirth: dateOfBirth ? moment(dateOfBirth).format('DD-MM-YYYY"') : '',
-      specialization,
+      specialization: specialization.label,
       gender: gender.label,
       profileContent
 		};
@@ -102,7 +106,7 @@ class CreateDoctorCard extends PureComponent {
     const error = Object.keys(errorText).filter(key => !!errorText[key]).length;
     if (error === 0) {
       this.setState({ active: true });
-      save(editValue).then(response => {
+      Action.save(editValue).then(response => {
         this.setState({
           open: true
         });
@@ -145,12 +149,22 @@ class CreateDoctorCard extends PureComponent {
     }
   };
 
+	_parseList = (dataList) => {
+    return dataList
+      ? dataList.map(data => ({
+          value: data.name,
+          label: data.name,
+        }))
+      : [];
+	};
+
   _handleClose = () => {
     this.setState({ open: false });
   };
 
   render() {
-    const { pristine, reset, submitting, handleSubmit } = this.props;
+		const { pristine, reset, submitting, handleSubmit } = this.props;
+		const specializations = this._parseList(this.props.specializations);
     return (
       <Card>
         <CardBody>
@@ -211,11 +225,13 @@ class CreateDoctorCard extends PureComponent {
                 <div className='form__form-group'>
                   <span className='form__form-group-label'>Specialization</span>
                   <div className='form__form-group-field'>
-                    <Field
+										<Field
                       name='specialization'
-                      component={renderField}
+                      component={renderSelectField}
                       type='text'
                       placeholder='Specialization'
+                      width={200}
+                      options={specializations}
                     />
                   </div>
                 </div>
@@ -311,6 +327,30 @@ class CreateDoctorCard extends PureComponent {
     );
   }
 }
+
+function mapDispatchToProps(dispatch) {
+  return {
+    getSpecialization: () => {
+      dispatch(Action.getSpecialization());
+    },
+  };
+}
+function mapStateToProps(state) {
+  const doctorState = state.doctor;
+  return {
+    specializations: !UNDERSCORE.isEmpty(doctorState)
+      ? doctorState.specialization
+      : [],
+  };
+}
+CreateDoctorCard.contextTypes = {
+  router: PropTypes.object
+};
+
+CreateDoctorCard = connect(
+  mapStateToProps,
+	mapDispatchToProps
+	)(CreateDoctorCard);
 
 export default reduxForm({
   form: 'doctor', // a unique identifier for this form
