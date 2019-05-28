@@ -4,16 +4,63 @@ import { ButtonToolbar, Button } from 'reactstrap';
 import { Field, reduxForm } from 'redux-form';
 import { withTranslation } from 'react-i18next';
 import { sendPushMessage } from './commons';
+import PropTypes from 'prop-types';
 
 const validate = values => {
   const errors = {};
   if (!values.title) {
-    errors.title = 'Required';
+    errors.title = "Title shouldn't be empty";
   }
   if (!values.message) {
-    errors.message = 'Required';
+    errors.message = "Message shouldn't be empty";
   }
   return errors;
+};
+
+const _renderTitleInput = ({ input, meta: { touched, error }, label }) => (
+  <div className='form__form-group'>
+    <span className='form__form-group-label'>{label}</span>
+    <div className='form__form-group-field'>
+      <div className='form__form-group-input-wrap'>
+        <input {...input} />
+        {error && touched && (
+          <span className='form__form-group-error'>{error}</span>
+        )}
+      </div>
+    </div>
+  </div>
+);
+
+_renderTitleInput.propTypes = {
+  input: PropTypes.shape().isRequired,
+  meta: PropTypes.shape({
+    touched: PropTypes.bool,
+    error: PropTypes.string
+  }),
+  label: PropTypes.string.isRequired
+};
+
+const _renderMessageInput = ({ input, meta: { touched, error }, label }) => (
+  <div className='form__form-group'>
+    <span className='form__form-group-label'>{label}</span>
+    <div className='form__form-group-field'>
+      <div className='form__form-group-input-wrap'>
+        <textarea {...input} />
+        {error && touched && (
+          <span className='form__form-group-error'>{error}</span>
+        )}
+      </div>
+    </div>
+  </div>
+);
+
+_renderMessageInput.propTypes = {
+  input: PropTypes.shape().isRequired,
+  meta: PropTypes.shape({
+    touched: PropTypes.bool,
+    error: PropTypes.string
+  }),
+  label: PropTypes.string.isRequired
 };
 
 class AnnouncementForm extends React.Component {
@@ -32,30 +79,6 @@ class AnnouncementForm extends React.Component {
     });
   };
 
-  _renderTitleInput = ({ input, meta, label }) => (
-    <div className='form__form-group'>
-      <span className='form__form-group-label'>{label}</span>
-      <div className='form__form-group-field'>
-        <input {...input} />
-      </div>
-      {meta.error && meta.visited && (
-        <span style={{ color: 'red' }}>{meta.error}</span>
-      )}
-    </div>
-  );
-
-  _renderMessageInput = ({ input, meta, label }) => (
-    <div className='form__form-group'>
-      <span className='form__form-group-label'>{label}</span>
-      <div className='form__form-group-field'>
-        <textarea {...input} />
-      </div>
-      {meta.error && meta.visited && (
-        <span style={{ color: 'red' }}>{meta.error}</span>
-      )}
-    </div>
-  );
-
   render() {
     const { pristine, reset, submitting, handleSubmit } = this.props;
     return (
@@ -66,15 +89,11 @@ class AnnouncementForm extends React.Component {
               className='form form--horizontal'
               onSubmit={handleSubmit(this._handleSubmit)}
             >
-              <Field
-                name='title'
-                label='Title'
-                component={this._renderTitleInput}
-              />
+              <Field name='title' label='Title' component={_renderTitleInput} />
               <Field
                 name='message'
                 label='Message'
-                component={this._renderMessageInput}
+                component={_renderMessageInput}
               />
               <ButtonToolbar className='form__button-toolbar'>
                 <Button
