@@ -23,7 +23,8 @@ import Settings from '../SettingsManagement'
 import {
   ROUTE_CREATE_DOCTOR,
   ROUTE_VIEW_DOCTORS,
-  ROUTE_CREATE_HOSPITAL,
+	ROUTE_CREATE_HOSPITAL,
+	ROUTE_EDIT_HOSPITAL,
   ROUTE_VIEW_HOSPITALS,
   ROUTE_CREATE_SCHEDULE,
   ROUTE_VIEW_SCHEDULES,
@@ -44,6 +45,7 @@ const Pages = () => (
     <Route path={ROUTE_CREATE_DOCTOR} component={CreateDoctor} />
     <Route path={ROUTE_VIEW_DOCTORS} component={ViewDoctors} />
     <Route path={ROUTE_CREATE_HOSPITAL} component={CreateHospital} />
+		<Route path={ROUTE_EDIT_HOSPITAL} component={CreateHospital} />
     <Route path={ROUTE_VIEW_HOSPITALS} component={ViewHospitals} />
     <Route path={ROUTE_CREATE_SCHEDULE} component={CreateSchedule} />
     <Route path={ROUTE_VIEW_SCHEDULES} component={ViewSchedules} />

@@ -1,10 +1,11 @@
 import React, { PureComponent } from 'react';
+import { connect } from 'react-redux';
 import { Card, CardBody, Col, Button, ButtonToolbar, Row } from 'reactstrap';
 import { Field, reduxForm, SubmissionError } from 'redux-form';
 import PropTypes from 'prop-types';
 import { withTranslation } from 'react-i18next';
 import Snackbar from '@material-ui/core/Snackbar';
-import { save } from '../../../../redux/actions/doctorActions';
+import * as Action from '../../../../redux/actions/doctorActions';
 import validate from '../../../../components/Form/FormValidation/components/validate';
 import { addDoctor, emptyField } from '../constants/doctorForm';
 import { UNDERSCORE } from '../../../../constants/utils';
@@ -22,10 +23,10 @@ const renderField = ({
   type,
   meta: { touched, error }
 }) => (
-  <div className='form__form-group-input-wrap '>
+  <div className="form__form-group-input-wrap ">
     <input {...input} placeholder={placeholder} type={type} />
     {touched && error && (
-      <span className='form__form-group-error'>{error}</span>
+      <span className="form__form-group-error">{error}</span>
     )}
   </div>
 );
@@ -59,11 +60,15 @@ class CreateDoctorCard extends PureComponent {
     super();
     this.state = {
       showPassword: false,
-      open: false,
+      displayToast: false,
+      toastMessage: '',
       errorText: {}
     };
   }
 
+  componentDidMount() {
+    this.props.getSpecialization();
+  }
   _handleChange = (key, event) => {
     const { saveData } = this.state;
     saveData[key] = event.target.value;
@@ -86,8 +91,8 @@ class CreateDoctorCard extends PureComponent {
       yearsOfExperience,
       degree,
       dateOfBirth: dateOfBirth ? moment(dateOfBirth).format('DD-MM-YYYY"') : '',
-      specialization,
-      gender,
+      specialization: specialization.label,
+      gender: gender.label,
       profileContent
     };
     const errorText = {};
@@ -102,11 +107,18 @@ class CreateDoctorCard extends PureComponent {
     const error = Object.keys(errorText).filter(key => !!errorText[key]).length;
     if (error === 0) {
       this.setState({ active: true });
-      save(editValue).then(response => {
-        this.setState({
-          open: true
+      Action.save(editValue)
+        .then(res => res.json())
+        .then(res => {
+          this.setState(
+            { displayToast: true, toastMessage: res.message },
+            () => {
+              if (res.status) {
+                this.props.reset();
+              }
+            }
+          );
         });
-      });
     } else {
       throw new SubmissionError(errorText);
     }
@@ -145,61 +157,71 @@ class CreateDoctorCard extends PureComponent {
     }
   };
 
+  _parseList = dataList => {
+    return dataList
+      ? dataList.map(data => ({
+          value: data.name,
+          label: data.name
+        }))
+      : [];
+  };
+
   _handleClose = () => {
-    this.setState({ open: false });
+    this.setState({ displayToast: false });
   };
 
   render() {
     const { pristine, reset, submitting, handleSubmit } = this.props;
+    const specializations = this._parseList(this.props.specializations);
     return (
       <Card>
         <CardBody>
           <Row>
             <Col md={6} sm={12}>
               <form
-                className='form form--horizontal'
+                className="form form--horizontal"
                 onSubmit={handleSubmit(this._handleSubmit)}
               >
-                <div className='form__form-group'>
-                  <span className='form__form-group-label'>Full Name</span>
-                  <div className='form__form-group-field'>
+                <div className="form__form-group">
+                  <span className="form__form-group-label">Full Name</span>
+                  <div className="form__form-group-field">
                     <Field
-                      name='fullName'
+                      name="fullName"
                       component={renderField}
-                      type='text'
-                      placeholder='Full Name'
+                      type="text"
+                      placeholder="Full Name"
                     />
                   </div>
                 </div>
-                <div className='form__form-group'>
-                  <span className='form__form-group-label'>Mobile</span>
-                  <div className='form__form-group-field'>
+                <div className="form__form-group">
+                  <span className="form__form-group-label">Mobile</span>
+                  <div className="form__form-group-field">
                     <Field
-                      name='mobile'
+                      name="mobile"
                       component={renderField}
-                      type='number'
-                      placeholder='Mobile'
+                      type="number"
+                      placeholder="Mobile"
                     />
                   </div>
                 </div>
-                <div className='form__form-group'>
-                  <span className='form__form-group-label'>Date of Birth</span>
-                  <div className='form__form-group-field'>
+                <div className="form__form-group">
+                  <span className="form__form-group-label">Date of Birth</span>
+                  <div className="form__form-group-field">
                     <Field
-                      name='dateOfBirth'
+                      name="dateOfBirth"
                       component={renderDatePicker}
-                      placeholder='Date of Birth'
+                      placeholder="Date of Birth"
                     />
                   </div>
                 </div>
-                <div className='form__form-group'>
-                  <span className='form__form-group-label'>Gender</span>
-                  <div className='form__form-group-field'>
+                <div className="form__form-group">
+                  <span className="form__form-group-label">Gender</span>
+                  <div className="form__form-group-field">
                     <Field
-                      name='gender'
+                      name="gender"
                       component={renderSelectField}
-                      type='text'
-                      placeholder='Gender'
+                      type="text"
+                      placeholder="Gender"
                       width={150}
                       options={[
                         { value: 'male', label: 'MALE' },
@@ -208,58 +230,64 @@ class CreateDoctorCard extends PureComponent {
                     />
                   </div>
                 </div>
-                <div className='form__form-group'>
-                  <span className='form__form-group-label'>Specialization</span>
-                  <div className='form__form-group-field'>
+                <div className="form__form-group">
+                  <span className="form__form-group-label">Specialization</span>
+                  <div className="form__form-group-field">
                     <Field
-                      name='specialization'
-                      component={renderField}
-                      type='text'
-                      placeholder='Specialization'
+                      name="specialization"
+                      component={renderSelectField}
+                      type="text"
+                      placeholder="Specialization"
+                      width={200}
+                      options={specializations}
                     />
                   </div>
                 </div>
-                <div className='form__form-group'>
-                  <span className='form__form-group-label'>Degree</span>
-                  <div className='form__form-group-field'>
+                <div className="form__form-group">
+                  <span className="form__form-group-label">Degree</span>
+                  <div className="form__form-group-field">
                     <Field
-                      name='degree'
+                      name="degree"
                       component={renderField}
-                      type='text'
-                      placeholder='Degree'
+                      type="text"
+                      placeholder="Degree"
                     />
                   </div>
                 </div>
-                <div className='form__form-group'>
-                  <span className='form__form-group-label'>
+                <div className="form__form-group">
+                  <span className="form__form-group-label">
                     Years Of Experience
                   </span>
-                  <div className='form__form-group-field'>
+                  <div className="form__form-group-field">
                     <Field
-                      name='yearsOfExperience'
+                      name="yearsOfExperience"
                       component={renderField}
-                      type='number'
-                      placeholder='Years Of Experience'
+                      type="number"
+                      placeholder="Years Of Experience"
                     />
                   </div>
                 </div>
-                <div className='form__form-group'>
-                  <span className='form__form-group-label'>Description</span>
-                  <div className='form__form-group-field'>
+                <div className="form__form-group">
+                  <span className="form__form-group-label">Description</span>
+                  <div className="form__form-group-field">
                     <Field
-                      name='profileContent'
-                      component='textarea'
-                      placeholder='Description'
+                      name="profileContent"
+                      component="textarea"
+                      placeholder="Description"
                     />
                   </div>
                 </div>
                 <div style={{ float: 'right' }}>
-                  <ButtonToolbar className='form__button-toolbar'>
-                    <Button color='primary' type='submit'>
+                  <ButtonToolbar className="form__button-toolbar">
+                    <Button
+                      color="primary"
+                      type="submit"
+                      disabled={pristine || submitting}
+                    >
                       Save
                     </Button>
                     <Button
-                      type='button'
+                      type="button"
                       onClick={reset}
                       disabled={pristine || submitting}
                     >
@@ -268,29 +296,15 @@ class CreateDoctorCard extends PureComponent {
                   </ButtonToolbar>
                 </div>
               </form>
-              {this.state.open && (
-                <Snackbar
-                  anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-                  autoHideDuration={3000}
-                  open={this.state.open}
-                  ContentProps={{
-                    'aria-describedby': 'message-id'
-                  }}
-                  onClose={this._handleClose}
-                  message={
-                    <span id='message-id'> Hospital saved successfully</span>
-                  }
-                />
-              )}
             </Col>
             <Col md={6} sm={12}>
               <Card style={{ height: 150 }}>
                 <CardBody>
-                  <div className='card__title'>
-                    <h5 className='subhead'>For files upload</h5>
+                  <div className="card__title">
+                    <h5 className="subhead">For files upload</h5>
                   </div>
-                  <form className='form' onSubmit={handleSubmit}>
-                    <Field name='files' component={renderDropZoneField} />
+                  <form className="form" onSubmit={handleSubmit}>
+                    <Field name="files" component={renderDropZoneField} />
                   </form>
                 </CardBody>
               </Card>
@@ -300,17 +314,41 @@ class CreateDoctorCard extends PureComponent {
         <Snackbar
           anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
           autoHideDuration={3000}
-          open={this.state.open}
+          open={this.state.displayToast}
           ContentProps={{
             'aria-describedby': 'message-id'
           }}
           onClose={this._handleClose}
-          message={<span id='message-id'> Doctor saved successfully</span>}
+          message={<span id="message-id">{this.state.toastMessage}</span>}
         />
       </Card>
     );
   }
 }
+
+function mapDispatchToProps(dispatch) {
+  return {
+    getSpecialization: () => {
+      dispatch(Action.getSpecialization());
+    }
+  };
+}
+function mapStateToProps(state) {
+  const doctorState = state.doctor;
+  return {
+    specializations: !UNDERSCORE.isEmpty(doctorState)
+      ? doctorState.specialization
+      : []
+  };
+}
+CreateDoctorCard.contextTypes = {
+  router: PropTypes.object
+};
+
+CreateDoctorCard = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(CreateDoctorCard);
 
 export default reduxForm({
   form: 'doctor', // a unique identifier for this form

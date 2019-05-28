@@ -50,4 +50,33 @@
   To create a production bundle, use `npm run build` or `yarn build`.
 -->
 </body>
+<script type="application/javascript">
+var ajax = new XMLHttpRequest();
+ajax.open('get', 'api/v1/auth/admin/loginstatus')
+ajax.send();
+ajax.onreadystatechange = function (){
+	console.log(ajax)
+	if( ajax.readyState === 4 && ajax.status === 200 || ajax.status === 304 &&
+		ajax.response.status === 'SUCCESS'){
+		var url = getQueryString('from');
+		console.log('-------url---------')
+		console.log(url)
+		if( url === null){
+			// window.location.href = '/pages/userManagement/viewUsers';
+		}else{
+			// window.location.href = '/user' + encodeURIComponent(url + window.location.hash);
+		}
+	}else{
+		// window.location.href = '/';
+	}
+}
+function getQueryString(){
+	var reg = new RegExp(`(^|&)${name}={.*}`);
+	var res = window.location.search.substr(1).match(reg);
+	if(res != null){
+		return decodeURI(res[2]);
+	}
+	return null;
+}
+</script>
 </html>
