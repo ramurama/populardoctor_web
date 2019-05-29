@@ -32,7 +32,6 @@ import {
   ROUTE_VIEW_USERS,
   ROUTE_CREATE_FRONTDESK_USER,
   ROUTE_VIEW_FRONTDESK_USER,
-  ROUTE_LINK_FRONTDESK_USER,
   ROUTE_ANNOUNCEMENT,
   ROUTE_VIEW_BOOKINGS,
   ROUTE_CUSTOMER_CARE,
@@ -132,11 +131,6 @@ class SidebarContent extends Component {
             <SidebarLink
               title={VIEW_USERS}
               route={ROUTE_VIEW_FRONTDESK_USER}
-              onClick={this.hideSidebar}
-            />
-            <SidebarLink
-              title={LINK_USER}
-              route={ROUTE_LINK_FRONTDESK_USER}
               onClick={this.hideSidebar}
             />
           </SidebarCategory>
