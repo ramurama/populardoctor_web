@@ -17,6 +17,7 @@ const endpoints = {
 	getFrontdeskUsersMasterList: '/api/v1/admin/getMasterFrontdeskUsers',
 	createFrontdeskUser: '/api/v1/admin/createFrontdeskUser/',
 	getDoctorFrontdeskUser: '/api/v1/admin/getDoctorFrontdeskUser/',
+	linkFrontdeskUser: '/api/v1/admin/linkFrontdeskUser',
   
 	getCustomerList: '/api/v1/admin/getCustomers/',
 	getScheduleList: '/api/v1/admin/getSchedules/',
@@ -26,7 +27,6 @@ const endpoints = {
   
 	getHospitalList: '/api/v1/admin/getHospitals/',
   
-	getFrontdeskList: '/api/v1/admin/getFrontdeskUsers/',
 	getScheduleDoctors: '/api/v1/admin/getScheduleDoctors/',
 	getScheduleHospitals: '/api/v1/admin/getScheduleHospitals',
   
