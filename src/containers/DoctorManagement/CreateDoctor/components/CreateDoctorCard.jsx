@@ -66,7 +66,8 @@ class CreateDoctorCard extends PureComponent {
       toastMessage: '',
       errorText: {},
       doProfileImageUpload: false,
-      doctorPdNumber: null
+      doctorPdNumber: null,
+      disableButtonActions: false
     };
   }
 
@@ -116,8 +117,9 @@ class CreateDoctorCard extends PureComponent {
         .then(res => {
           if (res.status) {
             //if data saved successfully, upload the profile image with the returned doctorPdNumber
-            this.setState({ toastMessage: res.message }, () =>
-              this.profileImageUploader.upload(res.doctorPdNumber)
+            this.setState(
+              { toastMessage: res.message, disableButtonActions: true },
+              () => this.profileImageUploader.upload(res.doctorPdNumber)
             );
           } else {
             //else display a toast with the returned message
@@ -290,14 +292,22 @@ class CreateDoctorCard extends PureComponent {
                     <Button
                       color='primary'
                       type='submit'
-                      disabled={pristine || submitting}
+                      disabled={
+                        pristine ||
+                        submitting ||
+                        this.state.disableButtonActions
+                      }
                     >
                       Save
                     </Button>
                     <Button
                       type='button'
                       onClick={reset}
-                      disabled={pristine || submitting}
+                      disabled={
+                        pristine ||
+                        submitting ||
+                        this.state.disableButtonActions
+                      }
                     >
                       Cancel
                     </Button>
@@ -309,8 +319,9 @@ class CreateDoctorCard extends PureComponent {
               <ProfileImageUploadForm
                 onRef={ref => (this.profileImageUploader = ref)}
                 onUploadComplete={status =>
-                  this.setState({ displayToast: true }, () =>
-                    this.props.reset()
+                  this.setState(
+                    { displayToast: true, disableButtonActions: false },
+                    () => this.props.reset()
                   )
                 }
               />

@@ -14,7 +14,6 @@ import ViewSchedules from '../ScheduleManagement/ViewSchedule/index';
 import Announcement from '../Announcement';
 import CreateFrontdeskUser from '../FrontdeskUsers/CreateFrontdeskUser';
 import ViewFrontdeskUser from '../FrontdeskUsers/ViewFrontdeskUser';
-import LinkFrontdeskUser from '../FrontdeskUsers/LinkFrontdeskUser';
 import ViewBookings from '../Bookings/ViewBookings';
 import ViewBookingDetail from '../Bookings/ViewBookingDetail';
 import CustomerCare from '../CustomerCare';
@@ -32,7 +31,6 @@ import {
   ROUTE_ANNOUNCEMENT,
   ROUTE_CREATE_FRONTDESK_USER,
   ROUTE_VIEW_FRONTDESK_USER,
-  ROUTE_LINK_FRONTDESK_USER,
   ROUTE_VIEW_BOOKINGS,
   ROUTE_VIEW_BOOKING_DETAIL,
   ROUTE_CUSTOMER_CARE,
@@ -52,7 +50,6 @@ const Pages = () => (
     <Route path={ROUTE_ANNOUNCEMENT} component={Announcement} />
     <Route path={ROUTE_CREATE_FRONTDESK_USER} component={CreateFrontdeskUser} />
     <Route path={ROUTE_VIEW_FRONTDESK_USER} component={ViewFrontdeskUser} />
-    <Route path={ROUTE_LINK_FRONTDESK_USER} component={LinkFrontdeskUser} />
     <Route path={ROUTE_VIEW_BOOKINGS} component={ViewBookings} />
     <Route path={ROUTE_VIEW_BOOKING_DETAIL} component={ViewBookingDetail}  />
     <Route path={ROUTE_CUSTOMER_CARE} component={CustomerCare}  />
