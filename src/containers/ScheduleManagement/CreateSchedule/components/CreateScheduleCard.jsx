@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   Card,
   CardBody,
@@ -7,58 +7,59 @@ import {
   Container,
   Button,
   ButtonToolbar
-} from 'reactstrap';
-import { Field, reduxForm, SubmissionError } from 'redux-form';
-import { connect } from 'react-redux';
-import { withTranslation } from 'react-i18next';
-import { addSchedule, emptyField } from '../constants/AddScheduleConfig';
-import * as Action from '../../../../redux/actions/scheduleActions';
-import validate from '../../../../components/Form/FormValidation/components/validate';
-import RenderSelectField from '../../../../components/shared/components/form/Select';
-import renderTimePickerField from '../../../../components/shared/components/form/TimePicker';
-import renderToggleButtonField from '../../../../components/shared/components/form/ToggleButton';
-import { UNDERSCORE } from '../../../../constants/utils';
-import Snackbar from '@material-ui/core/Snackbar';
+} from "reactstrap";
+import { Field, reduxForm, SubmissionError } from "redux-form";
+import { connect } from "react-redux";
+import { withRouter } from "react-router";
+import { withTranslation } from "react-i18next";
+import { addSchedule, emptyField } from "../constants/AddScheduleConfig";
+import * as Action from "../../../../redux/actions/scheduleActions";
+import validate from "../../../../components/Form/FormValidation/components/validate";
+import RenderSelectField from "../../../../components/shared/components/form/Select";
+import renderTimePickerField from "../../../../components/shared/components/form/TimePicker";
+import renderToggleButtonField from "../../../../components/shared/components/form/ToggleButton";
+import { UNDERSCORE } from "../../../../constants/utils";
+import Snackbar from "@material-ui/core/Snackbar";
 
-const moment = require('moment');
+const moment = require("moment");
 const weekDays = [
   {
-    value: 'Mon',
-    label: 'MON'
+    value: "Mon",
+    label: "MON"
   },
   {
-    value: 'Tue',
-    label: 'TUE'
+    value: "Tue",
+    label: "TUE"
   },
   {
-    value: 'Wed',
-    label: 'WED'
+    value: "Wed",
+    label: "WED"
   },
   {
-    value: 'Thu',
-    label: 'THU'
+    value: "Thu",
+    label: "THU"
   },
   {
-    value: 'Fri',
-    label: 'FRI'
+    value: "Fri",
+    label: "FRI"
   },
   {
-    value: 'Sat',
-    label: 'SAT'
+    value: "Sat",
+    label: "SAT"
   },
   {
-    value: 'Sun',
-    label: 'SUN'
+    value: "Sun",
+    label: "SUN"
   }
 ];
 const TokenType = [
   {
-    label: 'PREMIUM',
-    value: 'PREMIUM'
+    label: "PREMIUM",
+    value: "PREMIUM"
   },
   {
-    label: 'REGULAR',
-    value: 'REGULAR'
+    label: "REGULAR",
+    value: "REGULAR"
   }
 ];
 
@@ -68,10 +69,10 @@ const renderField = ({
   type,
   meta: { touched, error }
 }) => (
-  <div className='form__form-group-input-wrap form__form-group-input-wrap--error-above'>
+  <div className="form__form-group-input-wrap form__form-group-input-wrap--error-above">
     <input {...input} placeholder={placeholder} type={type} />
     {touched && error && (
-      <span className='form__form-group-error'>{error}</span>
+      <span className="form__form-group-error">{error}</span>
     )}
   </div>
 );
@@ -83,17 +84,26 @@ class CreateScheduleCard extends React.Component {
       tokenList: [
         {
           id: 0,
-          tokenNo: '',
+          tokenNo: "",
           type: {},
-          tokenTime: '',
+          tokenTime: "",
           startTime: null,
           endTime: null,
           showSnackBar: false,
-          snackBarMessage: ''
+          snackBarMessage: ""
         }
       ],
       isFastrack: false
     };
+  }
+
+  componentDidMount() {
+    const { location } = this.props;
+    const pathName = location.pathname;
+    if (pathName.includes("edit")) {
+      const pdNumber = pathName.split("/")[pathName.split("/").length - 1];
+      this.props.getScheduleDetail(pdNumber);
+    }
   }
   componentWillMount() {
     this.props.getDoctorList();
@@ -101,12 +111,12 @@ class CreateScheduleCard extends React.Component {
   }
 
   _handleSubmit = ({
-    doctor = '',
-    hospital = '',
-    weekday = '',
+    doctor = "",
+    hospital = "",
+    weekday = "",
     fastrack = false,
-    fromTime = '',
-    toTime = ''
+    fromTime = "",
+    toTime = ""
   }) => {
     const editValue = {
       doctor,
@@ -127,24 +137,24 @@ class CreateScheduleCard extends React.Component {
       if (!UNDERSCORE.isEmpty(errorText.tokens)) {
         this.setState({ errorToken: errorText.tokens });
       } else {
-        this.setState({ errorToken: '' });
+        this.setState({ errorToken: "" });
       }
       throw new SubmissionError(errorText);
       return;
     }
     // this._validateTokens(this._parseToken(tokenList, fastrack));
     editValue.tokens = this._parseToken(tokenList, fastrack);
-    editValue.startTime = moment(editValue.fromTime).format('hh:mm A');
-    editValue.endTime = moment(editValue.toTime).format('hh:mm A');
+    editValue.startTime = moment(editValue.fromTime).format("hh:mm A");
+    editValue.endTime = moment(editValue.toTime).format("hh:mm A");
     editValue.hospitalId = this.findIdInList(
       editValue.hospital.value,
       this.props.hospitalList,
-      'hospitalId'
+      "hospitalId"
     );
     editValue.doctorId = this.findIdInList(
       editValue.doctor.value,
       this.props.doctorList,
-      'doctorId'
+      "doctorId"
     );
     editValue.weekday = editValue.weekday.value;
     this.setState({ active: true });
@@ -192,8 +202,8 @@ class CreateScheduleCard extends React.Component {
     if (fastrack) {
       dataList.push({
         tokenNo: 0,
-        tokenType: 'FASTRACK',
-        tokenTime: 'Can visit on your arival'
+        tokenType: "FASTRACK",
+        tokenTime: "Can visit on your arival"
       });
     }
     return dataList;
@@ -202,8 +212,8 @@ class CreateScheduleCard extends React.Component {
   _validateScheduleFields = (key, value, errorText) => {
     if (UNDERSCORE.isEmpty(value)) {
       errorText[key] = addSchedule[key].emptyField;
-      if (addSchedule[key].type === 'date' && !!value) {
-        errorText[key] = '';
+      if (addSchedule[key].type === "date" && !!value) {
+        errorText[key] = "";
       }
     }
   };
@@ -218,9 +228,9 @@ class CreateScheduleCard extends React.Component {
     const { tokenList } = this.state;
     tokenList.push({
       id: index,
-      tokenNo: '',
-      tokenType: '',
-      tokenTime: '',
+      tokenNo: "",
+      tokenType: "",
+      tokenTime: "",
       startTime: null,
       endTime: null
     });
@@ -263,82 +273,82 @@ class CreateScheduleCard extends React.Component {
           tokenList.map((data, index) => (
             <div>
               <div>
-                <div style={{ display: 'flex', flexDirection: 'row' }}>
-                  <div style={{ width: 120, padding: '0px 8px' }}>
+                <div style={{ display: "flex", flexDirection: "row" }}>
+                  <div style={{ width: 120, padding: "0px 8px" }}>
                     <Field
-                      name={'tokentype' + index}
+                      name={"tokentype" + index}
                       component={RenderSelectField}
                       onChange={event =>
-                        this._handleTokenChange(index, 'tokenType', event.value)
+                        this._handleTokenChange(index, "tokenType", event.value)
                       }
-                      type='text'
-                      placeholder='Type'
+                      type="text"
+                      placeholder="Type"
                       width={100}
                       options={TokenType}
                     />
                   </div>
-                  <div style={{ width: 240, padding: '0px 8px' }}>
+                  <div style={{ width: 240, padding: "0px 8px" }}>
                     <Field
-                      name={'tokenNo' + index}
+                      name={"tokenNo" + index}
                       component={renderField}
                       onChange={event =>
                         this._handleTokenChange(
                           index,
-                          'tokenNo',
+                          "tokenNo",
                           event.target.value
                         )
                       }
-                      type='number'
+                      type="number"
                       value={data.tokenNo}
-                      placeholder='Token No'
+                      placeholder="Token No"
                     />
                   </div>
-                  <div style={{ width: 120, padding: '0px 8px' }}>
+                  <div style={{ width: 120, padding: "0px 8px" }}>
                     <Field
-                      name='startTime'
+                      name="startTime"
                       component={renderTimePickerField}
                       onChange={event =>
                         this._handleTokenChange(
                           index,
-                          'startTime',
-                          event.format('hh:mm A')
+                          "startTime",
+                          event.format("hh:mm A")
                         )
                       }
-                      placeholder='Start time'
+                      placeholder="Start time"
                       width={100}
                       timeMode
                     />
                   </div>
-                  <div style={{ width: 120, padding: '0px 8px' }}>
+                  <div style={{ width: 120, padding: "0px 8px" }}>
                     <Field
-                      name='endTime'
+                      name="endTime"
                       component={renderTimePickerField}
                       onChange={event =>
                         this._handleTokenChange(
                           index,
-                          'endTime',
-                          event.format('hh:mm A')
+                          "endTime",
+                          event.format("hh:mm A")
                         )
                       }
-                      placeholder='End time'
+                      placeholder="End time"
                       width={100}
                       timeMode
                     />
                   </div>
 
                   <Button
-                    className='icon btn-danger'
+                    className="icon btn-danger"
                     onClick={() => this._handleDeleteToken(data)}
                   >
-                    <span class='lnr lnr-trash text-white' />
+                    <span class="lnr lnr-trash text-white" />
                   </Button>
                   {tokenList.length - 1 === index && (
                     <Button
-                      className='icon btn-primary'
+                      className="icon btn-primary"
                       outline
                       onClick={() => this._handleAddToken(index + 1)}
                     >
-                      <span class='lnr lnr-plus-circle text-white' />
+                      <span class="lnr lnr-plus-circle text-white" />
                     </Button>
                   )}
                 </div>
@@ -352,7 +362,7 @@ class CreateScheduleCard extends React.Component {
   setEmptyData = columns => {
     const data = [];
     const obj = {};
-    columns.forEach(column => (obj[column.id] = ''));
+    columns.forEach(column => (obj[column.id] = ""));
     data.push(obj);
     return data;
   };
@@ -366,36 +376,36 @@ class CreateScheduleCard extends React.Component {
     const { errorToken } = this.state;
     const doctorList = this._parseList(
       this.props.doctorList,
-      'pdNumber',
-      'doctorId'
+      "pdNumber",
+      "doctorId"
     );
     const hospitalList = this._parseList(
       this.props.hospitalList,
-      'pdNumber',
-      'hospitalid'
+      "pdNumber",
+      "hospitalid"
     );
 
     return (
       <Container>
         <form
-          className='form form--horizontal'
+          className="form form--horizontal"
           onSubmit={handleSubmit(this._handleSubmit)}
         >
           <Card>
             <CardBody>
-              <div className='form__form-group'>
-                <h5 className='bold-text'>Add Schedule</h5>
+              <div className="form__form-group">
+                <h5 className="bold-text">Add Schedule</h5>
               </div>
               <Row>
                 <Col md={12} sm={12}>
-                  <div style={{ float: 'right' }}>
-                    <ButtonToolbar className='form__button-toolbar'>
-                      <Button color='primary' type='submit' size='sm'>
+                  <div style={{ float: "right" }}>
+                    <ButtonToolbar className="form__button-toolbar">
+                      <Button color="primary" type="submit" size="sm">
                         Save
                       </Button>
                       <Button
-                        type='button'
-                        size='sm'
+                        type="button"
+                        size="sm"
                         onClick={reset}
                         disabled={pristine || submitting}
                       >
@@ -408,66 +418,66 @@ class CreateScheduleCard extends React.Component {
               <Row>
                 <div>
                   <Col md={6} sm={12}>
-                    <div className='form__form-group'>
-                      <span className='form__form-group-label'>Doctor</span>
-                      <div className='form__form-group-field'>
+                    <div className="form__form-group">
+                      <span className="form__form-group-label">Doctor</span>
+                      <div className="form__form-group-field">
                         <Field
-                          name='doctor'
+                          name="doctor"
                           component={RenderSelectField}
-                          type='text'
-                          placeholder='Doctor'
+                          type="text"
+                          placeholder="Doctor"
                           width={240}
                           options={doctorList}
                           renderId={true}
                         />
                       </div>
                     </div>
-                    <div className='form__form-group'>
-                      <span className='form__form-group-label'>Hospital</span>
-                      <div className='form__form-group-field'>
+                    <div className="form__form-group">
+                      <span className="form__form-group-label">Hospital</span>
+                      <div className="form__form-group-field">
                         <Field
-                          name='hospital'
+                          name="hospital"
                           component={RenderSelectField}
-                          type='text'
+                          type="text"
                           renderId={true}
-                          placeholder='Hospital'
+                          placeholder="Hospital"
                           width={240}
                           options={hospitalList}
                         />
                       </div>
                     </div>
-                    <div className='form__form-group'>
-                      <span className='form__form-group-label'>Weekday</span>
-                      <div className='form__form-group-field'>
+                    <div className="form__form-group">
+                      <span className="form__form-group-label">Weekday</span>
+                      <div className="form__form-group-field">
                         <Field
-                          name='weekday'
+                          name="weekday"
                           component={RenderSelectField}
-                          type='text'
-                          placeholder='Weekday'
+                          type="text"
+                          placeholder="Weekday"
                           width={120}
                           options={weekDays}
                         />
                       </div>
                     </div>
-                    <div className='form__form-group'>
-                      <span className='form__form-group-label'>Start time</span>
-                      <div className='form__form-group-field'>
+                    <div className="form__form-group">
+                      <span className="form__form-group-label">Start time</span>
+                      <div className="form__form-group-field">
                         <Field
-                          name='fromTime'
+                          name="fromTime"
                           component={renderTimePickerField}
-                          placeholder='Start time'
+                          placeholder="Start time"
                           timeMode
                           width={120}
                         />
                       </div>
                     </div>
-                    <div className='form__form-group'>
-                      <span className='form__form-group-label'>End time</span>
-                      <div className='form__form-group-field'>
+                    <div className="form__form-group">
+                      <span className="form__form-group-label">End time</span>
+                      <div className="form__form-group-field">
                         <Field
-                          name='toTime'
+                          name="toTime"
                           component={renderTimePickerField}
-                          placeholder='End time'
+                          placeholder="End time"
                           timeMode
                           width={120}
                         />
@@ -479,21 +489,21 @@ class CreateScheduleCard extends React.Component {
               <Row>
                 <Col>
                   <div>
-                    <div className='form__form-group'>
-                      <h5 className='bold-text'>Add Token</h5>
+                    <div className="form__form-group">
+                      <h5 className="bold-text">Add Token</h5>
                       {errorToken && (
-                        <span className='form__form-group-error'>
+                        <span className="form__form-group-error">
                           {errorToken}
                         </span>
                       )}
                     </div>
-                    <div className='form__form-group'>
-                      <span className='form__form-group-label'>Fastrack</span>
-                      <div className='form__form-group-field'>
+                    <div className="form__form-group">
+                      <span className="form__form-group-label">Fastrack</span>
+                      <div className="form__form-group-field">
                         <Field
-                          name='fastrack'
+                          name="fastrack"
                           component={renderToggleButtonField}
-                          placeholder='Fastrack'
+                          placeholder="Fastrack"
                           onChange={this._handleFastrack}
                         />
                       </div>
@@ -504,15 +514,15 @@ class CreateScheduleCard extends React.Component {
               </Row>
             </CardBody>
             <Snackbar
-              anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+              anchorOrigin={{ vertical: "top", horizontal: "right" }}
               autoHideDuration={3000}
               open={this.state.showSnackBar}
               ContentProps={{
-                'aria-describedby': 'message-id'
+                "aria-describedby": "message-id"
               }}
               onClose={this._handleSnackBarClose}
               message={
-                <span id='message-id'>{this.state.snackBarMessage}</span>
+                <span id="message-id">{this.state.snackBarMessage}</span>
               }
             />
           </Card>
@@ -523,6 +533,11 @@ class CreateScheduleCard extends React.Component {
 }
 function mapStateToProps(state) {
   const scheduleState = state.schedule;
+  const defaultData =
+    !UNDERSCORE.isEmpty(scheduleState) &&
+    !UNDERSCORE.isEmpty(scheduleState.hospitalDetail)
+      ? scheduleState.doctorDetail
+      : {};
   return {
     doctorList: scheduleState.doctorMasterList,
     hospitalList: scheduleState.hospitalMasterList,
@@ -530,7 +545,8 @@ function mapStateToProps(state) {
       !UNDERSCORE.isEmpty(scheduleState) &&
       !UNDERSCORE.isEmpty(scheduleState.scheduleList)
         ? scheduleState.scheduleList
-        : []
+        : [],
+    initialValues: { ...defaultData }
   };
 }
 function mapDispatchToProps(dispatch) {
@@ -543,14 +559,18 @@ function mapDispatchToProps(dispatch) {
     },
     getScheduleList: doctorId => {
       dispatch(Action.getScheduleList(doctorId));
+    },
+    getScheduleDetail: doctorId => {
+      dispatch(Action.getScheduleDetail(doctorId));
     }
   };
 }
-CreateScheduleCard = connect(
+CreateScheduleCard = reduxForm({
+  form: "doctor",
+  validate,
+  enableReinitialize: true
+})(withTranslation("common")(CreateScheduleCard));
+export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(CreateScheduleCard);
-export default reduxForm({
-  form: 'doctor', // a unique identifier for this form
-  validate
-})(withTranslation('common')(CreateScheduleCard));
+)(withRouter(CreateScheduleCard));

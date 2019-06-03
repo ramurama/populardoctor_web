@@ -8,7 +8,16 @@ export function post (url, body) {
 					body: JSON.stringify(body)
 			});
 }
-
+export function put (url, body) {
+	return fetch(url, {
+			headers: {
+					'Accept': 'application/json',
+					'Content-Type': 'application/json',
+			},
+					method: "PUT",
+					body: JSON.stringify(body)
+			});
+}
 export function get (url) {
 	return fetch(url);
 }

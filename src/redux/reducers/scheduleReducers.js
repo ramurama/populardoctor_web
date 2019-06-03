@@ -3,17 +3,22 @@ export default (state = {}, action) => {
 		case 'RESPONSE_DOCTOR_MASTERLIST':
 			return {
 				...state,
-				doctorMasterList : action.data
+				doctorMasterList: action.data
 			};
 		case 'RESPONSE_HOSPITAL_MASTERLIST':
 			return {
 				...state,
-				hospitalMasterList : action.data
+				hospitalMasterList: action.data
 			};
 		case 'RESPONSE_SCHEDULE_LIST':
 			return {
 				...state,
-				scheduleList : action.data
+				scheduleList: action.data
+			};
+		case 'RESPONSE_SCHEDULE_DETAIL':
+			return {
+				...state,
+				scheduleDetail: action.data
 			};
 		default:
 			return state

@@ -38,6 +38,20 @@ export  function getScheduleList (doctorId) {
 		});
 	};
 };
+
+export  function getScheduleDetail (id) {
+	const endpoint = `${Endpoint.getScheduleDetail}${id}`;
+	return function (dispatch){
+		return get(endpoint)
+		.then((response) => response.json())
+		.then((data) => {
+			dispatch({
+				type: 'RESPONSE_SCHEDULE_DETAIL',
+				data
+			});
+		});
+	};
+};
 export function save(saveData){
 	return post(Endpoint.createSchedule, saveData);
 }

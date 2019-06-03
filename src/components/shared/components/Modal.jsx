@@ -35,9 +35,8 @@ export default class ModalComponent extends PureComponent {
 
   render() {
     const {
-      color, btn, title, message, colored, header,
+      color, btn, title, message, colored, header, modal
     } = this.props;
-    const { modal } = this.state;
     let Icon;
 
     switch (color) {

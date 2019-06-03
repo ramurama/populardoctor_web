@@ -20,7 +20,8 @@ import CustomerCare from '../CustomerCare';
 import Settings from '../SettingsManagement'
 
 import {
-  ROUTE_CREATE_DOCTOR,
+	ROUTE_CREATE_DOCTOR,
+	ROUTE_EDIT_DOCTOR,
   ROUTE_VIEW_DOCTORS,
 	ROUTE_CREATE_HOSPITAL,
 	ROUTE_EDIT_HOSPITAL,
@@ -33,7 +34,8 @@ import {
   ROUTE_VIEW_FRONTDESK_USER,
   ROUTE_VIEW_BOOKINGS,
   ROUTE_VIEW_BOOKING_DETAIL,
-  ROUTE_CUSTOMER_CARE,
+	ROUTE_CUSTOMER_CARE,
+	ROUTE_EDIT_SCHEDULE,
   ROUTE_SETTINGS
 } from '../../constants/routes';
 
@@ -41,11 +43,13 @@ const Pages = () => (
   <Switch>
     <Route path={ROUTE_VIEW_USERS} component={ViewUsers} />
     <Route path={ROUTE_CREATE_DOCTOR} component={CreateDoctor} />
+		<Route path={ROUTE_EDIT_DOCTOR} component={CreateDoctor} />
     <Route path={ROUTE_VIEW_DOCTORS} component={ViewDoctors} />
     <Route path={ROUTE_CREATE_HOSPITAL} component={CreateHospital} />
 		<Route path={ROUTE_EDIT_HOSPITAL} component={CreateHospital} />
     <Route path={ROUTE_VIEW_HOSPITALS} component={ViewHospitals} />
     <Route path={ROUTE_CREATE_SCHEDULE} component={CreateSchedule} />
+		<Route path={ROUTE_EDIT_SCHEDULE} component={CreateSchedule} />
     <Route path={ROUTE_VIEW_SCHEDULES} component={ViewSchedules} />
     <Route path={ROUTE_ANNOUNCEMENT} component={Announcement} />
     <Route path={ROUTE_CREATE_FRONTDESK_USER} component={CreateFrontdeskUser} />

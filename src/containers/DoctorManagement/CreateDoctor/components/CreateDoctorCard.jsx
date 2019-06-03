@@ -1,23 +1,23 @@
-import React, { PureComponent } from 'react';
-import { connect } from 'react-redux';
-import { Card, CardBody, Col, Button, ButtonToolbar, Row } from 'reactstrap';
-import { Field, reduxForm, SubmissionError } from 'redux-form';
-import PropTypes from 'prop-types';
-import { withTranslation } from 'react-i18next';
-import Snackbar from '@material-ui/core/Snackbar';
-import * as Action from '../../../../redux/actions/doctorActions';
-import validate from '../../../../components/Form/FormValidation/components/validate';
-import { addDoctor, emptyField } from '../constants/doctorForm';
-import { UNDERSCORE } from '../../../../constants/utils';
-import renderSelectField from '../../../../components/shared/components/form/Select';
-import renderDatePicker from '../../../../components/shared/components/form/DatePicker';
-import renderDropZoneField from '../../../../components/shared/components/form/DropZone';
-import ProfileImageUploadForm from './ProfileImageUploadForm';
+import React, { PureComponent } from "react";
+import { connect } from "react-redux";
+import { Card, CardBody, Col, Button, ButtonToolbar, Row } from "reactstrap";
+import { Field, reduxForm, SubmissionError } from "redux-form";
+import { withRouter } from "react-router";
+import PropTypes from "prop-types";
+import { withTranslation } from "react-i18next";
+import Snackbar from "@material-ui/core/Snackbar";
+import * as Action from "../../../../redux/actions/doctorActions";
+import validate from "../../../../components/Form/FormValidation/components/validate";
+import { addDoctor, emptyField } from "../constants/doctorForm";
+import { UNDERSCORE } from "../../../../constants/utils";
+import renderSelectField from "../../../../components/shared/components/form/Select";
+import renderDatePicker from "../../../../components/shared/components/form/DatePicker";
+import ProfileImageUploadForm from "./ProfileImageUploadForm";
 
-const moment = require('moment');
+const moment = require("moment");
 
 const profileImage =
-  'https://images.pexels.com/photos/433635/pexels-photo-433635.jpeg?auto=compress%5Cu0026cs=tinysrgb%5Cu0026dpr=2%5Cu0026h=750%5Cu0026w=1260';
+  "https://images.pexels.com/photos/433635/pexels-photo-433635.jpeg?auto=compress%5Cu0026cs=tinysrgb%5Cu0026dpr=2%5Cu0026h=750%5Cu0026w=1260";
 
 const renderField = ({
   input,
@@ -25,10 +25,10 @@ const renderField = ({
   type,
   meta: { touched, error }
 }) => (
-  <div className='form__form-group-input-wrap '>
+  <div className="form__form-group-input-wrap ">
     <input {...input} placeholder={placeholder} type={type} />
     {touched && error && (
-      <span className='form__form-group-error'>{error}</span>
+      <span className="form__form-group-error">{error}</span>
     )}
   </div>
 );
@@ -44,9 +44,9 @@ renderField.propTypes = {
 };
 
 renderField.defaultProps = {
-  placeholder: '',
+  placeholder: "",
   meta: null,
-  type: 'text'
+  type: "text"
 };
 
 class CreateDoctorCard extends PureComponent {
@@ -63,7 +63,7 @@ class CreateDoctorCard extends PureComponent {
     this.state = {
       showPassword: false,
       displayToast: false,
-      toastMessage: '',
+      toastMessage: "",
       errorText: {},
       doProfileImageUpload: false,
       doctorPdNumber: null,
@@ -72,6 +72,12 @@ class CreateDoctorCard extends PureComponent {
   }
 
   componentDidMount() {
+    const { location } = this.props;
+    const pathName = location.pathname;
+    if (pathName.includes("edit")) {
+      const pdNumber = pathName.split("/")[pathName.split("/").length - 1];
+      this.props.getDoctorDetail(pdNumber);
+    }
     this.props.getSpecialization();
   }
   _handleChange = (key, event) => {
@@ -81,21 +87,31 @@ class CreateDoctorCard extends PureComponent {
   };
 
   _handleSubmit = ({
-    fullName = '',
-    mobile = '',
-    yearsOfExperience = '',
-    degree = '',
-    dateOfBirth = '',
-    specialization = '',
-    gender = '',
-    profileContent = ''
+    fullName = "",
+    mobile = "",
+    yearsOfExperience = "",
+    degree = "",
+    dateOfBirth = "",
+    specialization = "",
+    gender = "",
+    profileContent = ""
   }) => {
+		console.log({
+      fullName,
+      mobile,
+      yearsOfExperience,
+      degree,
+      dateOfBirth,
+      specialization,
+      gender,
+      profileContent,
+    })
     const editValue = {
       fullName,
       mobile,
       yearsOfExperience,
       degree,
-      dateOfBirth: dateOfBirth ? moment(dateOfBirth).format('DD-MM-YYYY"') : '',
+      dateOfBirth: UNDERSCORE.isEmpty(dateOfBirth) ? moment(dateOfBirth).format('DD-MM-YYYY') : "",
       specialization: specialization.label,
       gender: gender.label,
       profileContent
@@ -135,8 +151,8 @@ class CreateDoctorCard extends PureComponent {
   };
 
   validateTextData = (value, key, editValue, errorText) => {
-    const type = addDoctor[key] ? addDoctor[key].type : 'other';
-    if (type !== 'other') {
+    const type = addDoctor[key] ? addDoctor[key].type : "other";
+    if (type !== "other") {
       if (UNDERSCORE.isEmpty(value)) {
         editValue[key] = value;
         errorText[key] = addDoctor[key].emptyField;
@@ -150,20 +166,20 @@ class CreateDoctorCard extends PureComponent {
   };
 
   validateOtherFields = (editValue, errorText) => {
-    if (!editValue['dateOfBirth']) {
-      errorText['dateOfBirth'] = emptyField;
+    if (!editValue["dateOfBirth"]) {
+      errorText["dateOfBirth"] = emptyField;
     }
-    if (UNDERSCORE.isEmpty(editValue['gender'])) {
-      errorText['gender'] = emptyField;
+    if (UNDERSCORE.isEmpty(editValue["gender"])) {
+      errorText["gender"] = emptyField;
     }
-    if (UNDERSCORE.isEmpty(editValue['specialization'])) {
-      errorText['specialization'] = emptyField;
+    if (UNDERSCORE.isEmpty(editValue["specialization"])) {
+      errorText["specialization"] = emptyField;
     }
   };
 
   _mobileNumberValidate = (value, errorText) => {
     if (value && value.length !== 0 && value.length !== 10) {
-      errorText['mobile'] = addDoctor['mobile'].errorText;
+      errorText["mobile"] = addDoctor["mobile"].errorText;
     }
   };
 
@@ -176,6 +192,9 @@ class CreateDoctorCard extends PureComponent {
       : [];
   };
 
+	handleDOBChange = (date) => {
+		console.log(date)
+	}
   _handleClose = () => {
     this.setState({ displayToast: false });
   };
@@ -189,109 +208,110 @@ class CreateDoctorCard extends PureComponent {
           <Row>
             <Col md={6} sm={12}>
               <form
-                className='form form--horizontal'
+                className="form form--horizontal"
                 onSubmit={handleSubmit(this._handleSubmit)}
               >
-                <div className='form__form-group'>
-                  <span className='form__form-group-label'>Full Name</span>
-                  <div className='form__form-group-field'>
+                <div className="form__form-group">
+                  <span className="form__form-group-label">Full Name</span>
+                  <div className="form__form-group-field">
                     <Field
-                      name='fullName'
+                      name="fullName"
                       component={renderField}
-                      type='text'
-                      placeholder='Full Name'
+                      type="text"
+                      placeholder="Full Name"
                     />
                   </div>
                 </div>
-                <div className='form__form-group'>
-                  <span className='form__form-group-label'>Mobile</span>
-                  <div className='form__form-group-field'>
+                <div className="form__form-group">
+                  <span className="form__form-group-label">Mobile</span>
+                  <div className="form__form-group-field">
                     <Field
-                      name='mobile'
+                      name="mobile"
                       component={renderField}
-                      type='number'
-                      placeholder='Mobile'
+                      type="number"
+                      placeholder="Mobile"
                     />
                   </div>
                 </div>
-                <div className='form__form-group'>
-                  <span className='form__form-group-label'>Date of Birth</span>
-                  <div className='form__form-group-field'>
+                <div className="form__form-group">
+                  <span className="form__form-group-label">Date of Birth</span>
+                  <div className="form__form-group-field">
                     <Field
-                      name='dateOfBirth'
+                      name="dateOfBirth"
                       component={renderDatePicker}
-                      placeholder='Date of Birth'
+											placeholder="Date of Birth"
+											onChange={this.handleDOBChange}
                     />
                   </div>
                 </div>
-                <div className='form__form-group'>
-                  <span className='form__form-group-label'>Gender</span>
-                  <div className='form__form-group-field'>
+                <div className="form__form-group">
+                  <span className="form__form-group-label">Gender</span>
+                  <div className="form__form-group-field">
                     <Field
-                      name='gender'
+                      name="gender"
                       component={renderSelectField}
-                      type='text'
-                      placeholder='Gender'
+                      type="text"
+                      placeholder="Gender"
                       width={150}
                       options={[
-                        { value: 'male', label: 'MALE' },
-                        { value: 'female', label: 'FEMALE' }
+                        { value: "male", label: "MALE" },
+                        { value: "female", label: "FEMALE" }
                       ]}
                     />
                   </div>
                 </div>
-                <div className='form__form-group'>
-                  <span className='form__form-group-label'>Specialization</span>
-                  <div className='form__form-group-field'>
+                <div className="form__form-group">
+                  <span className="form__form-group-label">Specialization</span>
+                  <div className="form__form-group-field">
                     <Field
-                      name='specialization'
+                      name="specialization"
                       component={renderSelectField}
-                      type='text'
-                      placeholder='Specialization'
+                      type="text"
+                      placeholder="Specialization"
                       width={200}
                       options={specializations}
                     />
                   </div>
                 </div>
-                <div className='form__form-group'>
-                  <span className='form__form-group-label'>Degree</span>
-                  <div className='form__form-group-field'>
+                <div className="form__form-group">
+                  <span className="form__form-group-label">Degree</span>
+                  <div className="form__form-group-field">
                     <Field
-                      name='degree'
+                      name="degree"
                       component={renderField}
-                      type='text'
-                      placeholder='Degree'
+                      type="text"
+                      placeholder="Degree"
                     />
                   </div>
                 </div>
-                <div className='form__form-group'>
-                  <span className='form__form-group-label'>
+                <div className="form__form-group">
+                  <span className="form__form-group-label">
                     Years Of Experience
                   </span>
-                  <div className='form__form-group-field'>
+                  <div className="form__form-group-field">
                     <Field
-                      name='yearsOfExperience'
+                      name="yearsOfExperience"
                       component={renderField}
-                      type='number'
-                      placeholder='Years Of Experience'
+                      type="number"
+                      placeholder="Years Of Experience"
                     />
                   </div>
                 </div>
-                <div className='form__form-group'>
-                  <span className='form__form-group-label'>Description</span>
-                  <div className='form__form-group-field'>
+                <div className="form__form-group">
+                  <span className="form__form-group-label">Description</span>
+                  <div className="form__form-group-field">
                     <Field
-                      name='profileContent'
-                      component='textarea'
-                      placeholder='Description'
+                      name="profileContent"
+                      component="textarea"
+                      placeholder="Description"
                     />
                   </div>
                 </div>
-                <div style={{ float: 'right' }}>
-                  <ButtonToolbar className='form__button-toolbar'>
+                <div style={{ float: "right" }}>
+                  <ButtonToolbar className="form__button-toolbar">
                     <Button
-                      color='primary'
-                      type='submit'
+                      color="primary"
+                      type="submit"
                       disabled={
                         pristine ||
                         submitting ||
@@ -301,7 +321,7 @@ class CreateDoctorCard extends PureComponent {
                       Save
                     </Button>
                     <Button
-                      type='button'
+                      type="button"
                       onClick={reset}
                       disabled={
                         pristine ||
@@ -329,14 +349,14 @@ class CreateDoctorCard extends PureComponent {
           </Row>
         </CardBody>
         <Snackbar
-          anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+          anchorOrigin={{ vertical: "top", horizontal: "right" }}
           autoHideDuration={3000}
           open={this.state.displayToast}
           ContentProps={{
-            'aria-describedby': 'message-id'
+            "aria-describedby": "message-id"
           }}
           onClose={this._handleClose}
-          message={<span id='message-id'>{this.state.toastMessage}</span>}
+          message={<span id="message-id">{this.state.toastMessage}</span>}
         />
       </Card>
     );
@@ -347,27 +367,43 @@ function mapDispatchToProps(dispatch) {
   return {
     getSpecialization: () => {
       dispatch(Action.getSpecialization());
+    },
+    getDoctorDetail: pdNumber => {
+      dispatch(Action.getDoctorDetail(pdNumber));
     }
   };
 }
 function mapStateToProps(state) {
   const doctorState = state.doctor;
+  const defaultData =
+    !UNDERSCORE.isEmpty(doctorState) &&
+    !UNDERSCORE.isEmpty(doctorState.doctorDetail)
+      ? doctorState.doctorDetail
+			: {};
+	if(!UNDERSCORE.isEmpty(defaultData)){
+		// console.log(defaultData)
+		// var specialization = {label: defaultData.specialization, name : defaultData.specialization};
+		// defaultData.specialization = specialization;
+	}
   return {
     specializations: !UNDERSCORE.isEmpty(doctorState)
       ? doctorState.specialization
-      : []
+      : [],
+    initialValues: { ...defaultData },
+    isUpdate : !UNDERSCORE.isEmpty(defaultData)
   };
 }
 CreateDoctorCard.contextTypes = {
   router: PropTypes.object
 };
 
-CreateDoctorCard = connect(
+CreateDoctorCard = reduxForm({
+  form: "doctor", 
+  enableReinitialize: true,
+  validate
+})(withTranslation("common")(CreateDoctorCard));
+
+export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(CreateDoctorCard);
-
-export default reduxForm({
-  form: 'doctor', // a unique identifier for this form
-  validate
-})(withTranslation('common')(CreateDoctorCard));
+)(withRouter(CreateDoctorCard));

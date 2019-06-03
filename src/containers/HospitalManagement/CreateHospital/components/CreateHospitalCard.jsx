@@ -2,12 +2,15 @@ import React, { PureComponent } from 'react';
 import { Card, CardBody, Col, Button, ButtonToolbar } from 'reactstrap';
 import { Field, reduxForm, SubmissionError } from 'redux-form';
 import PropTypes from 'prop-types';
+import { withRouter } from "react-router";
+import { connect } from "react-redux";
 import { withTranslation } from 'react-i18next';
 import Snackbar from '@material-ui/core/Snackbar';
-import { save } from '../../../../redux/actions/hospitalActions';
+import { save, update } from '../../../../redux/actions/hospitalActions';
 import validate from '../../../../components/Form/FormValidation/components/validate';
 import { addHospital } from '../constants/hospitalForm';
 import { UNDERSCORE } from '../../../../constants/utils';
+import * as Action from "../../../../redux/actions/hospitalActions";
 
 const renderField = ({
   input,
@@ -65,6 +68,14 @@ class CreateHospitalCard extends PureComponent {
     };
   }
 
+	componentDidMount(){
+		const {location } = this.props;
+		const pathName = location.pathname;
+		if(pathName.includes('edit')){
+			const pdNumber =  pathName.split('/')[pathName.split('/').length-1];
+			this.props.getHospitalDetail(pdNumber);
+		}
+	}
   _handleChange = (key, event) => {
     const { saveData } = this.state;
     saveData[key] = event.target.value;
@@ -102,8 +113,21 @@ class CreateHospitalCard extends PureComponent {
       location: saveData.location,
       landmark: saveData.landmark,
       pincode: saveData.pincode
-    };
-    save(data)
+		};
+		if(this.props.isUpdate){
+			const id = this.props.initialValues._id;
+			const pdNumber = this.props.initialValues.hospitalPdNumber;
+			update(data, id)
+      .then(res => res.json())
+      .then(res => {
+        this.setState({ displayToast: true, toastMessage: res.message }, () => {
+          if (res.status) {
+						this.props.getHospitalDetail(pdNumber);
+          }
+        });
+      });
+		}else{
+			save(data)
       .then(res => res.json())
       .then(res => {
         this.setState({ displayToast: true, toastMessage: res.message }, () => {
@@ -112,6 +136,7 @@ class CreateHospitalCard extends PureComponent {
           }
         });
       });
+		}
   };
 
   validateTextData = (value, key, editValue, errorText) => {
@@ -251,8 +276,39 @@ class CreateHospitalCard extends PureComponent {
     );
   }
 }
-
-export default reduxForm({
-  form: 'hospital', // a unique identifier for this form
+function mapStateToProps(state) {
+	
+	const hospitalState = state.hospital;
+	let isUpdate =false;
+	const defaultData = !UNDERSCORE.isEmpty(hospitalState) &&
+	!UNDERSCORE.isEmpty(hospitalState.hospitalDetail) ? 
+		hospitalState.hospitalDetail
+			: {};
+	if(!UNDERSCORE.isEmpty(defaultData)){
+		isUpdate = true;
+		defaultData.streetName = defaultData.address.split(' ')[0];
+		defaultData.building = defaultData.address.split(' ')[1];
+	}
+  return {
+		initialValues: {...defaultData},
+		isUpdate,
+  };
+}
+function mapDispatchToProps(dispatch) {
+  return {
+    getHospitalDetail: pdNumber => {
+      dispatch(Action.getHospitalDetail(pdNumber));
+    }
+  };
+}
+CreateHospitalCard = reduxForm({ 
+	form: 'hospital', // a unique identifier for this form
+	enableReinitialize: true,
   validate
 })(withTranslation('common')(CreateHospitalCard));
+
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withRouter(CreateHospitalCard));

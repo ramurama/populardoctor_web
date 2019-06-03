@@ -27,6 +27,19 @@ export  function getSpecialization() {
 		});
 	};
 };
+export function getDoctorDetail(pdNumber){
+	const endpoint = `${Endpoint.getDoctorDetail}${pdNumber}`;
+	return function (dispatch){
+		return get(endpoint)
+		.then((response) => response.json())
+		.then((data) => {
+			dispatch({
+				type: 'RESPONSE_DOCTORDETAIL',
+				data
+			});
+		});
+	};
+}
 
 
 export function save(saveData){

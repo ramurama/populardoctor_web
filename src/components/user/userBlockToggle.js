@@ -27,7 +27,6 @@ class UserBlockToggle extends React.Component{
 		const toolText = status === 'ACTIVE' ? 'block' : 'unblock';
 		const color = status === 'ACTIVE' ? true: false;
 		return (
-		<Container>
 			<Tooltip title={toolText}>
 				<Switch
 					checked={color}
@@ -36,7 +35,7 @@ class UserBlockToggle extends React.Component{
 					color="primary"
 				/>
 			</Tooltip>
-		</Container>);
+		);
 	}
 }
 function mapStateToProps(state){

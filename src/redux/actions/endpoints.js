@@ -8,7 +8,9 @@ const endpoints = {
 	createDoctor: '/api/v1/admin/createDoctor',
 	uploadProfileImage: '/api/v1/admin/uploadDoctorProfileImage',
 	getSpecializations: '/api/v1/admin/getSpecializations',
+	
 	createHospital: '/api/v1/admin/createHospital',
+	updateHospital: '/api/v1/admin/updateHospital',
   
 	createSchedule: '/api/v1/admin/createSchedule',
 	getDoctorMasterList: '/api/v1/admin/getMasterDoctors',
@@ -21,12 +23,16 @@ const endpoints = {
   
 	getCustomerList: '/api/v1/admin/getCustomers/',
 	getScheduleList: '/api/v1/admin/getSchedules/',
-  
+	getScheduleDetail: '/api/v1/admin/getScheduleDetails/',
+	
 	blockUser: '/api/v1/admin/blockUser',
 	unblockUser: '/api/v1/admin/unblockUser',
   
 	getHospitalList: '/api/v1/admin/getHospitals/',
-  
+	getHospitalDetail : '/api/v1/admin/getHospitalDetails/',
+	
+	getDoctorDetail : '/api/v1/admin/getDoctorDetails/',
+
 	getScheduleDoctors: '/api/v1/admin/getScheduleDoctors/',
 	getScheduleHospitals: '/api/v1/admin/getScheduleHospitals',
   
