@@ -1,4 +1,4 @@
-import { post, get } from './fetch';
+import { post, get, put } from './fetch';
 import Endpoint from './endpoints';
 
 export  function getDoctorList () {
@@ -44,4 +44,7 @@ export function getDoctorDetail(pdNumber){
 
 export function save(saveData){
 	return post(Endpoint.createDoctor, saveData);
+}
+export function update(saveData, id){
+	return put(`${Endpoint.updateDoctor}/${id}`, saveData);
 }

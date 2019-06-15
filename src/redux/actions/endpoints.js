@@ -6,6 +6,7 @@ const endpoints = {
   
 	doctorList: '/api/v1/admin/getDoctors/',
 	createDoctor: '/api/v1/admin/createDoctor',
+	updateDoctor: '/api/v1/admin/updateDoctor',
 	uploadProfileImage: '/api/v1/admin/uploadDoctorProfileImage',
 	getSpecializations: '/api/v1/admin/getSpecializations',
 	

@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import TimePicker from "rc-time-picker";
 
 import "rc-time-picker/assets/index.css";
+const  moment  = require("moment");
 
 class TimePickerField extends PureComponent {
   static propTypes = {
@@ -25,7 +26,7 @@ class TimePickerField extends PureComponent {
   };
 
   render() {
-    const { name, onChange, timeMode } = this.props;
+    const { name, onChange, timeMode , value } = this.props;
     const { open } = this.state;
 
     return (
@@ -33,7 +34,7 @@ class TimePickerField extends PureComponent {
         open={open}
         onOpen={this.setOpen}
         onClose={this.setOpen}
-        name={name}
+				name={name}
         onChange={onChange}
         showSecond={false}
         use12Hours={timeMode}

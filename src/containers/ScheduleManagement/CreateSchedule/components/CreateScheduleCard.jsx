@@ -63,17 +63,39 @@ const TokenType = [
   }
 ];
 
+const fastrack = {
+	number: 0,
+	type: 'FASTTRACK',
+	time: 'Can visit on your arival'
+};
+
+const emptyToken = [
+	{
+		id: 0,
+		number: "",
+		type: {},
+		time: "",
+		startTime: null,
+		endTime: null,
+		showSnackBar: false,
+		snackBarMessage: ""
+	}
+];
 const renderField = ({
   input,
   placeholder,
-  type,
+	type,
+	width,
+	disabled,
   meta: { touched, error }
 }) => (
   <div className="form__form-group-input-wrap form__form-group-input-wrap--error-above">
-    <input {...input} placeholder={placeholder} type={type} />
+	<div style={{ width: width }}>
+    <input {...input} placeholder={placeholder} type={type} disabled={disabled}  />
     {touched && error && (
       <span className="form__form-group-error">{error}</span>
-    )}
+		)}
+		</div>
   </div>
 );
 
@@ -81,18 +103,7 @@ class CreateScheduleCard extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      tokenList: [
-        {
-          id: 0,
-          tokenNo: "",
-          type: {},
-          tokenTime: "",
-          startTime: null,
-          endTime: null,
-          showSnackBar: false,
-          snackBarMessage: ""
-        }
-      ],
+      tokenList: emptyToken,
       isFastrack: false
     };
   }
@@ -108,8 +119,40 @@ class CreateScheduleCard extends React.Component {
   componentWillMount() {
     this.props.getDoctorList();
     this.props.getHospitalList();
+	}
+	static getDerivedStateFromProps(nextProps, prevState){
+		if(nextProps.isUpdate && !UNDERSCORE.isEqual(nextProps.initialValues.tokens,prevState.tokenList)){
+			return { tokenList: nextProps.initialValues.tokens};
+	 }
+	 else return null;
+ }
+ componentDidUpdate(prevProps, prevState) {
+  if(!UNDERSCORE.isEqual(prevState.tokenList,this.state.tokenList)){
+		const {isFastrack , dataList} =this._decodeTokenList(this.props.initialValues.tokens);
+    this.setState({isFastrack, tokenList: dataList});
   }
-
+ }
+	_decodeTokenList = (tokenList) => {
+		let isFastrack = false;
+		const dataList = []
+		tokenList && tokenList.forEach((map, index) => {
+			console.log(map)
+			if(UNDERSCORE.isEqual(map, fastrack)){
+				isFastrack = true;
+			}
+			dataList.push({
+				id: index,
+				number: map.number,
+				type: map.type,
+				startTime: map.time.split(' - ')[0],
+				endTime: map.time.split(' - ')[1],
+			})
+		});
+		return {
+			isFastrack,
+			dataList
+		}
+	}
   _handleSubmit = ({
     doctor = "",
     hospital = "",
@@ -186,24 +229,24 @@ class CreateScheduleCard extends React.Component {
     const dataList = [];
     tokenList.forEach(token => {
       if (
-        !UNDERSCORE.isEmpty(token.tokenNo) &&
-        !UNDERSCORE.isEmpty(token.tokenType) &&
+        !UNDERSCORE.isEmpty(token.number) &&
+        !UNDERSCORE.isEmpty(token.type) &&
         !UNDERSCORE.isEmpty(token.startTime) &&
         !UNDERSCORE.isEmpty(token.endTime)
       ) {
         const data = {
-          tokenNo: token.tokenNo,
-          tokenType: token.tokenType,
-          tokenTime: `${token.startTime} - ${token.endTime}`
+          number: parseInt(token.tokenNo),
+          type: token.tokenType,
+          time: `${token.startTime} - ${token.endTime}`
         };
         dataList.push(data);
       }
     });
     if (fastrack) {
       dataList.push({
-        tokenNo: 0,
-        tokenType: "FASTRACK",
-        tokenTime: "Can visit on your arival"
+        number: 0,
+        type: 'FASTTRACK',
+        time: 'Can visit on your arival'
       });
     }
     return dataList;
@@ -266,7 +309,8 @@ class CreateScheduleCard extends React.Component {
   };
 
   renderTokenList = () => {
-    const { tokenList } = this.state;
+		const { tokenList } = this.state;
+		console.log(tokenList)
     return (
       <div>
         {tokenList &&
@@ -276,10 +320,10 @@ class CreateScheduleCard extends React.Component {
                 <div style={{ display: "flex", flexDirection: "row" }}>
                   <div style={{ width: 120, padding: "0px 8px" }}>
                     <Field
-                      name={"tokentype" + index}
+                      name={"type" + index}
                       component={RenderSelectField}
                       onChange={event =>
-                        this._handleTokenChange(index, "tokenType", event.value)
+                        this._handleTokenChange(index, "type", event.value)
                       }
                       type="text"
                       placeholder="Type"
@@ -289,17 +333,17 @@ class CreateScheduleCard extends React.Component {
                   </div>
                   <div style={{ width: 240, padding: "0px 8px" }}>
                     <Field
-                      name={"tokenNo" + index}
+                      name={"number" + index}
                       component={renderField}
                       onChange={event =>
                         this._handleTokenChange(
                           index,
-                          "tokenNo",
+                          "number",
                           event.target.value
                         )
                       }
                       type="number"
-                      value={data.tokenNo}
+                      value={data.number}
                       placeholder="Token No"
                     />
                   </div>
@@ -372,7 +416,7 @@ class CreateScheduleCard extends React.Component {
   };
 
   render() {
-    const { pristine, reset, submitting, handleSubmit } = this.props;
+    const { pristine, reset, submitting, handleSubmit, isUpdate } = this.props;
     const { errorToken } = this.state;
     const doctorList = this._parseList(
       this.props.doctorList,
@@ -383,8 +427,9 @@ class CreateScheduleCard extends React.Component {
       this.props.hospitalList,
       "pdNumber",
       "hospitalid"
-    );
-
+		);
+		const renderTimeField = isUpdate ? renderField: renderTimePickerField;
+		const renderSelectField = isUpdate ? renderField: RenderSelectField;
     return (
       <Container>
         <form
@@ -423,11 +468,12 @@ class CreateScheduleCard extends React.Component {
                       <div className="form__form-group-field">
                         <Field
                           name="doctor"
-                          component={RenderSelectField}
+                          component={renderSelectField}
                           type="text"
                           placeholder="Doctor"
                           width={240}
-                          options={doctorList}
+													options={doctorList}
+													disabled={this.props.isUpdate}
                           renderId={true}
                         />
                       </div>
@@ -437,9 +483,10 @@ class CreateScheduleCard extends React.Component {
                       <div className="form__form-group-field">
                         <Field
                           name="hospital"
-                          component={RenderSelectField}
+                          component={renderSelectField}
                           type="text"
-                          renderId={true}
+													renderId={true}
+													disabled={this.props.isUpdate}
                           placeholder="Hospital"
                           width={240}
                           options={hospitalList}
@@ -451,8 +498,9 @@ class CreateScheduleCard extends React.Component {
                       <div className="form__form-group-field">
                         <Field
                           name="weekday"
-                          component={RenderSelectField}
-                          type="text"
+                          component={renderSelectField}
+													type="text"
+													disabled={this.props.isUpdate}
                           placeholder="Weekday"
                           width={120}
                           options={weekDays}
@@ -464,8 +512,9 @@ class CreateScheduleCard extends React.Component {
                       <div className="form__form-group-field">
                         <Field
                           name="fromTime"
-                          component={renderTimePickerField}
-                          placeholder="Start time"
+                          component={renderTimeField}
+													placeholder="Start time"
+													disabled={this.props.isUpdate}
                           timeMode
                           width={120}
                         />
@@ -476,7 +525,8 @@ class CreateScheduleCard extends React.Component {
                       <div className="form__form-group-field">
                         <Field
                           name="toTime"
-                          component={renderTimePickerField}
+													component={renderTimeField}
+													disabled={this.props.isUpdate}
                           placeholder="End time"
                           timeMode
                           width={120}
@@ -503,7 +553,8 @@ class CreateScheduleCard extends React.Component {
                         <Field
                           name="fastrack"
                           component={renderToggleButtonField}
-                          placeholder="Fastrack"
+													placeholder="Fastrack"
+													value={this.state.isFastrack}
                           onChange={this._handleFastrack}
                         />
                       </div>
@@ -535,8 +586,8 @@ function mapStateToProps(state) {
   const scheduleState = state.schedule;
   const defaultData =
     !UNDERSCORE.isEmpty(scheduleState) &&
-    !UNDERSCORE.isEmpty(scheduleState.hospitalDetail)
-      ? scheduleState.doctorDetail
+    !UNDERSCORE.isEmpty(scheduleState.scheduleDetail)
+      ? scheduleState.scheduleDetail
       : {};
   return {
     doctorList: scheduleState.doctorMasterList,
@@ -546,7 +597,8 @@ function mapStateToProps(state) {
       !UNDERSCORE.isEmpty(scheduleState.scheduleList)
         ? scheduleState.scheduleList
         : [],
-    initialValues: { ...defaultData }
+		initialValues: { ...defaultData },
+		isUpdate : !UNDERSCORE.isEmpty(defaultData)
   };
 }
 function mapDispatchToProps(dispatch) {

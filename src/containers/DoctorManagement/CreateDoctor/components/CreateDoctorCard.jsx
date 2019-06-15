@@ -22,11 +22,12 @@ const profileImage =
 const renderField = ({
   input,
   placeholder,
-  type,
+	type,
+	disabled,
   meta: { touched, error }
 }) => (
   <div className="form__form-group-input-wrap ">
-    <input {...input} placeholder={placeholder} type={type} />
+    <input {...input} placeholder={placeholder} type={type} disabled={disabled} />
     {touched && error && (
       <span className="form__form-group-error">{error}</span>
     )}
@@ -96,16 +97,6 @@ class CreateDoctorCard extends PureComponent {
     gender = "",
     profileContent = ""
   }) => {
-		console.log({
-      fullName,
-      mobile,
-      yearsOfExperience,
-      degree,
-      dateOfBirth,
-      specialization,
-      gender,
-      profileContent,
-    })
     const editValue = {
       fullName,
       mobile,
@@ -127,8 +118,30 @@ class CreateDoctorCard extends PureComponent {
     this.setState({ errorText });
     const error = Object.keys(errorText).filter(key => !!errorText[key]).length;
     if (error === 0) {
-      this.setState({ active: true });
-      Action.save(editValue)
+			this.setState({ active: true });
+			if(this.props.isUpdate){
+				console.log(this.props)
+				const id = this.props.initialValues.doctorId;
+				const pdNumber = this.props.initialValues.hospitalPdNumber;
+				console.log(editValue)
+				Action.update(editValue, id)
+        .then(res => res.json())
+        .then(res => {
+          if (res.status) {
+            this.setState(
+              { toastMessage: res.message, disableButtonActions: true },
+						);
+						this.props.getDoctorDetail(pdNumber);
+          } else {
+            //else display a toast with the returned message
+            this.setState({
+              displayToast: true,
+              toastMessage: res.message
+            });
+          }
+        });
+			}else{
+				Action.save(editValue)
         .then(res => res.json())
         .then(res => {
           if (res.status) {
@@ -145,6 +158,7 @@ class CreateDoctorCard extends PureComponent {
             });
           }
         });
+			}
     } else {
       throw new SubmissionError(errorText);
     }
@@ -229,7 +243,8 @@ class CreateDoctorCard extends PureComponent {
                       name="mobile"
                       component={renderField}
                       type="number"
-                      placeholder="Mobile"
+											placeholder="Mobile"
+											disabled={this.props.isUpdate}
                     />
                   </div>
                 </div>
@@ -380,11 +395,6 @@ function mapStateToProps(state) {
     !UNDERSCORE.isEmpty(doctorState.doctorDetail)
       ? doctorState.doctorDetail
 			: {};
-	if(!UNDERSCORE.isEmpty(defaultData)){
-		// console.log(defaultData)
-		// var specialization = {label: defaultData.specialization, name : defaultData.specialization};
-		// defaultData.specialization = specialization;
-	}
   return {
     specializations: !UNDERSCORE.isEmpty(doctorState)
       ? doctorState.specialization
