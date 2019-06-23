@@ -133,7 +133,6 @@ class CreateScheduleCard extends React.Component {
   }
   static getDerivedStateFromProps(nextProps, prevState) {
     if (nextProps.isUpdate && UNDERSCORE.isEmpty(prevState.existTokens) && !prevState.updated) {
-			alert()
       return { existTokens: nextProps.initialValues.tokens };
     } else return null;
   }
@@ -142,7 +141,6 @@ class CreateScheduleCard extends React.Component {
       const { isFastrack, dataList } = this._decodeTokenList(
         prevState.existTokens
 			);
-			alert()
       this._handleFastrack(isFastrack);
       this.setState({ isFastrack, existTokens: dataList, updated: true });
     }
@@ -204,8 +202,6 @@ class CreateScheduleCard extends React.Component {
 				deleteTokens.push({number : 0})
 			}
 		}
-		console.log(token)
-
 	}
 	_addSchedule = (editValue, isFastrack) => {
 		const { tokenList } = this.state;
@@ -342,12 +338,10 @@ class CreateScheduleCard extends React.Component {
 		const { existTokens, deleteTokens } = this.state;
 		deleteTokens.push({number: data.number});
 		const dataList = existTokens.filter((map) => !UNDERSCORE.isEqual(data, map));
-		console.log(dataList)
 		this.setState({
 			deleteTokens,
 			existTokens: dataList
 		});
-		console.log(existTokens)
 	}
 
   _handleFastrack = value => {
@@ -358,7 +352,6 @@ class CreateScheduleCard extends React.Component {
 
   renderTokenList = () => {
     const { tokenList, existTokens } = this.state;
-    console.log(existTokens);
     return (
       <div>
         {existTokens &&
