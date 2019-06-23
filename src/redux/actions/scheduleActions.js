@@ -1,4 +1,4 @@
-import { post, get, del } from './fetch';
+import { post, get, put, del } from './fetch';
 import Endpoint from './endpoints';
 
 export  function getDoctorList () {
@@ -56,7 +56,11 @@ export function save(saveData){
 	return post(Endpoint.createSchedule, saveData);
 }
 
-export function deleteToken( number, scheduleId){
-	const endpoint = `${Endpoint.deleteToken}${scheduleId}/${number}`;
+export function updateSchedule( data, scheduleId){
+	const endpoint = `${Endpoint.updateSchedule}${scheduleId}`;
+	return put( endpoint, data);
+}
+export function deleteSchedule(scheduleId){
+	const endpoint = `${Endpoint.deleteSchedule}${scheduleId}`;
 	return del( endpoint);
 }

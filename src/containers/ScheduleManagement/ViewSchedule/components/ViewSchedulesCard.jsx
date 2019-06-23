@@ -71,12 +71,18 @@ class ScheduleManagementCard extends React.Component {
   };
 
   handleSelect = value => {
+		this.setState({ doctorId: value.id});
     this.props.getScheduleList(value.id);
   };
   _handleEditHospital = data => {
     this.context.router.history.push(
       `/pages/scheduleManagement/editSchedule/${data._id}`
     );
+	};
+
+	_handleDeleteToken = data => {
+		Action.deleteSchedule(data._id)
+		.then(() =>  this.props.getScheduleList(this.state.doctorId));
   };
 
   _renderOperation = data => {

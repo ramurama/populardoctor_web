@@ -191,17 +191,36 @@ class CreateScheduleCard extends React.Component {
   };
 	_updateSchedule = () => {
 		const { deleteTokens, tokenList, isFastrack } = this.state;
+		// const errorText = {};
+		const addTokens = this._parseToken(tokenList, false);
 		const token = {
 			deleteTokens,
-			tokenList,
+			addTokens
 		};
 		if(this.props.initialValues.isFastrack !== isFastrack){
 			if(isFastrack){
-				tokenList.push(fastrack)
+				// const addTokenList = addTokens.push(fastrack)
+				token.addTokens.push(fastrack);
 			}else{
-				deleteTokens.push({number : 0})
+				deleteTokens.push(0)
 			}
 		}
+		
+		const { location } = this.props;
+    const pathName = location.pathname;
+		const scheduleId = pathName.split("/")[pathName.split("/").length - 1];
+		if(UNDERSCORE.isEmpty(token.addTokens) && UNDERSCORE.isEmpty(token.deleteTokens)){
+			return;
+		}
+		Action.updateSchedule(token,scheduleId)
+		.then(response => response.json())
+		.then(response => {
+			this.props.getScheduleDetail(scheduleId);
+			this.setState({
+				showSnackBar: true,
+				snackBarMessage: response.message
+			});
+		});
 	}
 	_addSchedule = (editValue, isFastrack) => {
 		const { tokenList } = this.state;
@@ -336,7 +355,7 @@ class CreateScheduleCard extends React.Component {
 	};
 	_handleExistDeleteToken  = (data) => {
 		const { existTokens, deleteTokens } = this.state;
-		deleteTokens.push({number: data.number});
+		deleteTokens.push(data.number);
 		const dataList = existTokens.filter((map) => !UNDERSCORE.isEqual(data, map));
 		this.setState({
 			deleteTokens,

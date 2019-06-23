@@ -48,7 +48,8 @@ const endpoints = {
   
 	changePassword: '/api/v1/admin/changePassword',
 
-	deleteToken: `/api/v1/admin/deleteToken/`,
+	updateSchedule: `/api/v1/admin/updateSchedule/`,
+	deleteSchedule: `/api/v1/admin/deleteSchedule/`,
   };
   
   export default endpoints;
