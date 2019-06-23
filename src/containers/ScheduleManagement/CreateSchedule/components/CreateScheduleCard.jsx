@@ -64,47 +64,58 @@ const TokenType = [
 ];
 
 const fastrack = {
-	number: 0,
-	type: 'FASTTRACK',
-	time: 'Can visit on your arival'
+  number: 0,
+  type: "FASTTRACK",
+  time: "Can visit on your arival"
 };
 
 const emptyToken = [
-	{
-		id: 0,
-		number: "",
-		type: {},
-		time: "",
-		startTime: null,
-		endTime: null,
-		showSnackBar: false,
-		snackBarMessage: ""
-	}
+  {
+    id: 0,
+    number: "",
+    type: {},
+    time: "",
+    startTime: null,
+    endTime: null,
+    showSnackBar: false,
+    snackBarMessage: ""
+  }
 ];
 const renderField = ({
   input,
   placeholder,
-	type,
-	width,
-	disabled,
+  type,
+  width,
+  disabled,
   meta: { touched, error }
-}) => (
-  <div className="form__form-group-input-wrap form__form-group-input-wrap--error-above">
-	<div style={{ width: width }}>
-    <input {...input} placeholder={placeholder} type={type} disabled={disabled}  />
-    {touched && error && (
-      <span className="form__form-group-error">{error}</span>
-		)}
-		</div>
-  </div>
-);
+}) => {
+
+  return (
+    <div className="form__form-group-input-wrap form__form-group-input-wrap--error-above">
+      <div style={{ width: width }}>
+        <input
+          {...input}
+          placeholder={placeholder}
+          type={type}
+          disabled={disabled}
+        />
+        {touched && error && (
+          <span className="form__form-group-error">{error}</span>
+        )}
+      </div>
+    </div>
+  );
+};
 
 class CreateScheduleCard extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       tokenList: emptyToken,
-      isFastrack: false
+      isFastrack: false,
+      existTokens: [],
+			updated: false,
+			deleteTokens: []
     };
   }
 
@@ -119,45 +130,51 @@ class CreateScheduleCard extends React.Component {
   componentWillMount() {
     this.props.getDoctorList();
     this.props.getHospitalList();
-	}
-	static getDerivedStateFromProps(nextProps, prevState){
-		if(nextProps.isUpdate && !UNDERSCORE.isEqual(nextProps.initialValues.tokens,prevState.tokenList)){
-			return { tokenList: nextProps.initialValues.tokens};
-	 }
-	 else return null;
- }
- componentDidUpdate(prevProps, prevState) {
-  if(!UNDERSCORE.isEqual(prevState.tokenList,this.state.tokenList)){
-		const {isFastrack , dataList} =this._decodeTokenList(this.props.initialValues.tokens);
-    this.setState({isFastrack, tokenList: dataList});
   }
- }
-	_decodeTokenList = (tokenList) => {
-		let isFastrack = false;
-		const dataList = []
-		tokenList && tokenList.forEach((map, index) => {
-			console.log(map)
-			if(UNDERSCORE.isEqual(map, fastrack)){
-				isFastrack = true;
-			}
-			dataList.push({
-				id: index,
-				number: map.number,
-				type: map.type,
-				startTime: map.time.split(' - ')[0],
-				endTime: map.time.split(' - ')[1],
-			})
-		});
-		return {
-			isFastrack,
-			dataList
-		}
-	}
+  static getDerivedStateFromProps(nextProps, prevState) {
+    if (nextProps.isUpdate && UNDERSCORE.isEmpty(prevState.existTokens) && !prevState.updated) {
+			alert()
+      return { existTokens: nextProps.initialValues.tokens };
+    } else return null;
+  }
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps.isUpdate && !prevState.updated) {
+      const { isFastrack, dataList } = this._decodeTokenList(
+        prevState.existTokens
+			);
+			alert()
+      this._handleFastrack(isFastrack);
+      this.setState({ isFastrack, existTokens: dataList, updated: true });
+    }
+  }
+  _decodeTokenList = tokenList => {
+    let isFastrack = false;
+    const dataList = [];
+    tokenList &&
+      tokenList.forEach((map, index) => {
+        if (UNDERSCORE.isEqual(map, fastrack)) {
+          isFastrack = true;
+        }
+        if (!UNDERSCORE.isEqual(map, fastrack)) {
+          dataList.push({
+            id: index,
+            number: map.number,
+            type: map.type,
+            startTime: map.time.split(" - ")[0],
+            endTime: map.time.split(" - ")[1]
+          });
+        }
+      });
+    return {
+      isFastrack,
+      dataList
+    };
+  };
   _handleSubmit = ({
     doctor = "",
     hospital = "",
     weekday = "",
-    fastrack = false,
+    isFastrack = false,
     fromTime = "",
     toTime = ""
   }) => {
@@ -168,13 +185,35 @@ class CreateScheduleCard extends React.Component {
       fromTime,
       toTime
     };
-    const { tokenList } = this.state;
+   if(this.props.isUpdate){
+		return this._updateSchedule();
+	 }else{
+		 return this._addSchedule(editValue, isFastrack);
+	 }
+  };
+	_updateSchedule = () => {
+		const { deleteTokens, tokenList, isFastrack } = this.state;
+		const token = {
+			deleteTokens,
+			tokenList,
+		};
+		if(this.props.initialValues.isFastrack !== isFastrack){
+			if(isFastrack){
+				tokenList.push(fastrack)
+			}else{
+				deleteTokens.push({number : 0})
+			}
+		}
+		console.log(token)
+
+	}
+	_addSchedule = (editValue, isFastrack) => {
+		const { tokenList } = this.state;
     const errorText = {};
-    console.log(editValue);
     Object.keys(editValue).forEach(key =>
       this._validateScheduleFields(key, editValue[key], errorText)
     );
-    this._validateTokens(this._parseToken(tokenList, fastrack), errorText);
+    this._validateTokens(this._parseToken(tokenList, isFastrack), errorText);
     const error = Object.keys(errorText).filter(key => !!errorText[key]).length;
     if (error !== 0) {
       if (!UNDERSCORE.isEmpty(errorText.tokens)) {
@@ -204,14 +243,12 @@ class CreateScheduleCard extends React.Component {
     Action.save(editValue)
       .then(response => response.json())
       .then(response => {
-        console.log(response);
         this.setState({
           showSnackBar: true,
           snackBarMessage: response.message
         });
       });
-  };
-
+	}
   findIdInList = (value, list, key) => {
     return list.filter(data => data.pdNumber === value)[0][key];
   };
@@ -235,8 +272,8 @@ class CreateScheduleCard extends React.Component {
         !UNDERSCORE.isEmpty(token.endTime)
       ) {
         const data = {
-          number: parseInt(token.tokenNo),
-          type: token.tokenType,
+          number: parseInt(token.number),
+          type: token.type,
           time: `${token.startTime} - ${token.endTime}`
         };
         dataList.push(data);
@@ -245,8 +282,8 @@ class CreateScheduleCard extends React.Component {
     if (fastrack) {
       dataList.push({
         number: 0,
-        type: 'FASTTRACK',
-        time: 'Can visit on your arival'
+        type: "FASTTRACK",
+        time: "Can visit on your arival"
       });
     }
     return dataList;
@@ -300,7 +337,18 @@ class CreateScheduleCard extends React.Component {
         token[key] = event;
       }
     });
-  };
+	};
+	_handleExistDeleteToken  = (data) => {
+		const { existTokens, deleteTokens } = this.state;
+		deleteTokens.push({number: data.number});
+		const dataList = existTokens.filter((map) => !UNDERSCORE.isEqual(data, map));
+		console.log(dataList)
+		this.setState({
+			deleteTokens,
+			existTokens: dataList
+		});
+		console.log(existTokens)
+	}
 
   _handleFastrack = value => {
     this.setState({
@@ -309,10 +357,56 @@ class CreateScheduleCard extends React.Component {
   };
 
   renderTokenList = () => {
-		const { tokenList } = this.state;
-		console.log(tokenList)
+    const { tokenList, existTokens } = this.state;
+    console.log(existTokens);
     return (
       <div>
+        {existTokens &&
+          existTokens.map(data => data.number !==0 && (
+            <div>
+              <div style={{ display: "flex", flexDirection: "row" }}>
+                <div style={{ width: 120, padding: "0px 8px" }}>
+                  <input
+                    width={100}
+                    value={data.type}
+                    type="text"
+                    disabled={this.props.isUpdate}
+                  />
+                </div>
+                <div style={{ width: 100, padding: "0px 8px" }}>
+                  <input
+                    width={100}
+                    value={data.number}
+                    type="text"
+                    disabled={this.props.isUpdate}
+                  />
+                </div>
+                <div style={{ width: 120, padding: "0px 8px" }}>
+                  <input
+                    width={100}
+                    value={data.startTime}
+                    type="text"
+                    disabled={this.props.isUpdate}
+                  />
+                </div>
+                <div style={{ width: 120, padding: "0px 8px" }}>
+                  <input
+                    width={100}
+                    value={data.endTime}
+                    type="text"
+                    disabled={this.props.isUpdate}
+                  />
+                </div>
+
+                <Button
+                  className="icon btn-danger"
+                  onClick={() => this._handleExistDeleteToken(data)}
+                >
+                  <span class="lnr lnr-trash text-white" />
+                </Button>
+              </div>
+            </div>
+          ))}
         {tokenList &&
           tokenList.map((data, index) => (
             <div>
@@ -331,7 +425,7 @@ class CreateScheduleCard extends React.Component {
                       options={TokenType}
                     />
                   </div>
-                  <div style={{ width: 240, padding: "0px 8px" }}>
+                  <div style={{ width: 100, padding: "0px 8px" }}>
                     <Field
                       name={"number" + index}
                       component={renderField}
@@ -427,9 +521,9 @@ class CreateScheduleCard extends React.Component {
       this.props.hospitalList,
       "pdNumber",
       "hospitalid"
-		);
-		const renderTimeField = isUpdate ? renderField: renderTimePickerField;
-		const renderSelectField = isUpdate ? renderField: RenderSelectField;
+    );
+    const renderTimeField = isUpdate ? renderField : renderTimePickerField;
+    const renderSelectField = isUpdate ? renderField : RenderSelectField;
     return (
       <Container>
         <form
@@ -472,8 +566,8 @@ class CreateScheduleCard extends React.Component {
                           type="text"
                           placeholder="Doctor"
                           width={240}
-													options={doctorList}
-													disabled={this.props.isUpdate}
+                          options={doctorList}
+                          disabled={this.props.isUpdate}
                           renderId={true}
                         />
                       </div>
@@ -485,8 +579,8 @@ class CreateScheduleCard extends React.Component {
                           name="hospital"
                           component={renderSelectField}
                           type="text"
-													renderId={true}
-													disabled={this.props.isUpdate}
+                          renderId={true}
+                          disabled={this.props.isUpdate}
                           placeholder="Hospital"
                           width={240}
                           options={hospitalList}
@@ -499,8 +593,8 @@ class CreateScheduleCard extends React.Component {
                         <Field
                           name="weekday"
                           component={renderSelectField}
-													type="text"
-													disabled={this.props.isUpdate}
+                          type="text"
+                          disabled={this.props.isUpdate}
                           placeholder="Weekday"
                           width={120}
                           options={weekDays}
@@ -513,8 +607,8 @@ class CreateScheduleCard extends React.Component {
                         <Field
                           name="fromTime"
                           component={renderTimeField}
-													placeholder="Start time"
-													disabled={this.props.isUpdate}
+                          placeholder="Start time"
+                          disabled={this.props.isUpdate}
                           timeMode
                           width={120}
                         />
@@ -525,8 +619,8 @@ class CreateScheduleCard extends React.Component {
                       <div className="form__form-group-field">
                         <Field
                           name="toTime"
-													component={renderTimeField}
-													disabled={this.props.isUpdate}
+                          component={renderTimeField}
+                          disabled={this.props.isUpdate}
                           placeholder="End time"
                           timeMode
                           width={120}
@@ -551,10 +645,10 @@ class CreateScheduleCard extends React.Component {
                       <span className="form__form-group-label">Fastrack</span>
                       <div className="form__form-group-field">
                         <Field
-                          name="fastrack"
+                          name="isFastrack"
                           component={renderToggleButtonField}
-													placeholder="Fastrack"
-													value={this.state.isFastrack}
+                          placeholder="Fastrack"
+                          value={this.state.isFastrack}
                           onChange={this._handleFastrack}
                         />
                       </div>
@@ -589,6 +683,7 @@ function mapStateToProps(state) {
     !UNDERSCORE.isEmpty(scheduleState.scheduleDetail)
       ? scheduleState.scheduleDetail
       : {};
+
   return {
     doctorList: scheduleState.doctorMasterList,
     hospitalList: scheduleState.hospitalMasterList,
@@ -597,8 +692,8 @@ function mapStateToProps(state) {
       !UNDERSCORE.isEmpty(scheduleState.scheduleList)
         ? scheduleState.scheduleList
         : [],
-		initialValues: { ...defaultData },
-		isUpdate : !UNDERSCORE.isEmpty(defaultData)
+    initialValues: { ...defaultData },
+    isUpdate: !UNDERSCORE.isEmpty(defaultData)
   };
 }
 function mapDispatchToProps(dispatch) {

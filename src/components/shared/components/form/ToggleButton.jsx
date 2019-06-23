@@ -27,7 +27,6 @@ class ToggleButtonField extends PureComponent {
     const {
       name, disabled, value, onChange,
     } = this.props;
-		alert(value)
     return (
       <div className="toggle-btn">
         <input

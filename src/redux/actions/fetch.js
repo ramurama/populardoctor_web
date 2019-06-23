@@ -21,3 +21,13 @@ export function put (url, body) {
 export function get (url) {
 	return fetch(url);
 }
+export function del (url, body) {
+	return fetch(url, {
+			headers: {
+					'Accept': 'application/json',
+					'Content-Type': 'application/json',
+			},
+					method: "DELETE",
+					body: JSON.stringify(body)
+			});
+}

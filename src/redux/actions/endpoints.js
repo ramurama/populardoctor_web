@@ -46,7 +46,9 @@ const endpoints = {
 	getSupportDetails: '/api/v1/user/getSupportDetails',
 	setSupportDetails: '/api/v1/admin/setSupportDetails',
   
-	changePassword: '/api/v1/admin/changePassword'
+	changePassword: '/api/v1/admin/changePassword',
+
+	deleteToken: `/api/v1/admin/deleteToken/`,
   };
   
   export default endpoints;
