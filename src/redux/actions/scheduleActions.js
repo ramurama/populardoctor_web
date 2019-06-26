@@ -52,6 +52,13 @@ export  function getScheduleDetail (id) {
 		});
 	};
 };
+
+export  function clearScheduleDetail () {
+	return {
+		type: 'RESPONSE_SCHEDULE_DETAIL',
+		data: [],
+	};
+}
 export function save(saveData){
 	return post(Endpoint.createSchedule, saveData);
 }

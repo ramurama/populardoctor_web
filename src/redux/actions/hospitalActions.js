@@ -34,3 +34,9 @@ export function getHospitalDetail(pdNumber){
 		});
 	};
 }
+export function clearHospitalDetail () {
+	return{
+		type: 'RESPONSE_HOSPITALDETAIL',
+		data:[],
+	}
+}

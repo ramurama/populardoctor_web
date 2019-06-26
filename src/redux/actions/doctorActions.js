@@ -41,7 +41,12 @@ export function getDoctorDetail(pdNumber){
 	};
 }
 
-
+export function clearDoctorDetail(){
+	return {
+		type: 'RESPONSE_DOCTORDETAIL',
+		data:[]
+	}
+}
 export function save(saveData){
 	return post(Endpoint.createDoctor, saveData);
 }

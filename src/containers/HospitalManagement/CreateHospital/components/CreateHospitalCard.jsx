@@ -1,15 +1,24 @@
-import React, { PureComponent } from 'react';
-import { Card, CardBody, Col, Button, ButtonToolbar } from 'reactstrap';
-import { Field, reduxForm, SubmissionError } from 'redux-form';
-import PropTypes from 'prop-types';
+import React, { PureComponent } from "react";
+import {
+  Card,
+  CardBody,
+  Col,
+  Button,
+  ButtonToolbar,
+  Row,
+  Container
+} from "reactstrap";
+import { Field, reduxForm, SubmissionError } from "redux-form";
+import PropTypes from "prop-types";
 import { withRouter } from "react-router";
 import { connect } from "react-redux";
-import { withTranslation } from 'react-i18next';
-import Snackbar from '@material-ui/core/Snackbar';
-import { save, update } from '../../../../redux/actions/hospitalActions';
-import validate from '../../../../components/Form/FormValidation/components/validate';
-import { addHospital } from '../constants/hospitalForm';
-import { UNDERSCORE } from '../../../../constants/utils';
+import { withTranslation } from "react-i18next";
+import Snackbar from "@material-ui/core/Snackbar";
+import { CREATE_HOSPITAL, EDIT_HOSPITAL } from "../../../../constants/strings";
+import { save, update } from "../../../../redux/actions/hospitalActions";
+import validate from "../../../../components/Form/FormValidation/components/validate";
+import { addHospital } from "../constants/hospitalForm";
+import { UNDERSCORE } from "../../../../constants/utils";
 import * as Action from "../../../../redux/actions/hospitalActions";
 
 const renderField = ({
@@ -37,9 +46,9 @@ renderField.propTypes = {
 };
 
 renderField.defaultProps = {
-  placeholder: '',
+  placeholder: "",
   meta: null,
-  type: 'text'
+  type: "text"
 };
 
 class CreateHospitalCard extends PureComponent {
@@ -56,26 +65,38 @@ class CreateHospitalCard extends PureComponent {
     this.state = {
       showPassword: false,
       saveData: {
-        name: '',
-        address: '',
-        location: '',
-        pincode: '',
-        landmark: ''
+        name: "",
+        address: "",
+        location: "",
+        pincode: "",
+        landmark: ""
       },
       displayToast: false,
-      toastMessage: '',
+      toastMessage: "",
       errorText: {}
     };
   }
 
-	componentDidMount(){
-		const {location } = this.props;
+  componentDidMount() {
+    const { location } = this.props;
+    const pathName = location.pathname;
+    if (pathName.includes("edit")) {
+      const pdNumber = pathName.split("/")[pathName.split("/").length - 1];
+      this.props.getHospitalDetail(pdNumber);
+    } else {
+      this.props.clearHospitalDetail();
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    const { location } = prevProps;
 		const pathName = location.pathname;
-		if(pathName.includes('edit')){
-			const pdNumber =  pathName.split('/')[pathName.split('/').length-1];
-			this.props.getHospitalDetail(pdNumber);
+		if(this.props.location.pathname !== pathName){
+			if (!pathName.includes("edit")) {
+				this.props.clearHospitalDetail();
+			}
 		}
-	}
+  }
   _handleChange = (key, event) => {
     const { saveData } = this.state;
     saveData[key] = event.target.value;
@@ -83,11 +104,11 @@ class CreateHospitalCard extends PureComponent {
   };
 
   _handleSubmit = ({
-    name = '',
-    streetName = '',
-    building = '',
-    location = '',
-    landmark = '',
+    name = "",
+    streetName = "",
+    building = "",
+    location = "",
+    landmark = "",
     pincode = 0
   }) => {
     const saveData = {
@@ -113,35 +134,41 @@ class CreateHospitalCard extends PureComponent {
       location: saveData.location,
       landmark: saveData.landmark,
       pincode: saveData.pincode
-		};
-		if(this.props.isUpdate){
-			const id = this.props.initialValues._id;
-			const pdNumber = this.props.initialValues.hospitalPdNumber;
-			update(data, id)
-      .then(res => res.json())
-      .then(res => {
-        this.setState({ displayToast: true, toastMessage: res.message }, () => {
-          if (res.status) {
-						this.props.getHospitalDetail(pdNumber);
-          }
+    };
+    if (this.props.isUpdate) {
+      const id = this.props.initialValues._id;
+      const pdNumber = this.props.initialValues.hospitalPdNumber;
+      update(data, id)
+        .then(res => res.json())
+        .then(res => {
+          this.setState(
+            { displayToast: true, toastMessage: res.message },
+            () => {
+              if (res.status) {
+                this.props.getHospitalDetail(pdNumber);
+              }
+            }
+          );
         });
-      });
-		}else{
-			save(data)
-      .then(res => res.json())
-      .then(res => {
-        this.setState({ displayToast: true, toastMessage: res.message }, () => {
-          if (res.status) {
-            this.props.reset();
-          }
+    } else {
+      save(data)
+        .then(res => res.json())
+        .then(res => {
+          this.setState(
+            { displayToast: true, toastMessage: res.message },
+            () => {
+              if (res.status) {
+                this.props.reset();
+              }
+            }
+          );
         });
-      });
-		}
+    }
   };
 
   validateTextData = (value, key, editValue, errorText) => {
-    const type = addHospital[key] ? addHospital[key].type : 'other';
-    if (type !== 'other') {
+    const type = addHospital[key] ? addHospital[key].type : "other";
+    if (type !== "other") {
       if (UNDERSCORE.isEmpty(value)) {
         editValue[key] = value;
         errorText[key] = addHospital[key].emptyField;
@@ -157,9 +184,9 @@ class CreateHospitalCard extends PureComponent {
     if (
       value &&
       value.length !== 0 &&
-      value.length !== addHospital['pincode'].length
+      value.length !== addHospital["pincode"].length
     ) {
-      errorText['pincode'] = addHospital['pincode'].errorText;
+      errorText["pincode"] = addHospital["pincode"].errorText;
     }
   };
   _handleClose = () => {
@@ -167,146 +194,158 @@ class CreateHospitalCard extends PureComponent {
   };
 
   render() {
-    const { pristine, reset, submitting, handleSubmit } = this.props;
+    const { isUpdate, pristine, reset, submitting, handleSubmit } = this.props;
+    const title = isUpdate ? EDIT_HOSPITAL : CREATE_HOSPITAL;
     return (
-      <Col sm="12" md={{ size: 6, offset: 3 }}>
-        <Card>
-          <CardBody>
-            <form
-              className="form form--horizontal"
-              onSubmit={handleSubmit(this._handleSubmit)}
-            >
-              <div className="form__form-group">
-                <span className="form__form-group-label">Hospital Name</span>
-                <div className="form__form-group-field">
-                  <Field
-                    name="name"
-                    component={renderField}
-                    type="text"
-                    placeholder="Hospital Name"
-                  />
-                </div>
-              </div>
-              <div className="form__form-group">
-                <span className="form__form-group-label">Street name</span>
-                <div className="form__form-group-field">
-                  <Field
-                    name="streetName"
-                    component={renderField}
-                    type="text"
-                    placeholder="Street name"
-                  />
-                </div>
-              </div>
-              <div className="form__form-group">
-                <span className="form__form-group-label">Building</span>
-                <div className="form__form-group-field">
-                  <Field
-                    name="building"
-                    component={renderField}
-                    type="text"
-                    placeholder="Building"
-                  />
-                </div>
-              </div>
-              <div className="form__form-group">
-                <span className="form__form-group-label">Location</span>
-                <div className="form__form-group-field">
-                  <Field
-                    name="location"
-                    component={renderField}
-                    type="text"
-                    placeholder="Location"
-                  />
-                </div>
-              </div>
-              <div className="form__form-group">
-                <span className="form__form-group-label">Pincode</span>
-                <div className="form__form-group-field">
-                  <Field
-                    name="pincode"
-                    component={renderField}
-                    type="number"
-                    placeholder="Pincode"
-                    onChange={value => this._handleChange('pincode', value)}
-                  />
-                </div>
-              </div>
-              <div className="form__form-group">
-                <span className="form__form-group-label">Landmark</span>
-                <div className="form__form-group-field">
-                  <Field
-                    name="landmark"
-                    component={renderField}
-                    type="text"
-                    placeholder="Landmark"
-                  />
-                </div>
-              </div>
-              <ButtonToolbar className="form__button-toolbar">
-                <Button
-                  color="primary"
-                  type="submit"
-                  disabled={pristine || submitting}
+      <Container>
+        <Row>
+          <Col md={12}>
+            <h3 className="page-title">{title}</h3>
+          </Col>
+          <Col sm="12" md={{ size: 6, offset: 3 }}>
+            <Card>
+              <CardBody>
+                <form
+                  className="form form--horizontal"
+                  onSubmit={handleSubmit(this._handleSubmit)}
                 >
-                  Save
-                </Button>
-                <Button
-                  type="button"
-                  onClick={reset}
-                  disabled={pristine || submitting}
-                >
-                  Cancel
-                </Button>
-              </ButtonToolbar>
-            </form>
-          </CardBody>
-        </Card>
-        <Snackbar
-          anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-          autoHideDuration={3000}
-          open={this.state.displayToast}
-          ContentProps={{
-            'aria-describedby': 'message-id'
-          }}
-          onClose={this._handleClose}
-          message={<span id="message-id">{this.state.toastMessage}</span>}
-        />
-      </Col>
+                  <div className="form__form-group">
+                    <span className="form__form-group-label">
+                      Hospital Name
+                    </span>
+                    <div className="form__form-group-field">
+                      <Field
+                        name="name"
+                        component={renderField}
+                        type="text"
+                        placeholder="Hospital Name"
+                      />
+                    </div>
+                  </div>
+                  <div className="form__form-group">
+                    <span className="form__form-group-label">Street name</span>
+                    <div className="form__form-group-field">
+                      <Field
+                        name="streetName"
+                        component={renderField}
+                        type="text"
+                        placeholder="Street name"
+                      />
+                    </div>
+                  </div>
+                  <div className="form__form-group">
+                    <span className="form__form-group-label">Building</span>
+                    <div className="form__form-group-field">
+                      <Field
+                        name="building"
+                        component={renderField}
+                        type="text"
+                        placeholder="Building"
+                      />
+                    </div>
+                  </div>
+                  <div className="form__form-group">
+                    <span className="form__form-group-label">Location</span>
+                    <div className="form__form-group-field">
+                      <Field
+                        name="location"
+                        component={renderField}
+                        type="text"
+                        placeholder="Location"
+                      />
+                    </div>
+                  </div>
+                  <div className="form__form-group">
+                    <span className="form__form-group-label">Pincode</span>
+                    <div className="form__form-group-field">
+                      <Field
+                        name="pincode"
+                        component={renderField}
+                        type="number"
+                        placeholder="Pincode"
+                        onChange={value => this._handleChange("pincode", value)}
+                      />
+                    </div>
+                  </div>
+                  <div className="form__form-group">
+                    <span className="form__form-group-label">Landmark</span>
+                    <div className="form__form-group-field">
+                      <Field
+                        name="landmark"
+                        component={renderField}
+                        type="text"
+                        placeholder="Landmark"
+                      />
+                    </div>
+                  </div>
+                  <ButtonToolbar className="form__button-toolbar">
+                    <Button
+                      color="primary"
+                      type="submit"
+                      disabled={pristine || submitting}
+                    >
+                      Save
+                    </Button>
+                    <Button
+                      type="button"
+                      onClick={reset}
+                      disabled={pristine || submitting}
+                    >
+                      Cancel
+                    </Button>
+                  </ButtonToolbar>
+                </form>
+              </CardBody>
+            </Card>
+            <Snackbar
+              anchorOrigin={{ vertical: "top", horizontal: "right" }}
+              autoHideDuration={3000}
+              open={this.state.displayToast}
+              ContentProps={{
+                "aria-describedby": "message-id"
+              }}
+              onClose={this._handleClose}
+              message={<span id="message-id">{this.state.toastMessage}</span>}
+            />
+          </Col>
+        </Row>
+      </Container>
     );
   }
 }
 function mapStateToProps(state) {
-	
-	const hospitalState = state.hospital;
-	let isUpdate =false;
-	const defaultData = !UNDERSCORE.isEmpty(hospitalState) &&
-	!UNDERSCORE.isEmpty(hospitalState.hospitalDetail) ? 
-		hospitalState.hospitalDetail
-			: {};
-	if(!UNDERSCORE.isEmpty(defaultData)){
-		isUpdate = true;
-		defaultData.streetName = defaultData.address.split(' ')[0];
-		defaultData.building = defaultData.address.split(' ')[1];
-	}
+  const hospitalState = state.hospital;
+  let isUpdate = false;
+  const defaultData =
+    !UNDERSCORE.isEmpty(hospitalState) &&
+    !UNDERSCORE.isEmpty(hospitalState.hospitalDetail)
+      ? hospitalState.hospitalDetail
+      : {};
+  if (!UNDERSCORE.isEmpty(defaultData)) {
+    isUpdate = true;
+    defaultData.streetName = defaultData.address.split(" ")[0];
+    defaultData.building = defaultData.address.split(" ")[1];
+  }
   return {
-		initialValues: {...defaultData},
-		isUpdate,
+    initialValues: { ...defaultData },
+    isUpdate
   };
 }
 function mapDispatchToProps(dispatch) {
   return {
     getHospitalDetail: pdNumber => {
       dispatch(Action.getHospitalDetail(pdNumber));
+    },
+    clearHospitalDetail: () => {
+      dispatch(Action.clearHospitalDetail());
     }
   };
 }
-CreateHospitalCard = reduxForm({ 
-	form: 'hospital', // a unique identifier for this form
-	enableReinitialize: true,
+CreateHospitalCard = reduxForm({
+  form: "hospital", // a unique identifier for this form
+  enableReinitialize: true,
   validate
-})(withTranslation('common')(CreateHospitalCard));
-
+})(withTranslation("common")(CreateHospitalCard));
 
 export default connect(
   mapStateToProps,

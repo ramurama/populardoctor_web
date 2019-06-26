@@ -1,12 +1,13 @@
 import React, { PureComponent } from "react";
 import { connect } from "react-redux";
-import { Card, CardBody, Col, Button, ButtonToolbar, Row } from "reactstrap";
+import { Card, CardBody, Col, Button, ButtonToolbar, Row, Container } from "reactstrap";
 import { Field, reduxForm, SubmissionError } from "redux-form";
 import { withRouter } from "react-router";
 import PropTypes from "prop-types";
 import { withTranslation } from "react-i18next";
 import Snackbar from "@material-ui/core/Snackbar";
 import * as Action from "../../../../redux/actions/doctorActions";
+import { CREATE_DOCTOR, EDIT_DOCTOR } from '../../../../constants/strings';
 import validate from "../../../../components/Form/FormValidation/components/validate";
 import { addDoctor, emptyField } from "../constants/doctorForm";
 import { UNDERSCORE } from "../../../../constants/utils";
@@ -78,7 +79,9 @@ class CreateDoctorCard extends PureComponent {
     if (pathName.includes("edit")) {
       const pdNumber = pathName.split("/")[pathName.split("/").length - 1];
       this.props.getDoctorDetail(pdNumber);
-    }
+    }else {
+			this.props.clearDoctorDetail();
+		}
     this.props.getSpecialization();
   }
   _handleChange = (key, event) => {
@@ -214,9 +217,16 @@ class CreateDoctorCard extends PureComponent {
   };
 
   render() {
-    const { pristine, reset, submitting, handleSubmit } = this.props;
-    const specializations = this._parseList(this.props.specializations);
+    const { pristine, reset, submitting, handleSubmit, isUpdate } = this.props;
+		const specializations = this._parseList(this.props.specializations);
+		const title = isUpdate ? EDIT_DOCTOR : CREATE_DOCTOR;
     return (
+			<Container>
+			<Row>
+      <Col md={12}>
+        <h3 className="page-title">{title}</h3>
+      </Col>
+    </Row>
       <Card>
         <CardBody>
           <Row>
@@ -374,6 +384,7 @@ class CreateDoctorCard extends PureComponent {
           message={<span id="message-id">{this.state.toastMessage}</span>}
         />
       </Card>
+			</Container>
     );
   }
 }
@@ -385,7 +396,10 @@ function mapDispatchToProps(dispatch) {
     },
     getDoctorDetail: pdNumber => {
       dispatch(Action.getDoctorDetail(pdNumber));
-    }
+		},
+		clearDoctorDetail: () => {
+			dispatch(Action.clearDoctorDetail());
+		}
   };
 }
 function mapStateToProps(state) {

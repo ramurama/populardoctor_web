@@ -13,6 +13,7 @@ import { connect } from "react-redux";
 import { withRouter } from "react-router";
 import { withTranslation } from "react-i18next";
 import { addSchedule, emptyField } from "../constants/AddScheduleConfig";
+import { CREATE_SCHEDULE, EDIT_SCHEDULE } from "../../../../constants/strings";
 import * as Action from "../../../../redux/actions/scheduleActions";
 import validate from "../../../../components/Form/FormValidation/components/validate";
 import RenderSelectField from "../../../../components/shared/components/form/Select";
@@ -89,7 +90,6 @@ const renderField = ({
   disabled,
   meta: { touched, error }
 }) => {
-
   return (
     <div className="form__form-group-input-wrap form__form-group-input-wrap--error-above">
       <div style={{ width: width }}>
@@ -114,8 +114,8 @@ class CreateScheduleCard extends React.Component {
       tokenList: emptyToken,
       isFastrack: false,
       existTokens: [],
-			updated: false,
-			deleteTokens: []
+      updated: false,
+      deleteTokens: []
     };
   }
 
@@ -125,6 +125,8 @@ class CreateScheduleCard extends React.Component {
     if (pathName.includes("edit")) {
       const pdNumber = pathName.split("/")[pathName.split("/").length - 1];
       this.props.getScheduleDetail(pdNumber);
+    } else {
+      this.props.clearScheduleDetail();
     }
   }
   componentWillMount() {
@@ -132,7 +134,11 @@ class CreateScheduleCard extends React.Component {
     this.props.getHospitalList();
   }
   static getDerivedStateFromProps(nextProps, prevState) {
-    if (nextProps.isUpdate && UNDERSCORE.isEmpty(prevState.existTokens) && !prevState.updated) {
+    if (
+      nextProps.isUpdate &&
+      UNDERSCORE.isEmpty(prevState.existTokens) &&
+      !prevState.updated
+    ) {
       return { existTokens: nextProps.initialValues.tokens };
     } else return null;
   }
@@ -140,7 +146,7 @@ class CreateScheduleCard extends React.Component {
     if (prevProps.isUpdate && !prevState.updated) {
       const { isFastrack, dataList } = this._decodeTokenList(
         prevState.existTokens
-			);
+      );
       this._handleFastrack(isFastrack);
       this.setState({ isFastrack, existTokens: dataList, updated: true });
     }
@@ -183,47 +189,50 @@ class CreateScheduleCard extends React.Component {
       fromTime,
       toTime
     };
-   if(this.props.isUpdate){
-		return this._updateSchedule();
-	 }else{
-		 return this._addSchedule(editValue, isFastrack);
-	 }
+    if (this.props.isUpdate) {
+      return this._updateSchedule();
+    } else {
+      return this._addSchedule(editValue, isFastrack);
+    }
   };
-	_updateSchedule = () => {
-		const { deleteTokens, tokenList, isFastrack } = this.state;
-		// const errorText = {};
-		const addTokens = this._parseToken(tokenList, false);
-		const token = {
-			deleteTokens,
-			addTokens
-		};
-		if(this.props.initialValues.isFastrack !== isFastrack){
-			if(isFastrack){
-				// const addTokenList = addTokens.push(fastrack)
-				token.addTokens.push(fastrack);
-			}else{
-				deleteTokens.push(0)
-			}
-		}
-		
-		const { location } = this.props;
+  _updateSchedule = () => {
+    const { deleteTokens, tokenList, isFastrack } = this.state;
+    // const errorText = {};
+    const addTokens = this._parseToken(tokenList, false);
+    const token = {
+      deleteTokens,
+      addTokens
+    };
+    if (this.props.initialValues.isFastrack !== isFastrack) {
+      if (isFastrack) {
+        // const addTokenList = addTokens.push(fastrack)
+        token.addTokens.push(fastrack);
+      } else {
+        deleteTokens.push(0);
+      }
+    }
+
+    const { location } = this.props;
     const pathName = location.pathname;
-		const scheduleId = pathName.split("/")[pathName.split("/").length - 1];
-		if(UNDERSCORE.isEmpty(token.addTokens) && UNDERSCORE.isEmpty(token.deleteTokens)){
-			return;
-		}
-		Action.updateSchedule(token,scheduleId)
-		.then(response => response.json())
-		.then(response => {
-			this.props.getScheduleDetail(scheduleId);
-			this.setState({
-				showSnackBar: true,
-				snackBarMessage: response.message
-			});
-		});
-	}
-	_addSchedule = (editValue, isFastrack) => {
-		const { tokenList } = this.state;
+    const scheduleId = pathName.split("/")[pathName.split("/").length - 1];
+    if (
+      UNDERSCORE.isEmpty(token.addTokens) &&
+      UNDERSCORE.isEmpty(token.deleteTokens)
+    ) {
+      return;
+    }
+    Action.updateSchedule(token, scheduleId)
+      .then(response => response.json())
+      .then(response => {
+        this.props.getScheduleDetail(scheduleId);
+        this.setState({
+          showSnackBar: true,
+          snackBarMessage: response.message
+        });
+      });
+  };
+  _addSchedule = (editValue, isFastrack) => {
+    const { tokenList } = this.state;
     const errorText = {};
     Object.keys(editValue).forEach(key =>
       this._validateScheduleFields(key, editValue[key], errorText)
@@ -263,7 +272,7 @@ class CreateScheduleCard extends React.Component {
           snackBarMessage: response.message
         });
       });
-	}
+  };
   findIdInList = (value, list, key) => {
     return list.filter(data => data.pdNumber === value)[0][key];
   };
@@ -352,16 +361,16 @@ class CreateScheduleCard extends React.Component {
         token[key] = event;
       }
     });
-	};
-	_handleExistDeleteToken  = (data) => {
-		const { existTokens, deleteTokens } = this.state;
-		deleteTokens.push(data.number);
-		const dataList = existTokens.filter((map) => !UNDERSCORE.isEqual(data, map));
-		this.setState({
-			deleteTokens,
-			existTokens: dataList
-		});
-	}
+  };
+  _handleExistDeleteToken = data => {
+    const { existTokens, deleteTokens } = this.state;
+    deleteTokens.push(data.number);
+    const dataList = existTokens.filter(map => !UNDERSCORE.isEqual(data, map));
+    this.setState({
+      deleteTokens,
+      existTokens: dataList
+    });
+  };
 
   _handleFastrack = value => {
     this.setState({
@@ -374,51 +383,54 @@ class CreateScheduleCard extends React.Component {
     return (
       <div>
         {existTokens &&
-          existTokens.map(data => data.number !==0 && (
-            <div>
-              <div style={{ display: "flex", flexDirection: "row" }}>
-                <div style={{ width: 120, padding: "0px 8px" }}>
-                  <input
-                    width={100}
-                    value={data.type}
-                    type="text"
-                    disabled={this.props.isUpdate}
-                  />
-                </div>
-                <div style={{ width: 100, padding: "0px 8px" }}>
-                  <input
-                    width={100}
-                    value={data.number}
-                    type="text"
-                    disabled={this.props.isUpdate}
-                  />
-                </div>
-                <div style={{ width: 120, padding: "0px 8px" }}>
-                  <input
-                    width={100}
-                    value={data.startTime}
-                    type="text"
-                    disabled={this.props.isUpdate}
-                  />
-                </div>
-                <div style={{ width: 120, padding: "0px 8px" }}>
-                  <input
-                    width={100}
-                    value={data.endTime}
-                    type="text"
-                    disabled={this.props.isUpdate}
-                  />
-                </div>
+          existTokens.map(
+            data =>
+              data.number !== 0 && (
+                <div>
+                  <div style={{ display: "flex", flexDirection: "row" }}>
+                    <div style={{ width: 120, padding: "0px 8px" }}>
+                      <input
+                        width={100}
+                        value={data.type}
+                        type="text"
+                        disabled={this.props.isUpdate}
+                      />
+                    </div>
+                    <div style={{ width: 100, padding: "0px 8px" }}>
+                      <input
+                        width={100}
+                        value={data.number}
+                        type="text"
+                        disabled={this.props.isUpdate}
+                      />
+                    </div>
+                    <div style={{ width: 120, padding: "0px 8px" }}>
+                      <input
+                        width={100}
+                        value={data.startTime}
+                        type="text"
+                        disabled={this.props.isUpdate}
+                      />
+                    </div>
+                    <div style={{ width: 120, padding: "0px 8px" }}>
+                      <input
+                        width={100}
+                        value={data.endTime}
+                        type="text"
+                        disabled={this.props.isUpdate}
+                      />
+                    </div>
 
-                <Button
-                  className="icon btn-danger"
-                  onClick={() => this._handleExistDeleteToken(data)}
-                >
-                  <span class="lnr lnr-trash text-white" />
-                </Button>
-              </div>
-            </div>
-          ))}
+                    <Button
+                      className="icon btn-danger"
+                      onClick={() => this._handleExistDeleteToken(data)}
+                    >
+                      <span class="lnr lnr-trash text-white" />
+                    </Button>
+                  </div>
+                </div>
+              )
+          )}
         {tokenList &&
           tokenList.map((data, index) => (
             <div>
@@ -536,8 +548,14 @@ class CreateScheduleCard extends React.Component {
     );
     const renderTimeField = isUpdate ? renderField : renderTimePickerField;
     const renderSelectField = isUpdate ? renderField : RenderSelectField;
+    const title = isUpdate ? EDIT_SCHEDULE : CREATE_SCHEDULE;
     return (
       <Container>
+				<Row>
+        <Col md={12}>
+          <h3 className="page-title">{title}</h3>
+        </Col>
+				</Row>
         <form
           className="form form--horizontal"
           onSubmit={handleSubmit(this._handleSubmit)}
@@ -721,6 +739,9 @@ function mapDispatchToProps(dispatch) {
     },
     getScheduleDetail: doctorId => {
       dispatch(Action.getScheduleDetail(doctorId));
+    },
+    clearScheduleDetail: () => {
+      dispatch(Action.clearScheduleDetail());
     }
   };
 }
