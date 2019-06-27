@@ -61,7 +61,7 @@ class CreateHospitalCard extends PureComponent {
   };
 
   constructor() {
-    super();
+		super();
     this.state = {
       showPassword: false,
       saveData: {
@@ -70,7 +70,8 @@ class CreateHospitalCard extends PureComponent {
         location: "",
         pincode: "",
         landmark: ""
-      },
+			},
+			hospitalId: '',
       displayToast: false,
       toastMessage: "",
       errorText: {}
@@ -78,8 +79,9 @@ class CreateHospitalCard extends PureComponent {
   }
 
   componentDidMount() {
-    const { location } = this.props;
-    const pathName = location.pathname;
+		const { location } = this.props;
+		const pathName = location.pathname;
+		console.log(this.props.match.params.hospitalId)
     if (pathName.includes("edit")) {
       const pdNumber = pathName.split("/")[pathName.split("/").length - 1];
       this.props.getHospitalDetail(pdNumber);
@@ -87,15 +89,14 @@ class CreateHospitalCard extends PureComponent {
       this.props.clearHospitalDetail();
     }
   }
-
-  componentDidUpdate(prevProps, prevState, snapshot) {
-    const { location } = prevProps;
+	
+	componentDidUpdate(prevProps, prevState, snapshot) {
+    const { location, initialValues } = prevProps;
 		const pathName = location.pathname;
-		if(this.props.location.pathname !== pathName){
-			if (!pathName.includes("edit")) {
+		console.log(initialValues)
+			if (!pathName.includes("edit") && !UNDERSCORE.isEmpty(initialValues)) {
 				this.props.clearHospitalDetail();
 			}
-		}
   }
   _handleChange = (key, event) => {
     const { saveData } = this.state;

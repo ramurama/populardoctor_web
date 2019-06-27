@@ -562,9 +562,9 @@ class CreateScheduleCard extends React.Component {
         >
           <Card>
             <CardBody>
-              <div className="form__form-group">
+              { !isUpdate && <div className="form__form-group">
                 <h5 className="bold-text">Add Schedule</h5>
-              </div>
+              </div>}
               <Row>
                 <Col md={12} sm={12}>
                   <div style={{ float: "right" }}>
