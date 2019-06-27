@@ -105,7 +105,7 @@ class CreateDoctorCard extends PureComponent {
       mobile,
       yearsOfExperience,
       degree,
-      dateOfBirth: UNDERSCORE.isEmpty(dateOfBirth) ? moment(dateOfBirth).format('DD-MM-YYYY') : "",
+      dateOfBirth: UNDERSCORE.isEmpty(dateOfBirth) ? moment(dateOfBirth).format('YYYY-MM-DD') : "",
       specialization: specialization.label,
       gender: gender.label,
       profileContent
