@@ -1,4 +1,4 @@
-import { post, get } from './fetch';
+import { post, get, put } from './fetch';
 import Endpoint from './endpoints';
 
 export  function getDoctorList () {
@@ -27,8 +27,29 @@ export  function getSpecialization() {
 		});
 	};
 };
+export function getDoctorDetail(pdNumber){
+	const endpoint = `${Endpoint.getDoctorDetail}${pdNumber}`;
+	return function (dispatch){
+		return get(endpoint)
+		.then((response) => response.json())
+		.then((data) => {
+			dispatch({
+				type: 'RESPONSE_DOCTORDETAIL',
+				data
+			});
+		});
+	};
+}
 
-
+export function clearDoctorDetail(){
+	return {
+		type: 'RESPONSE_DOCTORDETAIL',
+		data:[]
+	}
+}
 export function save(saveData){
 	return post(Endpoint.createDoctor, saveData);
+}
+export function update(saveData, id){
+	return put(`${Endpoint.updateDoctor}/${id}`, saveData);
 }

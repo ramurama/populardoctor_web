@@ -1,12 +1,8 @@
 import React from "react";
-import { Card, CardBody, Col } from "reactstrap";
+import { Card, CardBody, Col, Button } from "reactstrap";
 import PropTypes from "prop-types";
 import { withRouter } from "react-router";
-import Chip from "@material-ui/core/Chip";
-import Avatar from "@material-ui/core/Avatar";
 import { connect } from "react-redux";
-import Switch from "@material-ui/core/Switch";
-import Tooltip from "@material-ui/core/Tooltip";
 import MaterialTable from "../../../../components/containers/Tables/MaterialTable/index";
 import { UNDERSCORE } from "../../../../constants/utils";
 import * as Action from "../../../../redux/actions/hospitalActions";
@@ -27,36 +23,21 @@ const styles = {
 class HospitalManagementCard extends React.Component {
   componentWillMount() {
     this.props.getHospitalList("all");
-  }
+	}
+	
+	_handleEditHospital = (data) => {
+		this.context.router.history.push(`/pages/hospitalManagement/editHospital/${data.hospitalPdNumber}`)
+	}
 
-  renderAvatar = text => (
-    <div style={{ display: "flex", width: 200 }}>
-      <Avatar
-        alt="L"
-        src={text.doctorDetails.profileImage}
-        classes={styles.avatar}
-      />
-      <a style={{ padding: 20 }}>
-        <strong>{text.doctorDetails.fullName}</strong>
-      </a>
-    </div>
-  );
-
-  _renderToggle = text => {
-    const color = text.doctorDetails.status === "ACTIVE" ? false : true;
-    const tooltext =
-      text.doctorDetails.status === "ACTIVE" ? "Block" : "Unblock";
+	_renderOperation = data => {
     return (
-      <Tooltip title={tooltext}>
-        <Switch
-          checked={color}
-          onChange={() => this.handleToggle(text)}
-          value="checkedB"
-          color="primary"
-        />
-      </Tooltip>
+      <Button className="icon" onClick={() => this._handleEditHospital(data)}>
+        <span class="lnr lnr-pencil"></span>
+      </Button>
     );
   };
+
+
   render() {
     const { hospitalList } = this.props;
     const columns = [
@@ -90,7 +71,8 @@ class HospitalManagementCard extends React.Component {
         label: "Landmark",
         numeric: false,
         disablePadding: true
-      }
+      },
+      { label: "Action", render: text => this._renderOperation(text) }
     ];
 
     return (

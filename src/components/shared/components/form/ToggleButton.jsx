@@ -15,7 +15,7 @@ class ToggleButtonField extends PureComponent {
 
   static defaultProps = {
     defaultChecked: false,
-    disabled: false,
+		disabled: false,
   };
 
   componentDidMount() {
@@ -27,7 +27,6 @@ class ToggleButtonField extends PureComponent {
     const {
       name, disabled, value, onChange,
     } = this.props;
-
     return (
       <div className="toggle-btn">
         <input
@@ -50,13 +49,12 @@ class ToggleButtonField extends PureComponent {
 }
 
 const renderToggleButtonField = (props) => {
-  const { input, defaultChecked, disabled } = props;
-
+	const { input, defaultChecked, disabled } = props;
   return (
     <ToggleButtonField
       {...input}
       defaultChecked={defaultChecked}
-      disabled={disabled}
+			disabled={disabled}
     />
   );
 };
@@ -64,7 +62,8 @@ const renderToggleButtonField = (props) => {
 renderToggleButtonField.propTypes = {
   input: PropTypes.shape({
     onChange: PropTypes.func,
-    name: PropTypes.string,
+		name: PropTypes.string,
+		value: PropTypes.bool,
   }).isRequired,
   defaultChecked: PropTypes.bool,
   disabled: PropTypes.bool,
