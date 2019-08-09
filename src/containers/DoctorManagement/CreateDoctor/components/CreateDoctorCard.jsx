@@ -22,11 +22,9 @@ import { UNDERSCORE } from '../../../../constants/utils';
 import renderSelectField from '../../../../components/shared/components/form/Select';
 import renderDatePicker from '../../../../components/shared/components/form/DatePicker';
 import ProfileImageUploadForm from './ProfileImageUploadForm';
+import Endpoints from '../../../../redux/actions/endpoints';
 
 const moment = require('moment');
-
-const profileImage =
-  'https://images.pexels.com/photos/433635/pexels-photo-433635.jpeg?auto=compress%5Cu0026cs=tinysrgb%5Cu0026dpr=2%5Cu0026h=750%5Cu0026w=1260';
 
 const renderField = ({
   input,
@@ -82,7 +80,8 @@ class CreateDoctorCard extends PureComponent {
       errorText: {},
       doProfileImageUpload: false,
       doctorPdNumber: null,
-      disableButtonActions: false
+      disableButtonActions: false,
+      showProfileImageUploader: false
     };
   }
 
@@ -96,6 +95,9 @@ class CreateDoctorCard extends PureComponent {
       this.props.clearDoctorDetail();
     }
     this.props.getSpecialization();
+    if (UNDERSCORE.isEmpty(this.props.initialValues.profileImage)) {
+      this.setState({ showProfileImageUploader: true });
+    }
   }
   _handleChange = (key, event) => {
     const { saveData } = this.state;
@@ -127,7 +129,7 @@ class CreateDoctorCard extends PureComponent {
     };
     const errorText = {};
     editValue.password = editValue.mobile;
-    editValue.profileImage = profileImage;
+    editValue.profileImage = this.props.initialValues.profileImage;
     Object.keys(editValue).forEach(key =>
       this.validateTextData(editValue[key], key, editValue, errorText)
     );
@@ -147,8 +149,8 @@ class CreateDoctorCard extends PureComponent {
           .then(res => {
             if (res.status) {
               this.setState({
-                toastMessage: res.message,
-                displayToast: true
+                toastMessage: res.message
+                // displayToast: true
                 // disableButtonActions: true
               });
               this.props.getDoctorDetail(pdNumber);
@@ -382,15 +384,86 @@ class CreateDoctorCard extends PureComponent {
                 </form>
               </Col>
               <Col md={6} sm={12}>
-                <ProfileImageUploadForm
-                  onRef={ref => (this.profileImageUploader = ref)}
-                  onUploadComplete={status =>
-                    this.setState(
-                      { displayToast: true, disableButtonActions: false },
-                      () => this.props.reset()
-                    )
-                  }
-                />
+                <Row
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'flex-start',
+                    paddingLeft: '5%'
+                  }}
+                >
+                  {!UNDERSCORE.isEmpty(this.props.initialValues.profileImage) &&
+                    !this.state.showProfileImageUploader && (
+                      <div>
+                        <Row>
+                          <img
+                            src={this.props.initialValues.profileImage}
+                            style={{
+                              height: '40%',
+                              width: '40%',
+                              resizeMode: 'contain'
+                            }}
+                          />
+                        </Row>
+                        <Row>
+                          <Button
+                            onClick={() => {
+                              fetch(
+                                Endpoints.deleteProfileImage +
+                                  this.props.initialValues.doctorPdNumber,
+                                {
+                                  method: 'DELETE'
+                                }
+                              )
+                                .then(res => res.json())
+                                .then(res => {
+                                  alert(res);
+                                });
+                            }}
+                            color="danger"
+                            type="button"
+                            // disabled={pristine || submitting}
+                            style={{ marginTop: '2%' }}
+                          >
+                            Delete
+                          </Button>
+                        </Row>
+                      </div>
+                    )}
+                </Row>
+                {this.state.showProfileImageUploader && (
+                  <div>
+                    <Row>
+                      <Button
+                        onClick={() =>
+                          this.profileImageUploader.upload(
+                            this.props.initialValues.doctorPdNumber
+                          )
+                        }
+                        color="primary"
+                        type="button"
+                        // disabled={pristine || submitting}
+                      >
+                        Change
+                      </Button>
+                    </Row>
+                    <Row>
+                      <ProfileImageUploadForm
+                        onRef={ref => (this.profileImageUploader = ref)}
+                        onUploadComplete={status =>
+                          this.setState(
+                            {
+                              displayToast: true,
+                              toastMessage:
+                                'Profile image updated successfully.',
+                              disableButtonActions: false
+                            },
+                            () => this.props.reset()
+                          )
+                        }
+                      />
+                    </Row>
+                  </div>
+                )}
               </Col>
             </Row>
           </CardBody>
@@ -447,6 +520,7 @@ CreateDoctorCard.contextTypes = {
 CreateDoctorCard = reduxForm({
   form: 'doctor',
   enableReinitialize: true,
+  destroyOnUnmount: true,
   validate
 })(withTranslation('common')(CreateDoctorCard));
 
