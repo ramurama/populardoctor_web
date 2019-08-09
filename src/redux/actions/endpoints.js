@@ -8,6 +8,7 @@ const endpoints = {
 	createDoctor: '/api/v1/admin/createDoctor',
 	updateDoctor: '/api/v1/admin/updateDoctor',
 	uploadProfileImage: '/api/v1/admin/uploadDoctorProfileImage',
+	deleteProfileImage: '/api/v1/admin/deleteDoctorProfileImage/',
 	getSpecializations: '/api/v1/admin/getSpecializations',
 	
 	createHospital: '/api/v1/admin/createHospital',
