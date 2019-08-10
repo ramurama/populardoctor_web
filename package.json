@@ -63,6 +63,7 @@
     "react-dotdotdot": "^1.2.3",
     "react-draft-wysiwyg": "^1.13.2",
     "react-dropzone": "^9.0.0",
+    "react-flatpickr": "^3.9.0",
     "react-google-maps": "^9.4.5",
     "react-highcharts": "^16.0.2",
     "react-highlight": "^0.12.0",

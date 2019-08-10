@@ -76,6 +76,7 @@ class CreateDoctorCard extends PureComponent {
     this.state = {
       showPassword: false,
       displayToast: false,
+      dateOfBirth: "",
       toastMessage: "",
       errorText: {},
       doProfileImageUpload: false,
@@ -120,9 +121,7 @@ class CreateDoctorCard extends PureComponent {
       mobile,
       yearsOfExperience,
       degree,
-      dateOfBirth: UNDERSCORE.isEmpty(dateOfBirth)
-        ? moment(dateOfBirth).format("YYYY-MM-DD")
-        : "",
+      dateOfBirth: !UNDERSCORE.isEmpty(dateOfBirth) ? dateOfBirth : "",
       specialization: specialization.label,
       gender: gender.label,
       profileContent
@@ -213,7 +212,7 @@ class CreateDoctorCard extends PureComponent {
   };
 
   validateOtherFields = (editValue, errorText) => {
-    if (!editValue["dateOfBirth"]) {
+    if (!editValue["dateOfBirth"] && UNDERSCORE.isEmpty(editValue["dateOfBirth"])) {
       errorText["dateOfBirth"] = emptyField;
     }
     if (UNDERSCORE.isEmpty(editValue["gender"])) {
@@ -240,7 +239,7 @@ class CreateDoctorCard extends PureComponent {
   };
 
   handleDOBChange = date => {
-    console.log(date);
+    this.setState({ dateOfBirth: date });
   };
   _handleClose = () => {
     this.setState({ displayToast: false });

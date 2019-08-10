@@ -1,38 +1,23 @@
 import React, { PureComponent } from 'react';
-import DatePicker from 'react-datepicker';
+import 'flatpickr/dist/themes/material_green.css'
+import Flatpickr from 'react-flatpickr'
 import PropTypes from 'prop-types';
-import "react-datepicker/dist/react-datepicker.css";
 
 class DatePickerField extends PureComponent {
   static propTypes = {
     onChange: PropTypes.func.isRequired,
   };
 
-  constructor() {
-    super();
-    this.state = {
-      startDate: null,
-    };
-    this.handleChange = this.handleChange.bind(this);
-  }
-
-  handleChange(date) {
-		const { onChange } = this.props;
-		this.setState({ startDate: date})
-    onChange(date);
-  }
 
   render() {
-    const { startDate } = this.state;
-
+		const { value, onChange } = this.props;
     return (
-      <div className="date-picker" style={{width: this.props.width}}>
-        <DatePicker
-          selected={startDate}
-          onChange={this.handleChange}
-        />
-      </div>
-    );
+      <Flatpickr
+				value={value}
+				placeholder="Date of Birth"
+				dateFormat= "Y-m-d"
+        onChange={date => {onChange(date) }} />
+    )
   }
 }
 
