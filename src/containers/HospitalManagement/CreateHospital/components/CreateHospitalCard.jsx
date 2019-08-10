@@ -109,7 +109,7 @@ class CreateHospitalCard extends PureComponent {
     streetName = "",
     building = "",
     location = "",
-    landmark = "",
+		landmark = "",
     pincode = 0
   }) => {
     const saveData = {
@@ -119,7 +119,7 @@ class CreateHospitalCard extends PureComponent {
       location,
       landmark,
       pincode
-    };
+		};
     const errorText = {};
     Object.keys(saveData).forEach(key =>
       this.validateTextData(saveData[key], key, saveData, errorText)

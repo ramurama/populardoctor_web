@@ -122,16 +122,14 @@ class CreateScheduleCard extends React.Component {
   componentDidMount() {
     const { location } = this.props;
     const pathName = location.pathname;
+    this.props.getDoctorList();
+    this.props.getHospitalList();
     if (pathName.includes("edit")) {
       const pdNumber = pathName.split("/")[pathName.split("/").length - 1];
       this.props.getScheduleDetail(pdNumber);
     } else {
       this.props.clearScheduleDetail();
     }
-  }
-  componentWillMount() {
-    this.props.getDoctorList();
-    this.props.getHospitalList();
   }
   static getDerivedStateFromProps(nextProps, prevState) {
     if (
@@ -551,20 +549,22 @@ class CreateScheduleCard extends React.Component {
     const title = isUpdate ? EDIT_SCHEDULE : CREATE_SCHEDULE;
     return (
       <Container>
-				<Row>
-        <Col md={12}>
-          <h3 className="page-title">{title}</h3>
-        </Col>
-				</Row>
+        <Row>
+          <Col md={12}>
+            <h3 className="page-title">{title}</h3>
+          </Col>
+        </Row>
         <form
           className="form form--horizontal"
           onSubmit={handleSubmit(this._handleSubmit)}
         >
           <Card>
             <CardBody>
-              { !isUpdate && <div className="form__form-group">
-                <h5 className="bold-text">Add Schedule</h5>
-              </div>}
+              {!isUpdate && (
+                <div className="form__form-group">
+                  <h5 className="bold-text">Add Schedule</h5>
+                </div>
+              )}
               <Row>
                 <Col md={12} sm={12}>
                   <div style={{ float: "right" }}>
