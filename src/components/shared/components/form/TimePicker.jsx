@@ -1,9 +1,11 @@
 import React, { PureComponent } from "react";
 import PropTypes from "prop-types";
 import TimePicker from "rc-time-picker";
+import "flatpickr/dist/themes/material_green.css";
+import Flatpickr from "react-flatpickr";
 
 import "rc-time-picker/assets/index.css";
-const  moment  = require("moment");
+const moment = require("moment");
 
 class TimePickerField extends PureComponent {
   static propTypes = {
@@ -26,18 +28,15 @@ class TimePickerField extends PureComponent {
   };
 
   render() {
-    const { name, onChange, timeMode , value } = this.props;
-    const { open } = this.state;
-
+    const { value, onChange, placeholder } = this.props;
     return (
-      <TimePicker
-        open={open}
-        onOpen={this.setOpen}
-        onClose={this.setOpen}
-				name={name}
-        onChange={onChange}
-        showSecond={false}
-        use12Hours={timeMode}
+      <Flatpickr
+        options={{ enableTime: true, noCalendar: true, dateFormat: "H:i" }}
+        value={value}
+        placeholder={placeholder}
+        onChange={date => {
+          onChange(date);
+        }}
       />
     );
   }

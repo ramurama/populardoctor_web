@@ -61,7 +61,7 @@ class CreateHospitalCard extends PureComponent {
   };
 
   constructor() {
-		super();
+    super();
     this.state = {
       showPassword: false,
       saveData: {
@@ -70,8 +70,8 @@ class CreateHospitalCard extends PureComponent {
         location: "",
         pincode: "",
         landmark: ""
-			},
-			hospitalId: '',
+      },
+      hospitalId: "",
       displayToast: false,
       toastMessage: "",
       errorText: {}
@@ -79,9 +79,8 @@ class CreateHospitalCard extends PureComponent {
   }
 
   componentDidMount() {
-		const { location } = this.props;
-		const pathName = location.pathname;
-		console.log(this.props.match.params.hospitalId)
+    const { location } = this.props;
+    const pathName = location.pathname;
     if (pathName.includes("edit")) {
       const pdNumber = pathName.split("/")[pathName.split("/").length - 1];
       this.props.getHospitalDetail(pdNumber);
@@ -89,14 +88,13 @@ class CreateHospitalCard extends PureComponent {
       this.props.clearHospitalDetail();
     }
   }
-	
-	componentDidUpdate(prevProps, prevState, snapshot) {
+
+  componentDidUpdate(prevProps, prevState, snapshot) {
     const { location, initialValues } = prevProps;
-		const pathName = location.pathname;
-		console.log(initialValues)
-			if (!pathName.includes("edit") && !UNDERSCORE.isEmpty(initialValues)) {
-				this.props.clearHospitalDetail();
-			}
+    const pathName = location.pathname;
+    if (!pathName.includes("edit") && !UNDERSCORE.isEmpty(initialValues)) {
+      this.props.clearHospitalDetail();
+    }
   }
   _handleChange = (key, event) => {
     const { saveData } = this.state;
@@ -109,8 +107,10 @@ class CreateHospitalCard extends PureComponent {
     streetName = "",
     building = "",
     location = "",
-		landmark = "",
-    pincode = 0
+    landmark = "",
+    pincode = 0,
+    latitude = 0,
+    longitude = 0
   }) => {
     const saveData = {
       name,
@@ -118,8 +118,10 @@ class CreateHospitalCard extends PureComponent {
       building,
       location,
       landmark,
-      pincode
-		};
+      pincode,
+      latitude,
+      longitude
+    };
     const errorText = {};
     Object.keys(saveData).forEach(key =>
       this.validateTextData(saveData[key], key, saveData, errorText)
@@ -131,10 +133,14 @@ class CreateHospitalCard extends PureComponent {
     }
     const data = {
       name: saveData.name,
-      address: `${saveData.streetName} ${saveData.building}`,
+      address: JSON.stringify({
+        streetName: saveData.streetName,
+        building: saveData.building
+      }),
       location: saveData.location,
       landmark: saveData.landmark,
-      pincode: saveData.pincode
+      pincode: saveData.pincode,
+      latLng: [latitude, longitude]
     };
     if (this.props.isUpdate) {
       const id = this.props.initialValues._id;
@@ -257,6 +263,28 @@ class CreateHospitalCard extends PureComponent {
                     </div>
                   </div>
                   <div className="form__form-group">
+                    <span className="form__form-group-label">Latitude</span>
+                    <div className="form__form-group-field">
+                      <Field
+                        name="latitude"
+                        component={renderField}
+                        type="number"
+                        placeholder="latitude"
+                      />
+                    </div>
+                  </div>
+                  <div className="form__form-group">
+                    <span className="form__form-group-label">Longitude</span>
+                    <div className="form__form-group-field">
+                      <Field
+                        name="longitude"
+                        component={renderField}
+                        type="number"
+                        placeholder="Longitude"
+                      />
+                    </div>
+                  </div>
+                  <div className="form__form-group">
                     <span className="form__form-group-label">Pincode</span>
                     <div className="form__form-group-field">
                       <Field
@@ -324,8 +352,11 @@ function mapStateToProps(state) {
       : {};
   if (!UNDERSCORE.isEmpty(defaultData)) {
     isUpdate = true;
-    defaultData.streetName = defaultData.address.split(" ")[0];
-    defaultData.building = defaultData.address.split(" ")[1];
+    const address = JSON.parse(defaultData.address);
+    // defaultData.latitude = defaultData.latLng[0];
+    // defaultData.longitude = defaultData.latLng[1];
+    defaultData.streetName = address.streetName;
+    defaultData.building = address.building;
   }
   return {
     initialValues: { ...defaultData },

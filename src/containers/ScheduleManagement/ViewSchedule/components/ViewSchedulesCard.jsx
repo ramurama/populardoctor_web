@@ -30,7 +30,8 @@ const styles = {
 class ScheduleManagementCard extends React.Component {
   componentWillMount() {
     this.props.getDoctorList();
-    this.props.getHospitalList();
+		this.props.getHospitalList();
+		this.props.clearScheduleList();
   }
 
   renderAvatar = text => (
@@ -80,17 +81,10 @@ class ScheduleManagementCard extends React.Component {
     );
 	};
 
-	_handleDeleteToken = data => {
-		Action.deleteSchedule(data._id)
-		.then(() =>  this.props.getScheduleList(this.state.doctorId));
-  };
 
   _renderOperation = data => {
     return (
       <div>
-        <Button className="icon" onClick={() => this._handleDeleteToken(data)}>
-          <span class="lnr lnr-trash" />
-        </Button>
         <Button className="icon" onClick={() => this._handleEditHospital(data)}>
           <span class="lnr lnr-pencil" />
         </Button>
@@ -181,7 +175,10 @@ function mapDispatchToProps(dispatch) {
     },
     getScheduleList: doctorId => {
       dispatch(Action.getScheduleList(doctorId));
-    }
+		},
+		clearScheduleList: () => {
+			dispatch(Action.clearScheduleList());
+		}
   };
 }
 
