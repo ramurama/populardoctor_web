@@ -8,6 +8,7 @@ import {
   Button,
   ButtonToolbar
 } from "reactstrap";
+import PropTypes from "prop-types";
 import { Field, reduxForm, SubmissionError } from "redux-form";
 import { connect } from "react-redux";
 import { withRouter } from "react-router";
@@ -248,8 +249,8 @@ class CreateScheduleCard extends React.Component {
     }
     // this._validateTokens(this._parseToken(tokenList, fastrack));
     editValue.tokens = this._parseToken(tokenList, fastrack);
-    editValue.startTime = moment(editValue.fromTime).format("hh:mm A");
-    editValue.endTime = moment(editValue.toTime).format("hh:mm A");
+    editValue.startTime = moment(editValue.fromTime[0]).format("hh:mm A");
+    editValue.endTime = moment(editValue.toTime[0]).format("hh:mm A");
     editValue.hospitalId = this.findIdInList(
       editValue.hospital.value,
       this.props.hospitalList,
@@ -338,6 +339,17 @@ class CreateScheduleCard extends React.Component {
     });
     this.setState({
       tokenList
+    });
+  };
+
+  _handleDelete = () => {
+    const id = this.props.initialValues.id;
+    Action.deleteSchedule(id).then(result => {
+      if (result) {
+        this.context.router.history.push(
+          `/pages/scheduleManagement/viewSchedules`
+        );
+      }
     });
   };
 
@@ -467,13 +479,13 @@ class CreateScheduleCard extends React.Component {
                     <Field
                       name="startTime"
                       component={renderTimePickerField}
-                      onChange={event =>
+                      onChange={event => {
                         this._handleTokenChange(
                           index,
                           "startTime",
-                          event.format("hh:mm A")
-                        )
-                      }
+                          moment(event[0]).format("hh:mm A")
+                        );
+                      }}
                       placeholder="Start time"
                       width={100}
                       timeMode
@@ -487,7 +499,7 @@ class CreateScheduleCard extends React.Component {
                         this._handleTokenChange(
                           index,
                           "endTime",
-                          event.format("hh:mm A")
+                          moment(event[0]).format("hh:mm A")
                         )
                       }
                       placeholder="End time"
@@ -569,6 +581,14 @@ class CreateScheduleCard extends React.Component {
                 <Col md={12} sm={12}>
                   <div style={{ float: "right" }}>
                     <ButtonToolbar className="form__button-toolbar">
+                      {isUpdate && (
+                        <Button
+                          className="icon"
+                          onClick={() => this._handleDelete()}
+                        >
+                          <span class="lnr lnr-trash" /> Delete
+                        </Button>
+                      )}
                       <Button color="primary" type="submit" size="sm">
                         Save
                       </Button>
@@ -745,6 +765,9 @@ function mapDispatchToProps(dispatch) {
     }
   };
 }
+CreateScheduleCard.contextTypes = {
+  router: PropTypes.object
+};
 CreateScheduleCard = reduxForm({
   form: "doctor",
   validate,
