@@ -1,12 +1,12 @@
-import React from "react";
-import { Card, CardBody, Col, Button } from "reactstrap";
-import PropTypes from "prop-types";
-import { withRouter } from "react-router";
-import { connect } from "react-redux";
-import MaterialTable from "../../../../components/containers/Tables/MaterialTable/index";
-import { UNDERSCORE } from "../../../../constants/utils";
-import * as Action from "../../../../redux/actions/doctorActions";
-import UserBlockToggle from "../../../../components/user/userBlockToggle";
+import React from 'react';
+import { Card, CardBody, Col, Button } from 'reactstrap';
+import PropTypes from 'prop-types';
+import { withRouter } from 'react-router';
+import { connect } from 'react-redux';
+import MaterialTable from '../../../../components/containers/Tables/MaterialTable/index';
+import { UNDERSCORE } from '../../../../constants/utils';
+import * as Action from '../../../../redux/actions/doctorActions';
+import UserBlockToggle from '../../../../components/user/userBlockToggle';
 
 class DoctorManagementCard extends React.Component {
   componentWillMount() {
@@ -18,25 +18,35 @@ class DoctorManagementCard extends React.Component {
     this.props.getDoctorList();
   };
   renderDoctorCell = text => (
-    <div style={{ display: "flex", width: 200 }}>
+    <div style={{ display: 'flex', width: 200 }}>
       <strong>{text.doctorDetails.fullName}</strong>
     </div>
   );
 
-	_handleEditHospital = (data) => {
-		this.context.router.history.push(`/pages/doctorManagement/editDoctor/${data.doctorPdNumber}`)
-	}
+  _handleEditHospital = data => {
+    this.context.router.history.push(
+      `/pages/doctorManagement/editDoctor/${data.doctorPdNumber}`
+    );
+  };
 
   _renderToggle = row => {
     return (
-      <div style={{display:'flex'	}}>
+      <div style={{ display: 'flex' }}>
         <UserBlockToggle
           data={row}
           status={row.doctorDetails.status}
           id={row.userId}
           loadData={this._onLoad}
         />
-        <Button className="icon" onClick={() => this._handleEditHospital(row)}>
+        <Button
+          className="icon"
+          onClick={() => {
+            this._handleEditHospital(row);
+
+            //clear doctor deatils already available in redux state
+            this.props.clearDoctorDetail();
+          }}
+        >
           <span class="lnr lnr-pencil" />
         </Button>
       </div>
@@ -47,42 +57,42 @@ class DoctorManagementCard extends React.Component {
     const { doctorList } = this.props;
     const columns = [
       {
-        id: "name",
+        id: 'name',
         numeric: false,
         disablePadding: true,
-        label: "Name",
+        label: 'Name',
         render: text => this.renderDoctorCell(text)
       },
       {
-        id: "doctorPdNumber",
+        id: 'doctorPdNumber',
         numeric: false,
         disablePadding: true,
-        label: "Doctor Id",
+        label: 'Doctor Id',
         render: text => text.doctorPdNumber
       },
       {
-        id: "specialization",
+        id: 'specialization',
         numeric: false,
         disablePadding: true,
-        label: "Specialization"
+        label: 'Specialization'
       },
       {
-        id: "phone",
+        id: 'phone',
         numeric: false,
         disablePadding: true,
-        label: "Contact",
+        label: 'Contact',
         render: text => text.doctorDetails.username
       },
       {
-        id: "degree",
+        id: 'degree',
         numeric: false,
         disablePadding: true,
-        label: "Education",
+        label: 'Education',
         render: text => text.degree
       },
       {
-        id: "action",
-        label: "Operation",
+        id: 'action',
+        label: 'Operation',
         render: text => this._renderToggle(text)
       }
     ];
@@ -125,6 +135,9 @@ function mapDispatchToProps(dispatch) {
     },
     getDoctorList: () => {
       dispatch(Action.getDoctorList());
+    },
+    clearDoctorDetail: () => {
+      dispatch(Action.clearDoctorDetail());
     }
   };
 }

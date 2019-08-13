@@ -31,22 +31,24 @@ class ProfileImageUploadForm extends PureComponent {
 
   _handleSubmit = ({ profileImage }) => {
     const formData = new FormData();
-    formData.append(
-      'profileImage',
-      profileImage[0],
-      this.state.doctorPdNumber + '.png'
-    );
+    if (profileImage !== undefined && profileImage.length > 0) {
+      formData.append(
+        'profileImage',
+        profileImage[0],
+        this.state.doctorPdNumber + '.png'
+      );
 
-    fetch(EndPoints.uploadProfileImage + '/' + this.state.doctorPdNumber, {
-      method: 'POST',
-      body: formData
-    })
-      .then(res => res.json())
-      .then(res => {
-        this.props.reset();
-        this.props.onUploadComplete(res.status);
+      fetch(EndPoints.uploadProfileImage + '/' + this.state.doctorPdNumber, {
+        method: 'POST',
+        body: formData
       })
-      .catch(err => console.log(err));
+        .then(res => res.json())
+        .then(res => {
+          this.props.reset();
+          this.props.onUploadComplete(res.status);
+        })
+        .catch(err => console.log(err));
+    }
   };
 
   render() {
@@ -54,15 +56,15 @@ class ProfileImageUploadForm extends PureComponent {
     return (
       <Card style={{ height: 150 }}>
         <CardBody>
-          <div className='card__title'>
-            <h5 className='subhead'>Profile Image</h5>
+          <div className="card__title">
+            <h5 className="subhead">Profile Image</h5>
           </div>
           <form
             ref={element => (this.form = element)}
-            className='form'
+            className="form"
             onSubmit={handleSubmit(this._handleSubmit)}
           >
-            <Field name='profileImage' component={renderDropZoneField} />
+            <Field name="profileImage" component={renderDropZoneField} />
           </form>
         </CardBody>
       </Card>

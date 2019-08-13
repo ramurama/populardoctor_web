@@ -1,5 +1,5 @@
-import React, { PureComponent } from "react";
-import { connect } from "react-redux";
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import {
   Card,
   CardBody,
@@ -8,23 +8,23 @@ import {
   ButtonToolbar,
   Row,
   Container
-} from "reactstrap";
-import { Field, reduxForm, SubmissionError } from "redux-form";
-import { withRouter } from "react-router";
-import PropTypes from "prop-types";
-import { withTranslation } from "react-i18next";
-import Snackbar from "@material-ui/core/Snackbar";
-import * as Action from "../../../../redux/actions/doctorActions";
-import { CREATE_DOCTOR, EDIT_DOCTOR } from "../../../../constants/strings";
-import validate from "../../../../components/Form/FormValidation/components/validate";
-import { addDoctor, emptyField } from "../constants/doctorForm";
-import { UNDERSCORE } from "../../../../constants/utils";
-import renderSelectField from "../../../../components/shared/components/form/Select";
-import renderDatePicker from "../../../../components/shared/components/form/DatePicker";
-import ProfileImageUploadForm from "./ProfileImageUploadForm";
-import Endpoints from "../../../../redux/actions/endpoints";
+} from 'reactstrap';
+import { Field, reduxForm, SubmissionError } from 'redux-form';
+import { withRouter } from 'react-router';
+import PropTypes from 'prop-types';
+import { withTranslation } from 'react-i18next';
+import Snackbar from '@material-ui/core/Snackbar';
+import * as Action from '../../../../redux/actions/doctorActions';
+import { CREATE_DOCTOR, EDIT_DOCTOR } from '../../../../constants/strings';
+import validate from '../../../../components/Form/FormValidation/components/validate';
+import { addDoctor, emptyField } from '../constants/doctorForm';
+import { UNDERSCORE } from '../../../../constants/utils';
+import renderSelectField from '../../../../components/shared/components/form/Select';
+import renderDatePicker from '../../../../components/shared/components/form/DatePicker';
+import ProfileImageUploadForm from './ProfileImageUploadForm';
+import Endpoints from '../../../../redux/actions/endpoints';
 
-const moment = require("moment");
+const moment = require('moment');
 
 const renderField = ({
   input,
@@ -57,12 +57,12 @@ renderField.propTypes = {
 };
 
 renderField.defaultProps = {
-  placeholder: "",
+  placeholder: '',
   meta: null,
-  type: "text"
+  type: 'text'
 };
 
-class CreateDoctorCard extends PureComponent {
+class CreateDoctorCard extends Component {
   static propTypes = {
     t: PropTypes.func.isRequired,
     handleSubmit: PropTypes.func.isRequired,
@@ -76,30 +76,37 @@ class CreateDoctorCard extends PureComponent {
     this.state = {
       showPassword: false,
       displayToast: false,
-      dateOfBirth: "",
-      toastMessage: "",
+      dateOfBirth: '',
+      toastMessage: '',
       errorText: {},
-      doProfileImageUpload: false,
       doctorPdNumber: null,
       disableButtonActions: false,
-      showProfileImageUploader: false
+      isProfileImageDeleted: false
     };
   }
 
   componentDidMount() {
+    // this.showProfileImageUploader();
     const { location } = this.props;
     const pathName = location.pathname;
-    if (pathName.includes("edit")) {
-      const pdNumber = pathName.split("/")[pathName.split("/").length - 1];
+    if (pathName.includes('edit')) {
+      const pdNumber = pathName.split('/')[pathName.split('/').length - 1];
       this.props.getDoctorDetail(pdNumber);
     } else {
       this.props.clearDoctorDetail();
     }
     this.props.getSpecialization();
+  }
+
+  showProfileImageUploader() {
+    console.log(this.props.initialValues);
     if (UNDERSCORE.isEmpty(this.props.initialValues.profileImage)) {
       this.setState({ showProfileImageUploader: true });
+    } else {
+      this.setState({ showProfileImageUploader: false });
     }
   }
+
   _handleChange = (key, event) => {
     const { saveData } = this.state;
     saveData[key] = event.target.value;
@@ -107,21 +114,21 @@ class CreateDoctorCard extends PureComponent {
   };
 
   _handleSubmit = ({
-    fullName = "",
-    mobile = "",
+    fullName = '',
+    mobile = '',
     yearsOfExperience = 0,
-    degree = "",
-    dateOfBirth = "",
-    specialization = "",
-    gender = "",
-    profileContent = ""
+    degree = '',
+    dateOfBirth = '',
+    specialization = '',
+    gender = '',
+    profileContent = ''
   }) => {
     const editValue = {
       fullName,
       mobile,
       yearsOfExperience,
       degree,
-      dateOfBirth: !UNDERSCORE.isEmpty(dateOfBirth) ? dateOfBirth : "",
+      dateOfBirth: !UNDERSCORE.isEmpty(dateOfBirth) ? dateOfBirth : '',
       specialization: specialization.label,
       gender: gender.label,
       profileContent
@@ -146,8 +153,8 @@ class CreateDoctorCard extends PureComponent {
           .then(res => {
             if (res.status) {
               this.setState({
-                toastMessage: res.message
-                // displayToast: true
+                toastMessage: res.message,
+                displayToast: true
                 // disableButtonActions: true
               });
               this.props.getDoctorDetail(pdNumber);
@@ -184,9 +191,9 @@ class CreateDoctorCard extends PureComponent {
   };
 
   validateTextData = (value, key, editValue, errorText) => {
-    const type = addDoctor[key] ? addDoctor[key].type : "other";
+    const type = addDoctor[key] ? addDoctor[key].type : 'other';
     switch (type) {
-      case "number":
+      case 'number':
         if (UNDERSCORE.isEmpty(value.toString())) {
           editValue[key] = value;
           errorText[key] = addDoctor[key].emptyField;
@@ -195,7 +202,7 @@ class CreateDoctorCard extends PureComponent {
         errorText[key] = null;
         editValue[key] = value;
         break;
-      case "text":
+      case 'text':
         if (UNDERSCORE.isEmpty(value)) {
           editValue[key] = value;
           errorText[key] = addDoctor[key].emptyField;
@@ -212,20 +219,23 @@ class CreateDoctorCard extends PureComponent {
   };
 
   validateOtherFields = (editValue, errorText) => {
-    if (!editValue["dateOfBirth"] && UNDERSCORE.isEmpty(editValue["dateOfBirth"])) {
-      errorText["dateOfBirth"] = emptyField;
+    if (
+      !editValue['dateOfBirth'] &&
+      UNDERSCORE.isEmpty(editValue['dateOfBirth'])
+    ) {
+      errorText['dateOfBirth'] = emptyField;
     }
-    if (UNDERSCORE.isEmpty(editValue["gender"])) {
-      errorText["gender"] = emptyField;
+    if (UNDERSCORE.isEmpty(editValue['gender'])) {
+      errorText['gender'] = emptyField;
     }
-    if (UNDERSCORE.isEmpty(editValue["specialization"])) {
-      errorText["specialization"] = emptyField;
+    if (UNDERSCORE.isEmpty(editValue['specialization'])) {
+      errorText['specialization'] = emptyField;
     }
   };
 
   _mobileNumberValidate = (value, errorText) => {
     if (value && value.length !== 0 && value.length !== 10) {
-      errorText["mobile"] = addDoctor["mobile"].errorText;
+      errorText['mobile'] = addDoctor['mobile'].errorText;
     }
   };
 
@@ -249,6 +259,9 @@ class CreateDoctorCard extends PureComponent {
     const { pristine, reset, submitting, handleSubmit, isUpdate } = this.props;
     const specializations = this._parseList(this.props.specializations);
     const title = isUpdate ? EDIT_DOCTOR : CREATE_DOCTOR;
+    const showProfileImageUploader = UNDERSCORE.isEmpty(
+      this.props.initialValues.profileImage
+    );
     return (
       <Container>
         <Row>
@@ -310,8 +323,8 @@ class CreateDoctorCard extends PureComponent {
                         placeholder="Gender"
                         width={150}
                         options={[
-                          { value: "male", label: "MALE" },
-                          { value: "female", label: "FEMALE" }
+                          { value: 'male', label: 'MALE' },
+                          { value: 'female', label: 'FEMALE' }
                         ]}
                       />
                     </div>
@@ -365,7 +378,7 @@ class CreateDoctorCard extends PureComponent {
                       />
                     </div>
                   </div>
-                  <div style={{ float: "right" }}>
+                  <div style={{ float: 'right' }}>
                     <ButtonToolbar className="form__button-toolbar">
                       <Button
                         color="primary"
@@ -396,21 +409,21 @@ class CreateDoctorCard extends PureComponent {
               <Col md={6} sm={12}>
                 <Row
                   style={{
-                    flexDirection: "row",
-                    justifyContent: "flex-start",
-                    paddingLeft: "5%"
+                    flexDirection: 'row',
+                    justifyContent: 'flex-start',
+                    paddingLeft: '5%'
                   }}
                 >
-                  {!UNDERSCORE.isEmpty(this.props.initialValues.profileImage) &&
-                    !this.state.showProfileImageUploader && (
+                  {!this.state.isProfileImageDeleted &&
+                    !showProfileImageUploader && (
                       <div>
                         <Row>
                           <img
                             src={this.props.initialValues.profileImage}
                             style={{
-                              height: "40%",
-                              width: "40%",
-                              resizeMode: "contain"
+                              height: '40%',
+                              width: '40%',
+                              resizeMode: 'contain'
                             }}
                           />
                         </Row>
@@ -421,18 +434,23 @@ class CreateDoctorCard extends PureComponent {
                                 Endpoints.deleteProfileImage +
                                   this.props.initialValues.doctorPdNumber,
                                 {
-                                  method: "DELETE"
+                                  method: 'DELETE'
                                 }
                               )
                                 .then(res => res.json())
                                 .then(res => {
-                                  alert(res);
+                                  console.log(res);
+                                  if (res.status) {
+                                    this.setState({
+                                      isProfileImageDeleted: true
+                                    });
+                                  }
                                 });
                             }}
                             color="danger"
                             type="button"
                             // disabled={pristine || submitting}
-                            style={{ marginTop: "2%" }}
+                            style={{ marginTop: '2%' }}
                           >
                             Delete
                           </Button>
@@ -440,36 +458,68 @@ class CreateDoctorCard extends PureComponent {
                       </div>
                     )}
                 </Row>
-                {this.state.showProfileImageUploader && (
+                {(this.state.isProfileImageDeleted ||
+                  showProfileImageUploader) && (
                   <div>
-                    <Row>
-                      <Button
-                        onClick={() =>
-                          this.profileImageUploader.upload(
-                            this.props.initialValues.doctorPdNumber
-                          )
-                        }
-                        color="primary"
-                        type="button"
-                        // disabled={pristine || submitting}
-                      >
-                        Change
-                      </Button>
-                    </Row>
+                    {this.props.location.pathname.includes('edit') && (
+                      <Row>
+                        <Button
+                          onClick={() =>
+                            this.profileImageUploader.upload(
+                              this.props.initialValues.doctorPdNumber
+                            )
+                          }
+                          color="primary"
+                          type="button"
+                          // disabled={pristine || submitting}
+                        >
+                          Upload
+                        </Button>
+                      </Row>
+                    )}
                     <Row>
                       <ProfileImageUploadForm
                         onRef={ref => (this.profileImageUploader = ref)}
-                        onUploadComplete={status =>
-                          this.setState(
-                            {
-                              displayToast: true,
-                              toastMessage:
-                                "Profile image updated successfully.",
-                              disableButtonActions: false
-                            },
-                            () => this.props.reset()
-                          )
-                        }
+                        onUploadComplete={status => {
+                          if (status) {
+                            this.setState(
+                              {
+                                displayToast: true,
+                                toastMessage:
+                                  'Profile image updated successfully',
+                                disableButtonActions: false
+                              },
+                              () => {
+                                if (
+                                  this.props.location.pathname.includes('edit')
+                                ) {
+                                  setTimeout(() => {
+                                    this.setState(
+                                      {
+                                        isProfileImageDeleted: false
+                                      },
+                                      () => {
+                                        this.props.getDoctorDetail(
+                                          this.props.initialValues
+                                            .doctorPdNumber
+                                        );
+                                      }
+                                    );
+                                  }, 1000);
+                                }
+                              }
+                            );
+                          } else {
+                            this.setState(
+                              {
+                                displayToast: true,
+                                toastMessage: 'Error updating image!',
+                                disableButtonActions: false
+                              },
+                              () => this.props.reset()
+                            );
+                          }
+                        }}
                       />
                     </Row>
                   </div>
@@ -478,11 +528,11 @@ class CreateDoctorCard extends PureComponent {
             </Row>
           </CardBody>
           <Snackbar
-            anchorOrigin={{ vertical: "top", horizontal: "right" }}
+            anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
             autoHideDuration={3000}
             open={this.state.displayToast}
             ContentProps={{
-              "aria-describedby": "message-id"
+              'aria-describedby': 'message-id'
             }}
             onClose={this._handleClose}
             message={<span id="message-id">{this.state.toastMessage}</span>}
@@ -528,11 +578,11 @@ CreateDoctorCard.contextTypes = {
 };
 
 CreateDoctorCard = reduxForm({
-  form: "doctor",
+  form: 'doctor',
   enableReinitialize: true,
   destroyOnUnmount: true,
   validate
-})(withTranslation("common")(CreateDoctorCard));
+})(withTranslation('common')(CreateDoctorCard));
 
 export default connect(
   mapStateToProps,
