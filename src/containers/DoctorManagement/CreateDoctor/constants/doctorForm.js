@@ -19,6 +19,18 @@ export const addDoctor = {
 		length: 10,
 		errorText: 'Enter valid mobile number it should be 10 digit'
 	},
+	latitude: {
+		type: 'number',
+		emptyField: 'Field cannot be empty',
+		length: 10,
+		errorText: 'Enter valid mobile number it should be 10 digit'
+	},
+	longitude: {
+		type: 'number',
+		emptyField: 'Field cannot be empty',
+		length: 10,
+		errorText: 'Enter valid mobile number it should be 10 digit'
+	},
 	yearsOfExperience: {
 		type: 'number',
 		emptyField: 'Field cannot be empty',
