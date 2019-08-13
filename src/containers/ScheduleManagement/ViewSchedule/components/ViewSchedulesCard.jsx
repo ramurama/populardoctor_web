@@ -30,7 +30,8 @@ const styles = {
 class ScheduleManagementCard extends React.Component {
   componentWillMount() {
     this.props.getDoctorList();
-    this.props.getHospitalList();
+		this.props.getHospitalList();
+		this.props.clearScheduleList();
   }
 
   renderAvatar = text => (
@@ -174,7 +175,10 @@ function mapDispatchToProps(dispatch) {
     },
     getScheduleList: doctorId => {
       dispatch(Action.getScheduleList(doctorId));
-    }
+		},
+		clearScheduleList: () => {
+			dispatch(Action.clearScheduleList());
+		}
   };
 }
 
