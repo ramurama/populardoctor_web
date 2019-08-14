@@ -143,7 +143,7 @@ class CreateScheduleCard extends React.Component {
   componentDidUpdate(prevProps, prevState) {
     if (prevProps.isUpdate && !prevState.updated) {
       const { isFastrack, dataList } = this._decodeTokenList(
-        prevState.existTokens
+        this.props.initialValues.tokens
       );
       this._handleFastrack(isFastrack);
       this.setState({ isFastrack, existTokens: dataList, updated: true });
