@@ -5,6 +5,7 @@ import { Card, CardBody } from 'reactstrap';
 import { withTranslation } from 'react-i18next';
 import renderDropZoneField from '../../../../components/shared/components/form/DropZone';
 import EndPoints from '../../../../redux/actions/endpoints';
+import { UNDERSCORE } from '../../../../constants/utils';
 
 class ProfileImageUploadForm extends PureComponent {
   constructor(props) {
@@ -30,6 +31,9 @@ class ProfileImageUploadForm extends PureComponent {
   }
 
   _handleSubmit = ({ profileImage }) => {
+    if(UNDERSCORE.isEmpty(profileImage)){
+      return;
+    }
     const formData = new FormData();
     formData.append(
       'profileImage',

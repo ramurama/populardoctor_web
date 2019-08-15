@@ -71,18 +71,17 @@ const fastrack = {
   time: "Can visit on your arival"
 };
 
-const emptyToken = [
-  {
-    id: 0,
-    number: "",
-    type: {},
-    time: "",
-    startTime: null,
-    endTime: null,
-    showSnackBar: false,
-    snackBarMessage: ""
-  }
-];
+const emptyToken = {
+  id: 0,
+  number: "",
+  type: {},
+  time: "",
+  startTime: null,
+  endTime: null,
+  showSnackBar: false,
+  snackBarMessage: ""
+};
+
 const renderField = ({
   input,
   placeholder,
@@ -112,7 +111,7 @@ class CreateScheduleCard extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      tokenList: emptyToken,
+      tokenList: [emptyToken],
       isFastrack: false,
       existTokens: [],
       updated: false,
@@ -144,7 +143,7 @@ class CreateScheduleCard extends React.Component {
   componentDidUpdate(prevProps, prevState) {
     if (prevProps.isUpdate && !prevState.updated) {
       const { isFastrack, dataList } = this._decodeTokenList(
-        prevState.existTokens
+        this.props.initialValues.tokens
       );
       this._handleFastrack(isFastrack);
       this.setState({ isFastrack, existTokens: dataList, updated: true });
@@ -294,10 +293,12 @@ class CreateScheduleCard extends React.Component {
         !UNDERSCORE.isEmpty(token.startTime) &&
         !UNDERSCORE.isEmpty(token.endTime)
       ) {
+        const startTime = moment(token.startTime).format("hh:mm A");
+        const endTime = moment(token.endTime).format("hh:mm A");
         const data = {
           number: parseInt(token.number),
           type: token.type,
-          time: `${token.startTime} - ${token.endTime}`
+          time: `${startTime} - ${endTime}`
         };
         dataList.push(data);
       }
@@ -478,15 +479,16 @@ class CreateScheduleCard extends React.Component {
                   <div style={{ width: 120, padding: "0px 8px" }}>
                     <Field
                       name="startTime"
+                      placeholder="Start Time"
                       component={renderTimePickerField}
+                      value={data.startTime}
                       onChange={event => {
                         this._handleTokenChange(
                           index,
                           "startTime",
-                          moment(event[0]).format("hh:mm A")
+                          moment(event[0])
                         );
                       }}
-                      placeholder="Start time"
                       width={100}
                       timeMode
                     />
@@ -499,7 +501,7 @@ class CreateScheduleCard extends React.Component {
                         this._handleTokenChange(
                           index,
                           "endTime",
-                          moment(event[0]).format("hh:mm A")
+                          moment(event[0])
                         )
                       }
                       placeholder="End time"
