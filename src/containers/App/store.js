@@ -1,13 +1,18 @@
-import { combineReducers, createStore } from 'redux';
+import { combineReducers, createStore, applyMiddleware } from 'redux';
 import { reducer as reduxFormReducer } from 'redux-form';
-import { sidebarReducer, themeReducer } from '../../redux/reducers/index';
+import { sidebarReducer, themeReducer, doctorReducer, hospitalReducer, userReducer, scheduleReducer } from '../../redux/reducers/index';
+import thunk from 'redux-thunk';
 
 const reducer = combineReducers({
   form: reduxFormReducer, // mounted under "form",
   theme: themeReducer,
-  sidebar: sidebarReducer,
+	sidebar: sidebarReducer,
+	doctor: doctorReducer,
+	hospital: hospitalReducer,
+	user: userReducer,
+	schedule: scheduleReducer,
 });
 
-const store = createStore(reducer);
+const store = createStore(reducer, applyMiddleware(thunk));
 
 export default store;
