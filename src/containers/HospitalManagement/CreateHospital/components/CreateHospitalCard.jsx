@@ -353,8 +353,8 @@ function mapStateToProps(state) {
   if (!UNDERSCORE.isEmpty(defaultData)) {
     isUpdate = true;
     const address = JSON.parse(defaultData.address);
-    // defaultData.latitude = defaultData.latLng[0];
-    // defaultData.longitude = defaultData.latLng[1];
+    defaultData.latitude = defaultData.latLng[0];
+    defaultData.longitude = defaultData.latLng[1];
     defaultData.streetName = address.streetName;
     defaultData.building = address.building;
   }
