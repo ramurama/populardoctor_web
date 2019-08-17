@@ -1,12 +1,9 @@
 import React, { PureComponent } from "react";
 import PropTypes from "prop-types";
-import TimePicker from "rc-time-picker";
 import "flatpickr/dist/themes/material_green.css";
 import Flatpickr from "react-flatpickr";
-
 import "rc-time-picker/assets/index.css";
 import { UNDERSCORE } from "../../../../constants/utils";
-const moment = require("moment");
 
 class TimePickerField extends PureComponent {
   static propTypes = {

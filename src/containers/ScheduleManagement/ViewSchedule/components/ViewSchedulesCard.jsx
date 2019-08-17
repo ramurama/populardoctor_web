@@ -2,50 +2,20 @@ import React from "react";
 import { Card, CardBody, Col, Button } from "reactstrap";
 import PropTypes from "prop-types";
 import { withRouter } from "react-router";
-import Chip from "@material-ui/core/Chip";
-import Avatar from "@material-ui/core/Avatar";
-import { Field } from "redux-form";
 import { connect } from "react-redux";
 import Switch from "@material-ui/core/Switch";
 import Tooltip from "@material-ui/core/Tooltip";
 import MaterialTable from "../../../../components/containers/Tables/MaterialTable/index";
 import RenderSelectField from "../../../../components/shared/components/form/Select";
-import Modal from "./../../../../components/shared/components/Modal";
 import { UNDERSCORE } from "../../../../constants/utils";
 import * as Action from "../../../../redux/actions/scheduleActions";
 
-const styles = {
-  avatar: {
-    margin: 10
-  },
-  inactive: {
-    color: "white",
-    background: "#ea5555"
-  },
-  active: {
-    background: "#33bd33",
-    color: "white"
-  }
-};
 class ScheduleManagementCard extends React.Component {
   componentWillMount() {
     this.props.getDoctorList();
 		this.props.getHospitalList();
 		this.props.clearScheduleList();
   }
-
-  renderAvatar = text => (
-    <div style={{ display: "flex", width: 200 }}>
-      <Avatar
-        alt="L"
-        src={text.doctorDetails.profileImage}
-        classes={styles.avatar}
-      />
-      <a style={{ padding: 20 }}>
-        <strong>{text.doctorDetails.fullName}</strong>
-      </a>
-    </div>
-  );
 
   _renderToggle = text => {
     const color = text.status === "ACTIVE" ? false : true;

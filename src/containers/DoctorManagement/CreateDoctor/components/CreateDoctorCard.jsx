@@ -24,8 +24,6 @@ import renderDatePicker from "../../../../components/shared/components/form/Date
 import ProfileImageUploadForm from "./ProfileImageUploadForm";
 import Endpoints from "../../../../redux/actions/endpoints";
 
-const moment = require("moment");
-
 const renderField = ({
   input,
   placeholder,

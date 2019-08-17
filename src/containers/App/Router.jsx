@@ -21,7 +21,6 @@ import ViewBookings from '../Bookings/ViewBookings';
 import ViewBookingDetail from '../Bookings/ViewBookingDetail';
 import CustomerCare from '../CustomerCare';
 import Settings from '../SettingsManagement'
-import * as Actions from '../../redux/actions/loginActions';
 
 import {
 	ROUTE_CREATE_DOCTOR,
@@ -42,22 +41,6 @@ import {
 	ROUTE_EDIT_SCHEDULE,
   ROUTE_SETTINGS
 } from '../../constants/routes';
-
-function requireAuth(nextState, replace, next) {
-	Actions.loginSatus()
-		.then(response => response.json())
-		.then( data =>  {
-			if(data.status === 'SUCCESS'){
-				this.context.router.history.push('/pages/userManagement/viewUsers');
-			}else{
-					replace({
-						pathname: "/login",
-						state: {nextPathname: nextState.location.pathname}
-					});
-				}
-				next();
-		})
-}
 
 const Pages = () => (
   <Switch>

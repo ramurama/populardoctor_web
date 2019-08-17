@@ -1,11 +1,11 @@
 import React from 'react';
-import { Card, CardBody, Col, Button } from 'reactstrap';
+import { Card, CardBody, Col } from 'reactstrap';
 import TextInputDisabled from '../../../../components/custom/TextInputDisabled';
 import Moment from 'moment-timezone';
 import _ from 'underscore';
 
 const BookingDetailCard = props => {
-  const { bookingId, tokenDate, token, bookedTimeStamp, status } = props.data;
+  const { tokenDate, token, bookedTimeStamp, status } = props.data;
   let statusColor = 'green';
   switch (status) {
     case 'CANCELLED':
@@ -16,7 +16,9 @@ const BookingDetailCard = props => {
       break;
     case 'VISITED':
       statusColor = 'green';
-      break;
+			break;
+		default: 
+			break;
   }
   return (
     <Col md={6} lg={6}>

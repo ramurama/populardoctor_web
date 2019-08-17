@@ -54,7 +54,7 @@ class ProfileImageUploadForm extends PureComponent {
   };
 
   render() {
-    const { handleSubmit, reset } = this.props;
+    const { handleSubmit } = this.props;
     return (
       <Card style={{ height: 150 }}>
         <CardBody>

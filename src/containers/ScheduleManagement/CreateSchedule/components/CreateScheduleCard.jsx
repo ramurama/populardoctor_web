@@ -244,7 +244,6 @@ class CreateScheduleCard extends React.Component {
         this.setState({ errorToken: "" });
       }
       throw new SubmissionError(errorText);
-      return;
     }
     // this._validateTokens(this._parseToken(tokenList, fastrack));
     editValue.tokens = this._parseToken(tokenList, fastrack);

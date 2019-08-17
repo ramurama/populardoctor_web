@@ -7,19 +7,6 @@ import MaterialTable from "../../../../components/containers/Tables/MaterialTabl
 import { UNDERSCORE } from "../../../../constants/utils";
 import * as Action from "../../../../redux/actions/hospitalActions";
 
-const styles = {
-  avatar: {
-    margin: 10
-  },
-  inactive: {
-    color: "white",
-    background: "#ea5555"
-  },
-  active: {
-    background: "#33bd33",
-    color: "white"
-  }
-};
 class HospitalManagementCard extends React.Component {
   componentWillMount() {
     this.props.getHospitalList("all");

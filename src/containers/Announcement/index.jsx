@@ -1,5 +1,5 @@
 import React from 'react';
-import { Col, Container, Row, ButtonToolbar } from 'reactstrap';
+import { Col, Container, Row } from 'reactstrap';
 import AnnouncementForm from './components/AnnouncementForm';
 import { ANNOUNCEMENT } from '../../constants/strings';
 import AnnouncementsTable from './components/AnnouncementsTable';

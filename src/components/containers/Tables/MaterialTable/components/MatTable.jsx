@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Card, CardBody, Col } from 'reactstrap';
+import { Col } from 'reactstrap';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -9,11 +9,6 @@ import Checkbox from '@material-ui/core/Checkbox';
 import MatTableHead from './MatTableHead';
 import { UNDERSCORE } from '../../../../../constants/utils';
 
-function getSorting(order, orderBy) {
-  return order === 'desc'
-    ? (a, b) => b[orderBy] < a[orderBy]
-    : (a, b) => a[orderBy] - b[orderBy];
-}
 function getSort(value, order, orderBy) {
   return order === 'desc'
     ? UNDERSCORE.sortBy(value, orderBy)

@@ -7,28 +7,8 @@ import MaterialTable from "../../../../components/containers/Tables/MaterialTabl
 import { UNDERSCORE } from "../../../../constants/utils";
 import * as Action from "../../../../redux/actions/userActions";
 import UserBlockToggle from "../../../../components/user/userBlockToggle";
-import Snackbar from '@material-ui/core/Snackbar';
 
-const styles = {
-	avatar: {
-    margin: 10,
-	},
-	inactive: {
-		color: 'white',
-    background: '#ea5555'
-	},
-	active: {
-		background: '#33bd33',
-    color: 'white'
-	},
-}
 class UserManagementCard extends React.Component {
-
-	state = {
-		title: '',
-		userStatus: '',
-		message:'',
-	}
 
   componentWillMount() {
     this._onLoad();
@@ -36,9 +16,10 @@ class UserManagementCard extends React.Component {
 
 	_onLoad = () => {
 		this.props.getUserList();
-	}
+	} 
 
 	_handleNotification = (value) =>{
+		alert()
 		this.setState({...value});
 	}
 
