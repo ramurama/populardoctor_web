@@ -31,9 +31,9 @@ class ProfileImageUploadForm extends PureComponent {
   }
 
   _handleSubmit = ({ profileImage }) => {
-    if(UNDERSCORE.isEmpty(profileImage)){
-      return;
-    }
+		if(UNDERSCORE.isEmpty(profileImage)){
+			return;
+		}
     const formData = new FormData();
     formData.append(
       'profileImage',

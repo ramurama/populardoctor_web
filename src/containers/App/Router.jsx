@@ -12,6 +12,7 @@ import CreateHospital from '../HospitalManagement/CreateHospital/index';
 import EditHospitalPage from '../HospitalManagement/CreateHospital/editHospital';
 import ViewHospitals from '../HospitalManagement/ViewHospitals/index';
 import CreateSchedule from '../ScheduleManagement/CreateSchedule/index';
+import EditSchedulePage from '../ScheduleManagement/CreateSchedule/editSchedule';
 import ViewSchedules from '../ScheduleManagement/ViewSchedule/index';
 import Announcement from '../Announcement';
 import CreateFrontdeskUser from '../FrontdeskUsers/CreateFrontdeskUser';
@@ -20,6 +21,7 @@ import ViewBookings from '../Bookings/ViewBookings';
 import ViewBookingDetail from '../Bookings/ViewBookingDetail';
 import CustomerCare from '../CustomerCare';
 import Settings from '../SettingsManagement'
+import * as Actions from '../../redux/actions/loginActions';
 
 import {
 	ROUTE_CREATE_DOCTOR,
@@ -41,6 +43,22 @@ import {
   ROUTE_SETTINGS
 } from '../../constants/routes';
 
+function requireAuth(nextState, replace, next) {
+	Actions.loginSatus()
+		.then(response => response.json())
+		.then( data =>  {
+			if(data.status === 'SUCCESS'){
+				this.context.router.history.push('/pages/userManagement/viewUsers');
+			}else{
+					replace({
+						pathname: "/login",
+						state: {nextPathname: nextState.location.pathname}
+					});
+				}
+				next();
+		})
+}
+
 const Pages = () => (
   <Switch>
     <Route path={ROUTE_VIEW_USERS} component={ViewUsers} />
@@ -51,7 +69,7 @@ const Pages = () => (
 		<Route path={ROUTE_EDIT_HOSPITAL} component={EditHospitalPage} />
     <Route path={ROUTE_VIEW_HOSPITALS} component={ViewHospitals} />
     <Route path={ROUTE_CREATE_SCHEDULE} component={CreateSchedule} />
-		<Route path={ROUTE_EDIT_SCHEDULE} component={CreateSchedule} />
+		<Route path={ROUTE_EDIT_SCHEDULE} component={EditSchedulePage} />
     <Route path={ROUTE_VIEW_SCHEDULES} component={ViewSchedules} />
     <Route path={ROUTE_ANNOUNCEMENT} component={Announcement} />
     <Route path={ROUTE_CREATE_FRONTDESK_USER} component={CreateFrontdeskUser} />
