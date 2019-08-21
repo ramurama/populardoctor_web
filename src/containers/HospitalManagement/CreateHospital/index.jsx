@@ -1,12 +1,14 @@
-import React from 'react';
-import { Container, Row } from 'reactstrap';
-import CreateHospitalCard from './components/CreateHospitalCard';
-
+import React from "react";
+import { Container, Col, Row } from "reactstrap";
+import CreateHospitalCard from "./components/CreateHospitalCard";
 
 const CreateHospitalPage = () => (
-  <Container className='dashboard'>
+  <Container className="dashboard">
     <Row>
-      <CreateHospitalCard />
+      <Col md={12}>
+        <h3 className="page-title">Create Hospital</h3>
+      </Col>
+			<CreateHospitalCard />
     </Row>
   </Container>
 );

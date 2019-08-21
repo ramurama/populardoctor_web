@@ -67,7 +67,7 @@ const Pages = () => (
 const wrappedRoutes = () => (
   <div>
     <Layout />
-    <div className='container__wrap'>
+    <div className='container__wrap' style={{height: '100%'}}>
       <Route path='/pages' component={Pages} />
     </div>
   </div>

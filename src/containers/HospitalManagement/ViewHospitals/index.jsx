@@ -1,6 +1,6 @@
 import React from 'react';
 import { Col, Container, Row } from 'reactstrap';
-import ViewHospitalCard from './components/ViewHospitalCard';
+import ViewHospitalsContainer from './container/ViewHospitalsContainer';
 import { VIEW_HOSPITALS } from '../../../constants/strings';
 
 const ViewHospitalPage = () => (
@@ -11,7 +11,7 @@ const ViewHospitalPage = () => (
       </Col>
     </Row>
     <Row>
-      <ViewHospitalCard />
+      <ViewHospitalsContainer />
     </Row>
   </Container>
 );

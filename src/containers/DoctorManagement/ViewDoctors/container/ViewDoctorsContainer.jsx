@@ -3,12 +3,12 @@ import { Card, CardBody, Col, Button } from "reactstrap";
 import PropTypes from "prop-types";
 import { withRouter } from "react-router";
 import { connect } from "react-redux";
-import MaterialTable from "../../../../components/containers/Tables/MaterialTable/index";
+import MaterialTable from "../../../../components/containers/Tables/MaterialTable";
 import { UNDERSCORE } from "../../../../constants/utils";
 import * as Action from "../../../../redux/actions/doctorActions";
 import UserBlockToggle from "../../../../components/user/userBlockToggle";
 
-class DoctorManagementCard extends React.Component {
+class ViewDoctorsContainer extends React.Component {
   componentWillMount() {
     this._onLoad();
     this.props.getSpecialization();
@@ -129,11 +129,11 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-DoctorManagementCard.contextTypes = {
+ViewDoctorsContainer.contextTypes = {
   router: PropTypes.object
 };
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(withRouter(DoctorManagementCard));
+)(withRouter(ViewDoctorsContainer));
