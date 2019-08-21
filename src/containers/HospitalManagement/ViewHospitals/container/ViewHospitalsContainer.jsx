@@ -20,7 +20,7 @@ class ViewHospitalsContainer extends React.Component {
 
   _renderOperation = data => {
     return (
-      <Button className="icon" onClick={() => this._handleEditHospital(data)}>
+      <Button className="icon" color="primary" onClick={() => this._handleEditHospital(data)}>
         <span class="lnr lnr-pencil" />
       </Button>
     );

@@ -11,8 +11,7 @@ import { UNDERSCORE } from "../../../../constants/utils";
 import * as Action from "../../../../redux/actions/scheduleActions";
 
 class ViewSchedulesContainer extends React.Component {
-
-	componentWillMount() {
+  componentWillMount() {
     this.props.getDoctorList();
     this.props.getHospitalList();
     this.props.clearScheduleList();
@@ -54,11 +53,13 @@ class ViewSchedulesContainer extends React.Component {
 
   _renderOperation = data => {
     return (
-      <div>
-        <Button className="icon" onClick={() => this._handleEditHospital(data)}>
-          <span class="lnr lnr-pencil" />
-        </Button>
-      </div>
+      <Button
+        className="icon"
+        color="primary"
+        onClick={() => this._handleEditHospital(data)}
+      >
+        <span class="lnr lnr-pencil" />
+      </Button>
     );
   };
   render() {

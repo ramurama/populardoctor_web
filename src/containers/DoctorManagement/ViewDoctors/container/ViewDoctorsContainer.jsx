@@ -17,28 +17,36 @@ class ViewDoctorsContainer extends React.Component {
   _onLoad = () => {
     this.props.getDoctorList();
   };
-  renderDoctorCell = text => (
+
+  renderDoctorNameCell = text => (
     <div style={{ display: "flex", width: 200 }}>
       <strong>{text.doctorDetails.fullName}</strong>
     </div>
   );
 
-	_handleEditHospital = (data) => {
-		this.context.router.history.push(`/pages/doctorManagement/editDoctor/${data.doctorPdNumber}`)
-	}
+  _handleEditHospital = data => {
+    this.context.router.history.push(
+      `/pages/doctorManagement/editDoctor/${data.doctorPdNumber}`
+    );
+  };
 
   _renderToggle = row => {
     return (
-      <div style={{display:'flex'	}}>
+      <div style={{ display: "flex" }}>
+        <Button
+          className="icon"
+          id="TooltipBottom"
+          color="primary"
+          onClick={() => this._handleEditHospital(row)}
+        >
+          <span class="lnr lnr-pencil" />
+        </Button>
         <UserBlockToggle
           data={row}
           status={row.doctorDetails.status}
           id={row.userId}
           loadData={this._onLoad}
         />
-        <Button className="icon" onClick={() => this._handleEditHospital(row)}>
-          <span class="lnr lnr-pencil" />
-        </Button>
       </div>
     );
   };
@@ -51,7 +59,7 @@ class ViewDoctorsContainer extends React.Component {
         numeric: false,
         disablePadding: true,
         label: "Name",
-        render: text => this.renderDoctorCell(text)
+        render: text => this.renderDoctorNameCell(text)
       },
       {
         id: "doctorPdNumber",
