@@ -7,7 +7,6 @@ build application:
   stage: build
   image: node
   script:
-    - npm install
     - npm run build
   artifacts:
     paths: 
