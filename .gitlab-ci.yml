@@ -1,0 +1,19 @@
+stages:
+  - build
+  - test
+
+
+build application:
+  stage: build
+  image: node
+  script:
+    - npm install
+    - npm run build
+  artifacts:
+    paths: 
+      - dest/
+
+test application:
+  stage: test
+  script:
+    - npm run test
