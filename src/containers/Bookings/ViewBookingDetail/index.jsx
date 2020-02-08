@@ -4,7 +4,6 @@ import BookingDetailCard from './components/BookingDetailCard';
 import UserDetailCard from './components/UserDetailsCard';
 import DoctorDetailCard from './components/DoctorDetailsCard';
 import HospitalDetailCard from './components/HospitalDetailsCard';
-import { BOOKING_DETAIL } from '../../../constants/strings';
 import Endpoints from '../../../redux/actions/endpoints';
 import _ from 'underscore';
 

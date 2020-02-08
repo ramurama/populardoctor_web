@@ -1,6 +1,6 @@
 import React from 'react';
 import { Col, Container, Row } from 'reactstrap';
-import ViewUsersCard from './components/ViewUsersCard';
+import ViewUsersContainer from './container/ViewUsersContainer';
 import { VIEW_USERS } from '../../../constants/strings';
 
 const ViewUsersPage = () => (
@@ -11,7 +11,7 @@ const ViewUsersPage = () => (
       </Col>
     </Row>
     <Row>
-      <ViewUsersCard />
+      <ViewUsersContainer />
     </Row>
   </Container>
 );

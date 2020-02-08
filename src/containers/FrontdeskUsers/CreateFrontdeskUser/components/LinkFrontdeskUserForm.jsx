@@ -1,6 +1,6 @@
 import React from 'react';
-import { Card, CardBody, Col, Button, ButtonToolbar, Row } from 'reactstrap';
-import { Field, reduxForm, SubmissionError } from 'redux-form';
+import { Card, CardBody, Col, Button, ButtonToolbar } from 'reactstrap';
+import { Field, reduxForm } from 'redux-form';
 import { withTranslation } from 'react-i18next';
 import renderSelectField from '../../../../components/shared/components/form/Select';
 import Endpoints from '../../../../redux/actions/endpoints';
@@ -142,7 +142,7 @@ class LinkFrontdeskUserForm extends React.PureComponent {
 
   render() {
     const { mode } = this.state;
-    const { pristine, reset, submitting, handleSubmit } = this.props;
+    const { pristine, submitting, handleSubmit } = this.props;
     let _handleSubmit = undefined;
     if (_.isEqual(mode, MODE.VIEW)) {
       _handleSubmit = this._handleViewSubmit;

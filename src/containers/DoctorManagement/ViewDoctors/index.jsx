@@ -1,6 +1,6 @@
 import React from 'react';
 import { Col, Container, Row } from 'reactstrap';
-import DoctorManagementCard from './components/DoctorManagementCard';
+import ViewDoctorsContainer from './container/ViewDoctorsContainer';
 
 const ExamplePage = () => (
   <Container className="dashboard">
@@ -10,7 +10,7 @@ const ExamplePage = () => (
       </Col>
     </Row>
     <Row>
-      <DoctorManagementCard />
+      <ViewDoctorsContainer />
     </Row>
   </Container>
 );

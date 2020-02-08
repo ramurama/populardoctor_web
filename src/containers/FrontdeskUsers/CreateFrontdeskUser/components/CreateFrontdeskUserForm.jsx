@@ -1,6 +1,6 @@
 import React from 'react';
-import { Card, CardBody, Col, Button, ButtonToolbar, Row } from 'reactstrap';
-import { Field, reduxForm, SubmissionError } from 'redux-form';
+import { Card, CardBody, Col, Button, ButtonToolbar } from 'reactstrap';
+import { Field, reduxForm } from 'redux-form';
 import { withTranslation } from 'react-i18next';
 import Endpoints from '../../../../redux/actions/endpoints';
 import PropTypes from 'prop-types';

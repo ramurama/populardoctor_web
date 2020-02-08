@@ -1,8 +1,7 @@
 import React from 'react';
-import { Card, CardBody, Col, Button } from 'reactstrap';
+import { Card, CardBody, Col } from 'reactstrap';
 import MaterialTable from '../../../components/containers/Tables/MaterialTable';
 import SendIcon from 'mdi-react/SendIcon';
-import { Link } from 'react-router-dom';
 
 const AnnouncementsTable = props => {
   const columns = [

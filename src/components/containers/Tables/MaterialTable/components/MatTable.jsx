@@ -1,19 +1,14 @@
 import React, { PureComponent } from 'react';
-import { Card, CardBody, Col } from 'reactstrap';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
+import TableFooter from '@material-ui/core/TableFooter';
 import Checkbox from '@material-ui/core/Checkbox';
 import MatTableHead from './MatTableHead';
 import { UNDERSCORE } from '../../../../../constants/utils';
 
-function getSorting(order, orderBy) {
-  return order === 'desc'
-    ? (a, b) => b[orderBy] < a[orderBy]
-    : (a, b) => a[orderBy] - b[orderBy];
-}
 function getSort(value, order, orderBy) {
   return order === 'desc'
     ? UNDERSCORE.sortBy(value, orderBy)
@@ -114,13 +109,9 @@ export default class MatTable extends PureComponent {
         page * rowsPerPage + rowsPerPage
       );
     }
-    const emptyRows =
-      rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
 
-    console.log(data);
     return (
-      <Col md={12} lg={12}>
-        <div className='material-table__wrap' style={{ height: '90%' }}>
+        <div className='material-table__wrap' >
           <Table className='material-table'>
             <MatTableHead
               numSelected={selected.length}
@@ -165,27 +156,25 @@ export default class MatTable extends PureComponent {
                   </TableRow>
                 );
               })}
-              {emptyRows > 0 && (
-                <TableRow style={{ height: 49 * emptyRows }}>
-                  <TableCell colSpan={6} />
-                </TableRow>
-              )}
             </TableBody>
+						<TableFooter>
+            <TableRow>
+							<TablePagination
+								component='div'
+								className='material-table__pagination'
+								count={data.length}
+								rowsPerPage={rowsPerPage}
+								page={page}
+								backIconButtonProps={{ 'aria-label': 'Previous Page' }}
+								nextIconButtonProps={{ 'aria-label': 'Next Page' }}
+								onChangePage={this.handleChangePage}
+								onChangeRowsPerPage={this.handleChangeRowsPerPage}
+								rowsPerPageOptions={[100, 75, 50, 25, 5]}
+							/>
+						</TableRow>
+						</TableFooter>
           </Table>
         </div>
-        <TablePagination
-          component='div'
-          className='material-table__pagination'
-          count={data.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          backIconButtonProps={{ 'aria-label': 'Previous Page' }}
-          nextIconButtonProps={{ 'aria-label': 'Next Page' }}
-          onChangePage={this.handleChangePage}
-          onChangeRowsPerPage={this.handleChangeRowsPerPage}
-          rowsPerPageOptions={[100, 75, 50, 25, 5]}
-        />
-      </Col>
-    );
+    );	
   }
 }

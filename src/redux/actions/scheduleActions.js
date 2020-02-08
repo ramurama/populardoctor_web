@@ -64,12 +64,22 @@ export function getScheduleDetail(id) {
 	};
 };
 
-export function clearScheduleDetail() {
+export function clearScheduleDetail(dispatch) {
+	// return () => {
+	// 	return new Promise((resolve) => { 
+	// 			dispatch({
+	// 				type: 'RESPONSE_SCHEDULE_DETAIL',
+	// 				data: [],
+	// 			});
+	// 			resolve();
+	// 	});
+	// }
 	return {
 		type: 'RESPONSE_SCHEDULE_DETAIL',
 		data: [],
-	};
-}
+	}
+};
+
 export function save(saveData) {
 	return post(Endpoint.createSchedule, saveData);
 }
