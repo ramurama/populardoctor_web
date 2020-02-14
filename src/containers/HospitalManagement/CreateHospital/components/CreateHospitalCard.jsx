@@ -5,7 +5,6 @@ import {
   Col,
   Button,
   ButtonToolbar,
-  Row,
   Container
 } from "reactstrap";
 import { Field, reduxForm, SubmissionError } from "redux-form";
@@ -14,7 +13,7 @@ import { withRouter } from "react-router";
 import { connect } from "react-redux";
 import { withTranslation } from "react-i18next";
 import Snackbar from "@material-ui/core/Snackbar";
-import { CREATE_HOSPITAL, EDIT_HOSPITAL } from "../../../../constants/strings";
+import SaveIcon from 'mdi-react/ContentSaveIcon'
 import { save, update } from "../../../../redux/actions/hospitalActions";
 import validate from "../../../../components/Form/FormValidation/components/validate";
 import { addHospital } from "../constants/hospitalForm";
@@ -201,143 +200,131 @@ class CreateHospitalCard extends PureComponent {
   };
 
   render() {
-    const { isUpdate, pristine, reset, submitting, handleSubmit } = this.props;
-    const title = isUpdate ? EDIT_HOSPITAL : CREATE_HOSPITAL;
+    const { reset, handleSubmit } = this.props;
+
     return (
       <Container>
-        <Row>
-          <Col md={12}>
-            <h3 className="page-title">{title}</h3>
-          </Col>
-          <Col sm="12" md={{ size: 6, offset: 3 }}>
-            <Card>
-              <CardBody>
-                <form
-                  className="form form--horizontal"
-                  onSubmit={handleSubmit(this._handleSubmit)}
-                >
-                  <div className="form__form-group">
-                    <span className="form__form-group-label">
-                      Hospital Name
-                    </span>
-                    <div className="form__form-group-field">
-                      <Field
-                        name="name"
-                        component={renderField}
-                        type="text"
-                        placeholder="Hospital Name"
-                      />
-                    </div>
+        <Card>
+          <CardBody>
+            <form
+              className="form form--horizontal"
+              onSubmit={handleSubmit(this._handleSubmit)}
+            >
+              <Col>
+                <div className="form__form-group">
+                  <span className="form__form-group-label">Hospital Name</span>
+                  <div className="form__form-group-field">
+                    <Field
+                      name="name"
+                      component={renderField}
+                      type="text"
+                      placeholder="Hospital Name"
+                    />
                   </div>
-                  <div className="form__form-group">
-                    <span className="form__form-group-label">Street name</span>
-                    <div className="form__form-group-field">
-                      <Field
-                        name="streetName"
-                        component={renderField}
-                        type="text"
-                        placeholder="Street name"
-                      />
-                    </div>
+                </div>
+                <div className="form__form-group">
+                  <span className="form__form-group-label">Street name</span>
+                  <div className="form__form-group-field">
+                    <Field
+                      name="streetName"
+                      component={renderField}
+                      type="text"
+                      placeholder="Street name"
+                    />
                   </div>
-                  <div className="form__form-group">
-                    <span className="form__form-group-label">Building</span>
-                    <div className="form__form-group-field">
-                      <Field
-                        name="building"
-                        component={renderField}
-                        type="text"
-                        placeholder="Building"
-                      />
-                    </div>
+                </div>
+                <div className="form__form-group">
+                  <span className="form__form-group-label">Building</span>
+                  <div className="form__form-group-field">
+                    <Field
+                      name="building"
+                      component={renderField}
+                      type="text"
+                      placeholder="Building"
+                    />
                   </div>
-                  <div className="form__form-group">
-                    <span className="form__form-group-label">Location</span>
-                    <div className="form__form-group-field">
-                      <Field
-                        name="location"
-                        component={renderField}
-                        type="text"
-                        placeholder="Location"
-                      />
-                    </div>
+                </div>
+                <div className="form__form-group">
+                  <span className="form__form-group-label">Location</span>
+                  <div className="form__form-group-field">
+                    <Field
+                      name="location"
+                      component={renderField}
+                      type="text"
+                      placeholder="Location"
+                    />
                   </div>
-                  <div className="form__form-group">
-                    <span className="form__form-group-label">Latitude</span>
-                    <div className="form__form-group-field">
-                      <Field
-                        name="latitude"
-                        component={renderField}
-                        type="number"
-                        placeholder="latitude"
-                      />
-                    </div>
+                </div>
+                <div className="form__form-group">
+                  <span className="form__form-group-label">Latitude</span>
+                  <div className="form__form-group-field">
+                    <Field
+                      name="latitude"
+                      component={renderField}
+                      type="number"
+                      placeholder="latitude"
+                    />
                   </div>
-                  <div className="form__form-group">
-                    <span className="form__form-group-label">Longitude</span>
-                    <div className="form__form-group-field">
-                      <Field
-                        name="longitude"
-                        component={renderField}
-                        type="number"
-                        placeholder="Longitude"
-                      />
-                    </div>
+                </div>
+                <div className="form__form-group">
+                  <span className="form__form-group-label">Longitude</span>
+                  <div className="form__form-group-field">
+                    <Field
+                      name="longitude"
+                      component={renderField}
+                      type="number"
+                      placeholder="Longitude"
+                    />
                   </div>
-                  <div className="form__form-group">
-                    <span className="form__form-group-label">Pincode</span>
-                    <div className="form__form-group-field">
-                      <Field
-                        name="pincode"
-                        component={renderField}
-                        type="number"
-                        placeholder="Pincode"
-                        onChange={value => this._handleChange("pincode", value)}
-                      />
-                    </div>
+                </div>
+                <div className="form__form-group">
+                  <span className="form__form-group-label">Pincode</span>
+                  <div className="form__form-group-field">
+                    <Field
+                      name="pincode"
+                      component={renderField}
+                      type="number"
+                      placeholder="Pincode"
+                      onChange={value => this._handleChange("pincode", value)}
+                    />
                   </div>
-                  <div className="form__form-group">
-                    <span className="form__form-group-label">Landmark</span>
-                    <div className="form__form-group-field">
-                      <Field
-                        name="landmark"
-                        component={renderField}
-                        type="text"
-                        placeholder="Landmark"
-                      />
-                    </div>
+                </div>
+                <div className="form__form-group">
+                  <span className="form__form-group-label">Landmark</span>
+                  <div className="form__form-group-field">
+                    <Field
+                      name="landmark"
+                      component={renderField}
+                      type="text"
+                      placeholder="Landmark"
+                    />
                   </div>
-                  <ButtonToolbar className="form__button-toolbar">
-                    <Button
-                      color="primary"
-                      type="submit"
-                      disabled={pristine || submitting}
-                    >
-                      Save
-                    </Button>
-                    <Button
-                      type="button"
-                      onClick={reset}
-                      disabled={pristine || submitting}
-                    >
-                      Cancel
-                    </Button>
-                  </ButtonToolbar>
-                </form>
-              </CardBody>
-            </Card>
-            <Snackbar
-              anchorOrigin={{ vertical: "top", horizontal: "right" }}
-              autoHideDuration={3000}
-              open={this.state.displayToast}
-              ContentProps={{
-                "aria-describedby": "message-id"
-              }}
-              onClose={this._handleClose}
-              message={<span id="message-id">{this.state.toastMessage}</span>}
-            />
-          </Col>
-        </Row>
+                </div>
+              </Col>
+              <Col >
+                <ButtonToolbar className="form__button-toolbar">
+                  <Button className="icon" size="sm" color="primary" type="submit">
+									<SaveIcon/>
+                    Save
+                  </Button>
+                  <Button type="button" size="sm" onClick={reset}>
+                    Cancel
+                  </Button>
+                </ButtonToolbar>
+              </Col>
+            </form>
+          </CardBody>
+        </Card>
+        <Snackbar
+          anchorOrigin={{ vertical: "top", horizontal: "right" }}
+          autoHideDuration={3000}
+          open={this.state.displayToast}
+          ContentProps={{
+            "aria-describedby": "message-id"
+          }}
+          onClose={this._handleClose}
+          message={<span id="message-id">{this.state.toastMessage}</span>}
+        />
       </Container>
     );
   }
@@ -353,8 +340,8 @@ function mapStateToProps(state) {
   if (!UNDERSCORE.isEmpty(defaultData)) {
     isUpdate = true;
     const address = JSON.parse(defaultData.address);
-    // defaultData.latitude = defaultData.latLng[0];
-    // defaultData.longitude = defaultData.latLng[1];
+    defaultData.latitude = defaultData.latLng[0];
+    defaultData.longitude = defaultData.latLng[1];
     defaultData.streetName = address.streetName;
     defaultData.building = address.building;
   }

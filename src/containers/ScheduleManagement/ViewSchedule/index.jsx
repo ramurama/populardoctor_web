@@ -1,6 +1,6 @@
 import React from 'react';
 import { Col, Container, Row } from 'reactstrap';
-import ViewSchedulesCard from './components/ViewSchedulesCard';
+import ViewSchedulesContainer from './container/ViewSchedulesContainer';
 import { VIEW_SCHDULES } from '../../../constants/strings';
 
 const ViewSchedulesPage = () => (
@@ -11,7 +11,7 @@ const ViewSchedulesPage = () => (
       </Col>
     </Row>
     <Row>
-      <ViewSchedulesCard />
+      <ViewSchedulesContainer />
     </Row>
   </Container>
 );

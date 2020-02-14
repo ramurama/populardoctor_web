@@ -12,6 +12,7 @@ import CreateHospital from '../HospitalManagement/CreateHospital/index';
 import EditHospitalPage from '../HospitalManagement/CreateHospital/editHospital';
 import ViewHospitals from '../HospitalManagement/ViewHospitals/index';
 import CreateSchedule from '../ScheduleManagement/CreateSchedule/index';
+import EditSchedulePage from '../ScheduleManagement/CreateSchedule/editSchedule';
 import ViewSchedules from '../ScheduleManagement/ViewSchedule/index';
 import Announcement from '../Announcement';
 import CreateFrontdeskUser from '../FrontdeskUsers/CreateFrontdeskUser';
@@ -51,7 +52,7 @@ const Pages = () => (
 		<Route path={ROUTE_EDIT_HOSPITAL} component={EditHospitalPage} />
     <Route path={ROUTE_VIEW_HOSPITALS} component={ViewHospitals} />
     <Route path={ROUTE_CREATE_SCHEDULE} component={CreateSchedule} />
-		<Route path={ROUTE_EDIT_SCHEDULE} component={CreateSchedule} />
+		<Route path={ROUTE_EDIT_SCHEDULE} component={EditSchedulePage} />
     <Route path={ROUTE_VIEW_SCHEDULES} component={ViewSchedules} />
     <Route path={ROUTE_ANNOUNCEMENT} component={Announcement} />
     <Route path={ROUTE_CREATE_FRONTDESK_USER} component={CreateFrontdeskUser} />
@@ -66,7 +67,7 @@ const Pages = () => (
 const wrappedRoutes = () => (
   <div>
     <Layout />
-    <div className='container__wrap'>
+    <div className='container__wrap' style={{height: '100%'}}>
       <Route path='/pages' component={Pages} />
     </div>
   </div>

@@ -31,9 +31,9 @@ class ProfileImageUploadForm extends PureComponent {
   }
 
   _handleSubmit = ({ profileImage }) => {
-    if(UNDERSCORE.isEmpty(profileImage)){
-      return;
-    }
+		if(UNDERSCORE.isEmpty(profileImage)){
+			return;
+		}
     const formData = new FormData();
     formData.append(
       'profileImage',
@@ -54,7 +54,7 @@ class ProfileImageUploadForm extends PureComponent {
   };
 
   render() {
-    const { handleSubmit, reset } = this.props;
+    const { handleSubmit } = this.props;
     return (
       <Card style={{ height: 150 }}>
         <CardBody>

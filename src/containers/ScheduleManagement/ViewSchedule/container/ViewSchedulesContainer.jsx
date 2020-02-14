@@ -2,50 +2,20 @@ import React from "react";
 import { Card, CardBody, Col, Button } from "reactstrap";
 import PropTypes from "prop-types";
 import { withRouter } from "react-router";
-import Chip from "@material-ui/core/Chip";
-import Avatar from "@material-ui/core/Avatar";
-import { Field } from "redux-form";
 import { connect } from "react-redux";
 import Switch from "@material-ui/core/Switch";
 import Tooltip from "@material-ui/core/Tooltip";
-import MaterialTable from "../../../../components/containers/Tables/MaterialTable/index";
+import MaterialTable from "../../../../components/containers/Tables/MaterialTable";
 import RenderSelectField from "../../../../components/shared/components/form/Select";
-import Modal from "./../../../../components/shared/components/Modal";
 import { UNDERSCORE } from "../../../../constants/utils";
 import * as Action from "../../../../redux/actions/scheduleActions";
 
-const styles = {
-  avatar: {
-    margin: 10
-  },
-  inactive: {
-    color: "white",
-    background: "#ea5555"
-  },
-  active: {
-    background: "#33bd33",
-    color: "white"
-  }
-};
-class ScheduleManagementCard extends React.Component {
+class ViewSchedulesContainer extends React.Component {
   componentWillMount() {
     this.props.getDoctorList();
-		this.props.getHospitalList();
-		this.props.clearScheduleList();
+    this.props.getHospitalList();
+    this.props.clearScheduleList();
   }
-
-  renderAvatar = text => (
-    <div style={{ display: "flex", width: 200 }}>
-      <Avatar
-        alt="L"
-        src={text.doctorDetails.profileImage}
-        classes={styles.avatar}
-      />
-      <a style={{ padding: 20 }}>
-        <strong>{text.doctorDetails.fullName}</strong>
-      </a>
-    </div>
-  );
 
   _renderToggle = text => {
     const color = text.status === "ACTIVE" ? false : true;
@@ -72,23 +42,24 @@ class ScheduleManagementCard extends React.Component {
   };
 
   handleSelect = value => {
-		this.setState({ doctorId: value.id});
+    this.setState({ doctorId: value.id });
     this.props.getScheduleList(value.id);
   };
   _handleEditHospital = data => {
     this.context.router.history.push(
       `/pages/scheduleManagement/editSchedule/${data._id}`
     );
-	};
-
+  };
 
   _renderOperation = data => {
     return (
-      <div>
-        <Button className="icon" onClick={() => this._handleEditHospital(data)}>
-          <span class="lnr lnr-pencil" />
-        </Button>
-      </div>
+      <Button
+        className="icon"
+        color="primary"
+        onClick={() => this._handleEditHospital(data)}
+      >
+        <span class="lnr lnr-pencil" />
+      </Button>
     );
   };
   render() {
@@ -135,18 +106,6 @@ class ScheduleManagementCard extends React.Component {
               </div>
             </div>
             <MaterialTable columns={columns} data={scheduleList} />
-            {/* <Modal
-							color="danger"
-							title="Stop!"
-							header
-							modal={true}
-							btn="Danger"
-							message="Extremely we promotion remainder eagerness enjoyment an. Ham her demands removal
-										brought minuter raising invited gay. Contented consisted continual curiosity contained get sex.
-										Forth child dried in in aware do. You had met they song how feel lain evil near. Small she
-										avoid six yet table china. And bed make say been then dine mrs. To household rapturous
-										fulfilled attempted on so. "
-						/> */}
           </CardBody>
         </Card>
       </Col>
@@ -175,18 +134,18 @@ function mapDispatchToProps(dispatch) {
     },
     getScheduleList: doctorId => {
       dispatch(Action.getScheduleList(doctorId));
-		},
-		clearScheduleList: () => {
-			dispatch(Action.clearScheduleList());
-		}
+    },
+    clearScheduleList: () => {
+      dispatch(Action.clearScheduleList());
+    }
   };
 }
 
-ScheduleManagementCard.contextTypes = {
+ViewSchedulesContainer.contextTypes = {
   router: PropTypes.object
 };
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(withRouter(ScheduleManagementCard));
+)(withRouter(ViewSchedulesContainer));

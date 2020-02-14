@@ -1,20 +1,7 @@
 import React, { PureComponent } from "react";
 import Select from "react-select";
 import PropTypes from "prop-types";
-import MenuItem from "@material-ui/core/MenuItem";
-import Paper from "@material-ui/core/Paper";
 
-function Option(props) {
-  return (
-   <option>
- 		{`${props.label} (${props.value}) `}
-	 </option>
-  );
-}
-
-const components = {
-  Option
-};
 class SelectField extends PureComponent {
   static propTypes = {
     onChange: PropTypes.func.isRequired,

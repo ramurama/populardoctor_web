@@ -144,10 +144,10 @@ class CreateScheduleCard extends React.Component {
     if (prevProps.isUpdate && !prevState.updated) {
       const { isFastrack, dataList } = this._decodeTokenList(
         this.props.initialValues.tokens
-      );
-      this._handleFastrack(isFastrack);
+			);
+			this._handleFastrack(isFastrack);
       this.setState({ isFastrack, existTokens: dataList, updated: true });
-    }
+		}
   }
   _decodeTokenList = tokenList => {
     let isFastrack = false;
@@ -244,7 +244,6 @@ class CreateScheduleCard extends React.Component {
         this.setState({ errorToken: "" });
       }
       throw new SubmissionError(errorText);
-      return;
     }
     // this._validateTokens(this._parseToken(tokenList, fastrack));
     editValue.tokens = this._parseToken(tokenList, fastrack);
@@ -390,7 +389,10 @@ class CreateScheduleCard extends React.Component {
   };
 
   renderTokenList = () => {
-    const { tokenList, existTokens } = this.state;
+		const { tokenList, existTokens } = this.state;
+		console.log('tokenList')
+		console.log(tokenList)
+		console.log(existTokens)
     return (
       <div>
         {existTokens &&

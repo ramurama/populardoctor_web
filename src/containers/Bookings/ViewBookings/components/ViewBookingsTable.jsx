@@ -33,7 +33,9 @@ const ViewBookingsTable = props => {
             break;
           case 'VISITED':
             icon = <CheckIcon color="#2e7d32" />;
-            break;
+						break;
+					default: 
+						break;
         }
         return icon;
       }

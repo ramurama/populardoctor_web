@@ -3,40 +3,28 @@ import { Card, CardBody, Col, Button } from "reactstrap";
 import PropTypes from "prop-types";
 import { withRouter } from "react-router";
 import { connect } from "react-redux";
-import MaterialTable from "../../../../components/containers/Tables/MaterialTable/index";
+import MaterialTable from "../../../../components/containers/Tables/MaterialTable";
 import { UNDERSCORE } from "../../../../constants/utils";
 import * as Action from "../../../../redux/actions/hospitalActions";
 
-const styles = {
-  avatar: {
-    margin: 10
-  },
-  inactive: {
-    color: "white",
-    background: "#ea5555"
-  },
-  active: {
-    background: "#33bd33",
-    color: "white"
-  }
-};
-class HospitalManagementCard extends React.Component {
+class ViewHospitalsContainer extends React.Component {
   componentWillMount() {
     this.props.getHospitalList("all");
-	}
-	
-	_handleEditHospital = (data) => {
-		this.context.router.history.push(`/pages/hospitalManagement/editHospital/${data.hospitalPdNumber}`)
-	}
+  }
 
-	_renderOperation = data => {
-    return (
-      <Button className="icon" onClick={() => this._handleEditHospital(data)}>
-        <span class="lnr lnr-pencil"></span>
-      </Button>
+  _handleEditHospital = data => {
+    this.context.router.history.push(
+      `/pages/hospitalManagement/editHospital/${data.hospitalPdNumber}`
     );
   };
 
+  _renderOperation = data => {
+    return (
+      <Button className="icon" color="primary" onClick={() => this._handleEditHospital(data)}>
+        <span class="lnr lnr-pencil" />
+      </Button>
+    );
+  };
 
   render() {
     const { hospitalList } = this.props;
@@ -111,11 +99,11 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-HospitalManagementCard.contextTypes = {
+ViewHospitalsContainer.contextTypes = {
   router: PropTypes.object
 };
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(withRouter(HospitalManagementCard));
+)(withRouter(ViewHospitalsContainer));
