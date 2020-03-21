@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -24,22 +25,23 @@
   -->
   <title>Popular Doctor</title>
 </head>
+
 <body>
-<noscript>
-  You need to enable JavaScript to run this app.
-</noscript>
-<div id="root">
-  <!--Loader-->
-  <div class="load">
-    <!-- <div class="load__icon-wrap">
+  <noscript>
+    You need to enable JavaScript to run this app.
+  </noscript>
+  <div id="root">
+    <!--Loader-->
+    <div class="load">
+      <!-- <div class="load__icon-wrap">
       <svg class="load__icon">
         <path fill="#4ce1b6" d="M12,4V2A10,10 0 0,0 2,12H4A8,8 0 0,1 12,4Z"/>
       </svg>
     </div> -->
+    </div>
+    <!--Loader-->
   </div>
-  <!--Loader-->
-</div>
-<!--
+  <!--
   This HTML file is a template.
   If you open it directly in the browser, you will see an empty page.
 
@@ -51,32 +53,32 @@
 -->
 </body>
 <script type="application/javascript">
-var ajax = new XMLHttpRequest();
-ajax.open('get', 'api/v1/auth/admin/loginstatus')
-ajax.send();
-ajax.onreadystatechange = function (){
-	console.log(ajax)
-	if( ajax.readyState === 4 && ajax.status === 200 || ajax.status === 304 &&
-		ajax.response.status === 'SUCCESS'){
-		var url = getQueryString('from');
-		console.log('-------url---------')
-		console.log(url)
-		if( url === null){
-			// window.location.href = '/pages/userManagement/viewUsers';
-		}else{
-			// window.location.href = '/user' + encodeURIComponent(url + window.location.hash);
-		}
-	}else{
-		// window.location.href = '/';
-	}
-}
-function getQueryString(){
-	var reg = new RegExp(`(^|&)${name}={.*}`);
-	var res = window.location.search.substr(1).match(reg);
-	if(res != null){
-		return decodeURI(res[2]);
-	}
-	return null;
-}
+  var ajax = new XMLHttpRequest();
+  ajax.open('get', 'api/v1/auth/admin/loginstatus')
+  ajax.send();
+  ajax.onreadystatechange = function () {
+    if (ajax.readyState === 4 && ajax.status === 200 || ajax.status === 304 &&
+      ajax.response.status === 'SUCCESS') {
+      var url = getQueryString('from');
+
+      if (url === null) {
+        // window.location.href = '/pages/userManagement/viewUsers';
+      } else {
+        // window.location.href = '/user' + encodeURIComponent(url + window.location.hash);
+      }
+    } else {
+      // window.location.href = '/';
+    }
+  }
+
+  function getQueryString() {
+    var reg = new RegExp(`(^|&)${name}={.*}`);
+    var res = window.location.search.substr(1).match(reg);
+    if (res != null) {
+      return decodeURI(res[2]);
+    }
+    return null;
+  }
 </script>
+
 </html>
