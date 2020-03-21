@@ -3,7 +3,6 @@ import { Card, CardBody, Col } from "reactstrap";
 import { connect } from "react-redux";
 import MaterialTable from "../../../../components/containers/Tables/MaterialTable";
 import UserBlockToggle from "../../../../components/user/userBlockToggle";
-import { UNDERSCORE } from "../../../../constants/utils";
 import * as Action from "../../../../redux/actions/frontdeskActions";
 
 class FrontdeskUsersTable extends Component {
